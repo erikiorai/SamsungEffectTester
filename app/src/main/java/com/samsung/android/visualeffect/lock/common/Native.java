@@ -4,11 +4,6 @@ package com.samsung.android.visualeffect.lock.common;
 public class Native {
     private long mEffectId = 0;
 
-    static {
-        System.loadLibrary("stlport");
-        System.loadLibrary("secveSrkCommon");
-    }
-
     public static native void pauseAnimation();
 
     public static native void resumeAnimation();
@@ -36,4 +31,9 @@ public class Native {
     public native void showAffordance(int i, int i2);
 
     public native void showUnlock();
+
+    static {
+        System.loadLibrary("stlport");
+        System.loadLibrary("secveSrkCommon");
+    }
 }

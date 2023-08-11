@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">Effect</string>
+    <string name="wall">hold -> wallpaper change</string>
+    <string name="reset"><![CDATA[press -> reset unlock state]]></string>
+    <string name="show_affordance">show affordance</string>
+    <string name="unlock_ability">unlock ability</string>
+
+    <string name="unlock_effect_none">None</string>
+    <string name="unlock_effect_montblanc">Ink in water</string>
+    <string name="unlock_effect_abstract">Abstract tiles</string>
+    <string name="unlock_effect_geometric_mosaic">Geometric mosaic</string>
+    <string name="unlock_effect_brilliant_ring">Brilliant ring</string>
+    <string name="unlock_effect_popping">Popping colours</string>
+    <string name="unlock_effect_particle">Sparkling bubbles</string>
+    <string name="unlock_effect_simple_ripple">Stone skipping</string>
+    <string name="unlock_effect_watercolor">Watercolour</string>
+    <string name="unlock_effect_ripple">Ripple</string>
+    <string name="unlock_effect_liquid">Water droplet</string>
+    <string name="unlock_effect_colour_droplet">Coloured Droplets</string>
+    <string name="light_effect">Light effect</string>
+
 </resources>

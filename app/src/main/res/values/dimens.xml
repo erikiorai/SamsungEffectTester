@@ -2,4 +2,5 @@
 <resources>
     <dimen name="keyguard_lockscreen_first_border">144dp</dimen>
     <dimen name="keyguard_lockscreen_second_border">216dp</dimen>
+    <dimen name="button_margins">105dp</dimen>
 </resources>
