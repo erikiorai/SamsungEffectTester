@@ -28,4 +28,5 @@ android {
 
 dependencies {
 implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
+    compileOnly(files("libs/mainsysui33.jar"))
 }

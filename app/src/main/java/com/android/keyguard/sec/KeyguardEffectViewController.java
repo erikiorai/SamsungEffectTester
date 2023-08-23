@@ -7,6 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.hardware.SensorEvent;
 import android.os.FileObserver;
+import android.os.Handler;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,7 +16,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.aj.effect.MainActivity;
-import com.aj.effect.R;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -741,9 +741,13 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         if (view != null && this.mForegroundCircleView != null) {
             this.mForegroundCircleView.handleUnlock(view, event);
         } else if (this.mUnlockEffectView != null) {
-            MainActivity.multiactionButton.setAlpha(0.8F);
-            MainActivity.multiactionButton.setText(R.string.reset);
             this.mUnlockEffectView.handleUnlock(view, event);
+            // todo handle un;lock
+            Handler handler = new Handler();
+            handler.postDelayed(() -> {
+                MainActivity.switchActivity(mContext);
+            }, getUnlockDelay()+250L);
+
         }
     }
 

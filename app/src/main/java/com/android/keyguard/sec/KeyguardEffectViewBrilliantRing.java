@@ -381,7 +381,7 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
         if (bmp == null) {
             Log.d(TAG, "bmp is null");
         } else {
-            setBitmap(bmp);//KeyguardEffectViewUtil.getPreferredConfigBitmap(bmp, Bitmap.Config.ARGB_8888));
+            setBitmap(KeyguardEffectViewUtil.getPreferredConfigBitmap(bmp, Bitmap.Config.ARGB_8888));
         }
     }
 

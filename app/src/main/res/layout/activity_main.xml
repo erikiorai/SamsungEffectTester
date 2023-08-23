@@ -87,4 +87,19 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <TextView
+        android:id="@+id/clock"
+        style="@style/keyguard_text_shadow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/kg_singleclock_margin_top"
+        android:layout_marginBottom="1dp"
+        android:fontFamily="@font/samsungneonum3t"
+        android:shadowColor="#cc000000"
+        android:text="12:45"
+        android:textColor="@color/white"
+        android:textSize="@dimen/kg_singleclock_time_text_size_large"
+        android:typeface="normal" />
+
 </FrameLayout>

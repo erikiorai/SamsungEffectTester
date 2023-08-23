@@ -18,5 +18,8 @@
     <string name="unlock_effect_liquid">Water droplet</string>
     <string name="unlock_effect_colour_droplet">Coloured Droplets</string>
     <string name="light_effect">Light effect</string>
+    <string name="blind_effect">Blind</string>
+    <string name="brilliant_cut">Brilliant cut</string>
+    <string name="unlock_effect">Unlock effect</string>
 
 </resources>

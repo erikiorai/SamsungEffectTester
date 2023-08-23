@@ -16,11 +16,13 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.BaseInterpolator;
 import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
+import com.aj.effect.QuintEaseOut;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.IEffectView;
@@ -49,25 +51,6 @@ class BackEaseOut extends BaseInterpolator {
         float t2 = t - 1.0f;
         return (t2 * t2 * (((o + 1.0f) * t2) + o)) + 1.0f;
     }
-}
-
-class QuintEaseOut extends BaseInterpolator {
-    public QuintEaseOut() {
-    }
-
-    public QuintEaseOut(Context context, AttributeSet attrs) {
-    }
-
-    @Override // android.animation.TimeInterpolator
-    public float getInterpolation(float t) {
-        return out(t);
-    }
-
-    private float out(float t) {
-        float t2 = t - 1.0f;
-        return (t2 * t2 * t2 * t2 * t2) + 1.0f;
-    }
-
 }
 
 /* loaded from: classes.dex */
@@ -104,7 +87,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     private float currentX;
     private float currentY;
     private Bitmap.Config defaultConfig;
-    private float defaultInSampleSize;
+    private final float defaultInSampleSize = 0.8f;
     private double distance;
     private float distancePerMaxAlpha;
     private ValueAnimator fadeOutAnimator;
@@ -208,7 +191,6 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         this.isPlayAffordance = false;
         this.isTouched = false;
         this.defaultConfig = Bitmap.Config.RGB_565;
-        this.defaultInSampleSize = 2.0f;
         this.globalAlpha = 0.8f;
         this.mContext = context;
         this.mFirstCreatedRunnable = null;
@@ -247,7 +229,6 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         this.isPlayAffordance = false;
         this.isTouched = false;
         this.defaultConfig = Bitmap.Config.RGB_565;
-        this.defaultInSampleSize = 2.0f;
         this.globalAlpha = 0.8f;
         this.mContext = context;
         this.mFirstCreatedRunnable = null;
@@ -286,7 +267,6 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         this.isPlayAffordance = false;
         this.isTouched = false;
         this.defaultConfig = Bitmap.Config.RGB_565;
-        this.defaultInSampleSize = 2.0f;
         this.globalAlpha = 0.8f;
         this.mContext = context;
         this.mFirstCreatedRunnable = null;
@@ -315,10 +295,13 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     public void lensFlareinit() {
         if (getChildCount() == 0) {
             Log.d("LensFlare", "this.getChildCount() == 0");
-            DisplayMetrics dm = getResources().getDisplayMetrics();
+            DisplayMetrics dm = new DisplayMetrics();
+            WindowManager dis = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+            dis.getDefaultDisplay().getRealMetrics(dm);
+            // todo getResources().getDisplayMetrics();
             this.screenWidth = dm.widthPixels;
             this.screenHeight = dm.heightPixels;
-            int smallestWidth = this.screenWidth < this.screenHeight ? this.screenWidth : this.screenHeight;
+            int smallestWidth = Math.min(this.screenWidth, this.screenHeight);
             Log.d("LensFlare", "lensFlareinit ============================");
             Log.d("LensFlare", "screenWidth : " + this.screenWidth);
             Log.d("LensFlare", "screenHeight : " + this.screenHeight);

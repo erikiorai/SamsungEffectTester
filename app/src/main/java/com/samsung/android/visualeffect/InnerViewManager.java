@@ -3,64 +3,74 @@ package com.samsung.android.visualeffect;
 import android.content.Context;
 
 import com.samsung.android.visualeffect.lock.abstracttile.AbstractTileEffect;
+import com.samsung.android.visualeffect.lock.blind.BlindEffect;
+import com.samsung.android.visualeffect.lock.brilliantcut.BrilliantCutEffect;
 import com.samsung.android.visualeffect.lock.brilliantring.BrilliantRingEffect;
+import com.samsung.android.visualeffect.lock.droplet.DropletEffect_GL;
+import com.samsung.android.visualeffect.lock.geometricmosaic.GeometricMosaicEffect;
+import com.samsung.android.visualeffect.lock.indigodiffusion.IndigoDiffusionEffect;
 import com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect;
+import com.samsung.android.visualeffect.lock.particle.ParticleEffect;
+import com.samsung.android.visualeffect.lock.particle.ParticleSpaceEffect;
+import com.samsung.android.visualeffect.lock.rippleink.RippleInkEffect;
+import com.samsung.android.visualeffect.lock.sparklingbubbles.SparklingBubblesEffect_GL;
+import com.samsung.android.visualeffect.lock.watercolor.WaterColorEffect;
 
 /* loaded from: classes.dex */
 public class InnerViewManager {
     public static IEffectView getInstance(Context context, int argv) {
-        if (argv == 0) {
+        if (argv == EffectType.ABSTRACT_TILES) {
             return new AbstractTileEffect(context);
-        }/*
-        else if (argv == 1) {
-            return new GeometricMosaicEffect(context);
         }
+        else if (argv == EffectType.GEOMETRIC_MOSAIC) {
+            return new GeometricMosaicEffect(context);
+        }/*
         else if (argv == 2) {
             return new CircleUnlockEffect(context);
-        }
-        else if (argv == 3) {
+        }*/
+        else if (argv == EffectType.POPPING_COLOUR) {
             return new ParticleSpaceEffect(context);
         }
-        else if (argv == 4) {
+        else if (argv == EffectType.PARTICLE_MUSIC) {
             return new ParticleEffect(context);
         }
-        else if (argv == 5) {
+        else if (argv == EffectType.WATERCOLOR) {
             return new WaterColorEffect(context);
         }
         else if (argv == 6) {
             return new BrilliantCutEffect(context);
-        } */
-        else if (argv == 7) {
+        }
+        else if (argv == EffectType.BRILLIANT_RING) {
             return new BrilliantRingEffect(context);
-        } /*
-        else if (argv == 8) {
+        }
+        else if (argv == EffectType.RIPPLE_INK) {
             return new RippleInkEffect(context);
         }
-        else if (argv == 9) {
+        else if (argv == EffectType.INDIGO_DIFFUSE) {
             return new IndigoDiffusionEffect(context);
         }
-        else if (argv == 10) {
+        else if (argv == EffectType.BLIND) {
             return new BlindEffect(context);
-        } */
-        else if (argv == 11) {
+        }
+        else if (argv == EffectType.LENSFLARE) {
             return new LensFlareEffect(context);
         }
-        /* else if (argv == 12) {
-            return new WaterDropletEffect_GL(context);
-        }
+        else if (argv == EffectType.WATER_DROPLET_GL) {
+            return new DropletEffect_GL(context, false);
+        } /*
         else if (argv == 13) {
             return new WaterDropletEffect_TV(context);
-        }
-        else if (argv == 14) {
+        } */
+        else if (argv == EffectType.SPARKLING_BUBBLES_GL) {
             return new SparklingBubblesEffect_GL(context);
         }
-        else if (argv == 15) {
+        /*else if (argv == 15) {
             return new SparklingBubblesEffect_TV(context);
+        }*/
+        else if (argv == EffectType.COLOUR_DROPLET_GL) {
+            return new DropletEffect_GL(context, true);
         }
-        else if (argv == 16) {
-            return new ColourDropletEffect_GL(context);
-        }
-        else if (argv == 17) {
+        /*else if (argv == 17) {
             return new ColourDropletEffect_TV(context);
         }
 */

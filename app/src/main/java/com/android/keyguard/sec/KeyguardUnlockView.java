@@ -11,7 +11,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.FrameLayout;
 
 /* loaded from: classes.dex */
-public class KeyguardUnlockView extends FrameLayout implements KeyguardUnlockEventHandler.UnlockCallback {
+public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandler.UnlockCallback {
     private static final String TAG = "KeyguardUnlockView";
     private final int FADE_IN_OUT_ANIMATION_DURATION;
     private Context mContext;
@@ -52,7 +52,7 @@ public class KeyguardUnlockView extends FrameLayout implements KeyguardUnlockEve
         this.mFadeInAnimation.setDuration(300L);
         this.mFadeOutAnimation.setFillAfter(true);
         this.mFadeOutAnimation.setDuration(100L);
-        this.mKeyguardUnlockEventHandler = new KeyguardUnlockEventHandler(this, KeyguardEffectViewController.getInstance(context));
+        this.mKeyguardUnlockEventHandler = new KeyguardUnlockEventHandler(KeyguardEffectViewController.getInstance(context), context);
         this.mContext = context;
 
     }
@@ -156,7 +156,7 @@ public class KeyguardUnlockView extends FrameLayout implements KeyguardUnlockEve
         }
     }
 
-    @Override // com.android.keyguard.KeyguardSecurityView
+    @Override // com.android.keyguard.KeyguardSecurityView // todo most important
     public void showBouncer(int duration) {
         this.mIsBouncing = true;
         Rect outRect = new Rect();
@@ -169,7 +169,7 @@ public class KeyguardUnlockView extends FrameLayout implements KeyguardUnlockEve
         this.mIsBouncing = false;
     }*/
 
-    @Override // com.android.keyguard.sec.KeyguardUnlockEventHandler.UnlockCallback
+    /*@Override // com.android.keyguard.sec.KeyguardUnlockEventHandler.UnlockCallback
     public void userActivity() {
 
     }
@@ -191,5 +191,5 @@ public class KeyguardUnlockView extends FrameLayout implements KeyguardUnlockEve
 
     @Override // com.android.keyguard.sec.KeyguardUnlockEventHandler.UnlockCallback
     public void onUnlockViewSwiped(boolean swiped) {
-    }
+    } */
 }

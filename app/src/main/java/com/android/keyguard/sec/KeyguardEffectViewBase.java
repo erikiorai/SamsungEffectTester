@@ -35,6 +35,5 @@ public interface KeyguardEffectViewBase {
 
     void update();
 
-    // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     void setContextualWallpaper(Bitmap bmp);
 }

@@ -1,6 +1,7 @@
 package com.android.keyguard.sec;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.res.Resources;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -13,7 +14,7 @@ import com.aj.effect.R;
 public class KeyguardUnlockEventHandler {
     private static final boolean DEBUG = true;
     private static final String TAG = "KeyguardUnlockEventHandler";
-    private UnlockCallback mCallback;
+    private UnlockCallback mCallback = null;
     private final int mFirstBorder;
     private final int mSecondBorder;
     private float mStartX;
@@ -38,10 +39,10 @@ public class KeyguardUnlockEventHandler {
         void userActivity();
     }
 
-    public KeyguardUnlockEventHandler(UnlockCallback callback, KeyguardEffectViewBase unlockView) {
+    public KeyguardUnlockEventHandler(KeyguardEffectViewBase unlockView, Context context) {
         this.mUnlockView = unlockView;
-        this.mCallback = callback;
-        Resources res = ((View) callback).getContext().getResources();
+        //this.mCallback = callback;
+        Resources res = context.getResources();
         this.mFirstBorder = (int) res.getDimension(R.dimen.keyguard_lockscreen_first_border);
         this.mSecondBorder = (int) res.getDimension(R.dimen.keyguard_lockscreen_second_border);
     }
@@ -121,7 +122,7 @@ public class KeyguardUnlockEventHandler {
                 int diffY = (int) (touchedEventY - mStartY);
                 mDistance = Math.sqrt(Math.pow(diffX, 2.0d) + Math.pow(diffY, 2.0d));
                 if (view != null) {
-                    if (view.getHeight() / 2 < mDistance) {
+                    if (view.getHeight() / 2.0 < mDistance) {
                         if (mCallback != null) {
                             mCallback.onUnlockViewSwiped(true);
                         }
