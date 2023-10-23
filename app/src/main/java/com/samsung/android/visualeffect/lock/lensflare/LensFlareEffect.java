@@ -23,6 +23,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.aj.effect.QuintEaseOut;
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.IEffectView;
@@ -87,7 +88,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     private float currentX;
     private float currentY;
     private Bitmap.Config defaultConfig;
-    private final float defaultInSampleSize = 0.8f;
+    private final float defaultInSampleSize = 0.75f; // todo: size
     private double distance;
     private float distancePerMaxAlpha;
     private ValueAnimator fadeOutAnimator;
@@ -297,10 +298,9 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             Log.d("LensFlare", "this.getChildCount() == 0");
             DisplayMetrics dm = new DisplayMetrics();
             WindowManager dis = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-            dis.getDefaultDisplay().getRealMetrics(dm);
-            // todo getResources().getDisplayMetrics();
-            this.screenWidth = dm.widthPixels;
-            this.screenHeight = dm.heightPixels;
+            Rect rect = Utils.getViewRect(dm, dis);
+            screenWidth = rect.width();
+            screenHeight = rect.height();
             int smallestWidth = Math.min(this.screenWidth, this.screenHeight);
             Log.d("LensFlare", "lensFlareinit ============================");
             Log.d("LensFlare", "screenWidth : " + this.screenWidth);
@@ -998,7 +998,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
                     hoverExit();
                     break;
                 case MotionEvent.ACTION_HOVER_MOVE:
-                    hoverMove(event.getRawX(), event.getRawY());
+                    hoverMove(event.getX(), event.getY());
                     break;
                 case MotionEvent.ACTION_HOVER_ENTER:
                     if ((event.getSource() & 16386) == 16386 || (event.getSource() & 8194) == 8194) {
@@ -1007,7 +1007,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
                         this.Y_OFFSET = this.FINGER_HOVER_Y_OFFSET;
                     }
                     Log.d("LensFlare", "InputDevice.SOURCE_STYLUS = 16386, Y_OFFSET = " + this.Y_OFFSET);
-                    hoverEnter(event.getRawX(), event.getRawY());
+                    hoverEnter(event.getX(), event.getY());
                     break;
             }
         }
@@ -1066,9 +1066,9 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
                 this.Y_OFFSET = this.FINGER_HOVER_Y_OFFSET;
             }
             Log.d("LensFlare", "InputDevice.SOURCE_STYLUS = 16386, Y_OFFSET = " + this.Y_OFFSET);
-            showLight(event.getRawX(), event.getRawY());
+            showLight(event.getX(), event.getY());
         } else if (event.getActionMasked() == 2 && event.getActionIndex() == 0) {
-            move(event.getRawX(), event.getRawY());
+            move(event.getX(), event.getY());
         } else if (event.getActionMasked() == 1 || event.getActionMasked() == 3) {
             hide();
         }

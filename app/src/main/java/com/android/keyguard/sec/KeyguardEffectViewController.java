@@ -1240,6 +1240,18 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
             case EFFECT_COLOURDROPLET:
                 nameOfEffect = "ColourDroplet";
                 break;
+            case 18: // todo NEW EFFECTS
+                nameOfEffect = "Morphing";
+                break;
+            case 19:
+                nameOfEffect = "PoppingColor";
+                break;
+            case 20:
+                nameOfEffect = "RectangleTraveller";
+                break;
+            case 21:
+                nameOfEffect = "BouncingColor";
+                break;
             case EFFECT_SPRING:
                 nameOfEffect = "Spring";
                 break;
@@ -1374,6 +1386,9 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         }
     }
 
+    public KeyguardEffectViewBase getUnlockEffect() {
+        return mUnlockEffectView;
+    }
 
     @SuppressLint("LongLogTag")
     private void makeEffectViews(int effect) {

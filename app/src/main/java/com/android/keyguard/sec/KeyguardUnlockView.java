@@ -13,19 +13,14 @@ import android.widget.FrameLayout;
 /* loaded from: classes.dex */
 public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandler.UnlockCallback {
     private static final String TAG = "KeyguardUnlockView";
-    private final int FADE_IN_OUT_ANIMATION_DURATION;
+    private final int FADE_IN_OUT_ANIMATION_DURATION = 300;
     private Context mContext;
-    private AlphaAnimation mFadeInAnimation;
-    private AlphaAnimation mFadeOutAnimation;
-    private boolean mIsBouncing;
-    private boolean mIsHelpTextEnabled;
-    private boolean mIsKeyguardDismissing;
-    private boolean mIsMultiTouch;
-    private boolean mIsTouchExplorationEnabled;
+    private AlphaAnimation mFadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
+    private AlphaAnimation mFadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
     private KeyguardUnlockEventHandler mKeyguardUnlockEventHandler;
     private long mResumedTimeMillis;
     private KeyguardEffectViewBase mUnlockView;
-    private Handler mHandler;
+    private Handler mHandler = new Handler();
 
     public KeyguardUnlockView(Context context) {
         this(context, null);
@@ -33,18 +28,7 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
 
     public KeyguardUnlockView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.mIsBouncing = false;
         mResumedTimeMillis = System.currentTimeMillis();
-        this.FADE_IN_OUT_ANIMATION_DURATION = 300;
-        this.mFadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
-        this.mFadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
-        this.mKeyguardUnlockEventHandler = null;
-        this.mIsHelpTextEnabled = false;
-        this.mIsTouchExplorationEnabled = false;
-        this.mIsKeyguardDismissing = false;
-        this.mIsMultiTouch = false;
-        mHandler = new Handler();
-
         setFocusable(true);
         setFocusableInTouchMode(true);
         requestFocus();
@@ -58,7 +42,7 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
     }
 
     @Override // android.view.View
-    protected void onFinishInflate() {
+    public void onFinishInflate() {
         super.onFinishInflate();
         this.mUnlockView = KeyguardEffectViewController.getInstance(this.mContext);
     }
@@ -81,6 +65,11 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
         return this.mKeyguardUnlockEventHandler.handleTouchEvent(null, event);
     }
 
+    @Override
+    public boolean onHoverEvent(MotionEvent event) {
+        return super.onHoverEvent(event);
+    }
+
     @Override // android.view.View
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
@@ -88,11 +77,6 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
             this.mKeyguardUnlockEventHandler.reset();
         }
     }
-
-    public void reset() {
-        mKeyguardUnlockEventHandler.reset();
-    }
-
 
     // idk even what is this.
     /*private void pokeWakelockWithTimeCheck() {

@@ -2,6 +2,7 @@ package com.samsung.android.visualeffect;
 
 import android.content.Context;
 
+import com.samsung.android.visualeffect.lock.CircleMorphingWrappedEffect;
 import com.samsung.android.visualeffect.lock.abstracttile.AbstractTileEffect;
 import com.samsung.android.visualeffect.lock.blind.BlindEffect;
 import com.samsung.android.visualeffect.lock.brilliantcut.BrilliantCutEffect;
@@ -37,7 +38,7 @@ public class InnerViewManager {
         else if (argv == EffectType.WATERCOLOR) {
             return new WaterColorEffect(context);
         }
-        else if (argv == 6) {
+        else if (argv == EffectType.BRILLIANT_CUT) {
             return new BrilliantCutEffect(context);
         }
         else if (argv == EffectType.BRILLIANT_RING) {
@@ -72,8 +73,20 @@ public class InnerViewManager {
         }
         /*else if (argv == 17) {
             return new ColourDropletEffect_TV(context);
+        }*/
+        else if (argv == 18) {
+            return new CircleMorphingWrappedEffect(context);
         }
-*/
+        /* todo else if (argv == 19) {
+            return new EffectViewPoppingColor(context);
+        }
+        else if (argv == 20) {
+            return new EffectViewRectangleTraveller(context);
+        }
+        else if (argv == 21) {
+            return new EffectViewBouncingColor(context);
+        }*/
+
         return null;
     }
 }

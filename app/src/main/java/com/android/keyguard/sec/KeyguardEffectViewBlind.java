@@ -90,11 +90,11 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
     }
 
     private void init(Context context) {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : Constructor");
+        Log.d(TAG, "KeyguardEffectViewBlind : Constructor");
         this.mContext = context.getApplicationContext();
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : onPreExecute");
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : isAsyncPostExecuted = " + KeyguardEffectViewBlind.this.isInit);
+        Log.d(TAG, "KeyguardEffectViewBlind : onPreExecute");
+        Log.d(TAG, "KeyguardEffectViewBlind : isAsyncPostExecuted = " + KeyguardEffectViewBlind.this.isInit);
         this.light = BitmapFactory.decodeResource(KeyguardEffectViewBlind.this.getContext().getResources(), R.drawable.keyguard_blind_light);
         KeyguardEffectViewBlind.this.blindEffect = new EffectView(KeyguardEffectViewBlind.this.mContext);
         KeyguardEffectViewBlind.this.blindEffect.setEffect(10);
@@ -107,25 +107,25 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
         hm1.put("background", KeyguardEffectViewBlind.this.setBackground());
         KeyguardEffectViewBlind.this.blindEffect.handleCustomEvent(0, hm1);
         KeyguardEffectViewBlind.this.blindEffect.init(KeyguardEffectViewBlind.this.data);
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : doInBackground");
+        Log.d(TAG, "KeyguardEffectViewBlind : doInBackground");
         KeyguardEffectViewBlind.this.addView(KeyguardEffectViewBlind.this.blindEffect);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public Bitmap setBackground() {
-        Log.d("BlindEffect", "setBackground");
+        Log.d(TAG, "setBackground");
         Bitmap pBitmap = null;
         try {
             pBitmap = MainActivity.bitm; // todo bitmap
             if (pBitmap != null) {
-                Log.d("BlindEffect", "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
+                Log.d(TAG, "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
                 for (int i = 1; i <= 2; i++) {
                     for (int j = 1; j <= 2; j++) {
                         int pixel = pBitmap.getPixel((pBitmap.getWidth() / 3) * i, (pBitmap.getHeight() / 3) * j);
                         int redValue = Color.red(pixel);
                         int blueValue = Color.blue(pixel);
                         int greenValue = Color.green(pixel);
-                        Log.d("BlindEffect", "pBitmap.getPixel(" + ((pBitmap.getWidth() / 3) * i) + "," + ((pBitmap.getHeight() / 3) * j) + ") : " + redValue + " " + greenValue + " " + blueValue);
+                        Log.d(TAG, "pBitmap.getPixel(" + ((pBitmap.getWidth() / 3) * i) + "," + ((pBitmap.getHeight() / 3) * j) + ") : " + redValue + " " + greenValue + " " + blueValue);
                     }
                 }
             }
@@ -138,7 +138,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
     private void makeSound() {
         stopReleaseSound();
         if (this.mSoundPool == null) {
-            Log.d("BlindEffect", "new SoundPool");
+            Log.d(TAG, "new SoundPool");
             this.sounds = new int[3];
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
@@ -153,7 +153,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
             @Override // java.lang.Runnable
             public void run() {
                 if (KeyguardEffectViewBlind.this.mSoundPool != null) {
-                    Log.d("BlindEffect", "releaseSound");
+                    Log.d(TAG, "releaseSound");
                     KeyguardEffectViewBlind.this.mSoundPool.release();
                     KeyguardEffectViewBlind.this.mSoundPool = null;
                 }
@@ -188,7 +188,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
     protected void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         if (this.isWindowFocused) {
-            Log.d("BlindEffect", "KeyguardEffectViewBlind : onConfigurationChanged");
+            Log.d(TAG, "KeyguardEffectViewBlind : onConfigurationChanged");
         }
         HashMap<String, Boolean> hm0 = new HashMap<>();
         hm0.put("onConfigurationChanged", this.isWindowFocused);
@@ -197,7 +197,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void show() {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : show");
+        Log.d(TAG, "KeyguardEffectViewBlind : show");
         HashMap<String, Boolean> hm0 = new HashMap<>();
         hm0.put("show", true);
         this.blindEffect.handleCustomEvent(99, hm0);
@@ -206,12 +206,12 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void reset() {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : reset");
+        Log.d(TAG, "KeyguardEffectViewBlind : reset");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void cleanUp() {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : cleanUp");
+        Log.d(TAG, "KeyguardEffectViewBlind : cleanUp");
         this.blindEffect.clearScreen();
         stopReleaseSound();
         releaseSound();
@@ -219,7 +219,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : update");
+        Log.d(TAG, "KeyguardEffectViewBlind : update");
         HashMap<String, Bitmap> hm0 = new HashMap<>();
         hm0.put("background", setBackground());
         this.blindEffect.handleCustomEvent(0, hm0);
@@ -232,12 +232,12 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOn() {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : screenTurnedOn");
+        Log.d(TAG, "KeyguardEffectViewBlind : screenTurnedOn");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOff() {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : screenTurnedOff");
+        Log.d(TAG, "KeyguardEffectViewBlind : screenTurnedOff");
         if (this.isInit) {
             HashMap<String, Boolean> hm0 = new HashMap<>();
             hm0.put("initAnimationValue", true);
@@ -248,7 +248,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void showUnlockAffordance(long startDelay, Rect rect) {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : showUnlockAffordance");
+        Log.d(TAG, "KeyguardEffectViewBlind : showUnlockAffordance");
         HashMap<String, Object> hm0 = new HashMap<>();
         hm0.put("StartDelay", startDelay);
         hm0.put("Rect", rect);
@@ -262,7 +262,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void handleUnlock(View view, MotionEvent event) {
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : handleUnlock (exit xml animation removed)");
+        Log.d(TAG, "KeyguardEffectViewBlind : handleUnlock (exit xml animation removed)");
         HashMap<String, Boolean> hm0 = new HashMap<>();
         hm0.put("unlock", true);
         this.blindEffect.handleCustomEvent(2, hm0);
@@ -272,7 +272,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void playLockSound() {
         playSound(SOUND_ID_LOCK);
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : playLockSound");
+        Log.d(TAG, "KeyguardEffectViewBlind : playLockSound");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
@@ -281,7 +281,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
         if (event.getActionMasked() == 0) {
             stopReleaseSound();
             if (this.mSoundPool == null) {
-                Log.d("BlindEffect", "ACTION_DOWN, mSoundPool == null");
+                Log.d(TAG, "ACTION_DOWN, mSoundPool == null");
                 makeSound();
             }
             playSound(0);
@@ -292,7 +292,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
     @Override // android.view.View
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        Log.d("BlindEffect", "KeyguardEffectViewBlind : onWindowFocusChanged " + hasWindowFocus);
+        Log.d(TAG, "KeyguardEffectViewBlind : onWindowFocusChanged " + hasWindowFocus);
         this.isWindowFocused = hasWindowFocus;
     }
 

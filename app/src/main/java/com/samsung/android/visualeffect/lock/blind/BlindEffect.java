@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.aj.effect.QuintEaseOut;
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.IEffectView;
@@ -43,13 +44,13 @@ class QuadEaseIn extends BaseInterpolator {
 
 /* loaded from: classes.dex */
 public class BlindEffect extends FrameLayout implements IEffectView {
-    private final boolean DBG;
-    private final int DOWN_ANIMATION_DURATION;
-    private final String TAG;
-    private final int TOTAL_COLUMN_LANDSCAPE;
-    private final int TOTAL_COLUMN_PORTRAIT;
+    private final boolean DBG = true;
+    private final long DOWN_ANIMATION_DURATION = 200L;
+    private final String TAG = "BlindEffect";
+    private final int TOTAL_COLUMN_LANDSCAPE = 40;
+    private final int TOTAL_COLUMN_PORTRAIT = 25;
     private int UNLOCK_ALPHA_ANIMATION_DURATION;
-    private final int UP_ANIMATION_DURATION;
+    private final long UP_ANIMATION_DURATION = 1000L;
     private Runnable affordanceRunnableDown;
     private Runnable affordanceRunnableUp;
     float affordanceX;
@@ -107,54 +108,21 @@ public class BlindEffect extends FrameLayout implements IEffectView {
 
     public BlindEffect(Context context) {
         super(context);
-        this.TAG = "BlindEffect";
-        this.DBG = true;
-        this.light = null;
-        this.pushAnimationMin = 0.0f;
-        this.pointX = -1.0f;
-        this.pointY = -1.0f;
-        this.point2X = -1.0f;
-        this.dm = new DisplayMetrics();
-        WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(dm);
-        this.totalColumn = 0;
-        this.isLandscape = true;
-        this.isInitialized = false;
-        this.UNLOCK_ALPHA_ANIMATION_DURATION = 500;
-        this.DOWN_ANIMATION_DURATION = 200;
-        this.UP_ANIMATION_DURATION = 1000;
-        this.TOTAL_COLUMN_LANDSCAPE = 40;
-        this.TOTAL_COLUMN_PORTRAIT = 25;
         constructor(context);
     }
 
     public BlindEffect(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.TAG = "BlindEffect";
-        this.DBG = true;
-        this.light = null;
-        this.pushAnimationMin = 0.0f;
-        this.pointX = -1.0f;
-        this.pointY = -1.0f;
-        this.point2X = -1.0f;
-        this.dm = new DisplayMetrics();
-        WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(dm);
-        this.totalColumn = 0;
-        this.isLandscape = true;
-        this.isInitialized = false;
-        this.UNLOCK_ALPHA_ANIMATION_DURATION = 500;
-        this.DOWN_ANIMATION_DURATION = 200;
-        this.UP_ANIMATION_DURATION = 1000;
-        this.TOTAL_COLUMN_LANDSCAPE = 40;
-        this.TOTAL_COLUMN_PORTRAIT = 25;
         constructor(context);
     }
 
     public BlindEffect(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.TAG = "BlindEffect";
-        this.DBG = true;
+        constructor(context);
+    }
+
+    private void constructor(Context context) {
+        Log.d(TAG, "Constructor");
         this.light = null;
         this.pushAnimationMin = 0.0f;
         this.pointX = -1.0f;
@@ -162,29 +130,21 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         this.point2X = -1.0f;
         this.dm = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(dm);
+        Rect rect = Utils.getViewRect(dm, mWindowManager);
+        stageWidth = rect.width();
+        stageHeight = rect.height();
         this.totalColumn = 0;
         this.isLandscape = true;
         this.isInitialized = false;
         this.UNLOCK_ALPHA_ANIMATION_DURATION = 500;
-        this.DOWN_ANIMATION_DURATION = 200;
-        this.UP_ANIMATION_DURATION = 1000;
-        this.TOTAL_COLUMN_LANDSCAPE = 40;
-        this.TOTAL_COLUMN_PORTRAIT = 25;
-        constructor(context);
-    }
 
-    private void constructor(Context context) {
-        Log.d("BlindEffect", "Constructor");
         this.mContext = context;
-        this.stageWidth = this.dm.widthPixels;
-        this.stageHeight = this.dm.heightPixels;
         this.longWidth = Math.max(this.stageWidth, this.stageHeight);
         this.shortWidth = Math.min(this.stageWidth, this.stageHeight);
     }
 
     private void setBackgroundImage(Bitmap backgroundImage) {
-        Log.d("BlindEffect", "setBackgroundImage : " + backgroundImage.getWidth() + " x " + backgroundImage.getHeight());
+        Log.d(TAG, "setBackgroundImage : " + backgroundImage.getWidth() + " x " + backgroundImage.getHeight());
         this.bitmapLandscape = getScaledBitmap(backgroundImage, this.longWidth, this.shortWidth);
         this.bitmapPortrait = getScaledBitmap(backgroundImage, this.shortWidth, this.longWidth);
         if (this.isInitialized) {
@@ -213,12 +173,12 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private void setLightImage(Bitmap lightImage) {
-        Log.d("BlindEffect", "setLightImage : " + lightImage.getWidth() + " x " + lightImage.getHeight());
+        Log.d(TAG, "setLightImage : " + lightImage.getWidth() + " x " + lightImage.getHeight());
         this.light = lightImage;
     }
 
     private void blindEffectInit() {
-        Log.d("BlindEffect", "blindEffectInit");
+        Log.d(TAG, "blindEffectInit");
         this.cm = new ColorMatrix();
         this.layoutLandscape = new FrameLayout(this.mContext);
         this.layoutLandscape.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
@@ -236,13 +196,15 @@ public class BlindEffect extends FrameLayout implements IEffectView {
 
     private void resetOrientation(boolean isWindowFocused) {
         clearEffect();
-        this.stageWidth = this.dm.widthPixels;
-        this.stageHeight = this.dm.heightPixels;
+        WindowManager mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
+        Rect rect = Utils.getViewRect(dm, mWindowManager);
+        stageWidth = rect.width();
+        stageHeight = rect.height();
         this.isLandscape = this.stageWidth > this.stageHeight;
         if (isWindowFocused) {
-            Log.d("BlindEffect", "resetOrientation : isLandscape = " + this.isLandscape + ", " + this.stageWidth + " x " + this.stageHeight);
+            Log.d(TAG, "resetOrientation : isLandscape = " + this.isLandscape + ", " + this.stageWidth + " x " + this.stageHeight);
         }
-        this.totalColumn = this.isLandscape ? 40 : 25;
+        this.totalColumn = this.isLandscape ? TOTAL_COLUMN_LANDSCAPE : TOTAL_COLUMN_PORTRAIT;
         if (this.isLandscape) {
             this.layoutLandscape.setVisibility(View.VISIBLE);
             this.layoutPortrait.setVisibility(View.GONE);
@@ -255,7 +217,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     private void setAnimator() {
         this.downAnimator = ValueAnimator.ofFloat(0.3f, 1.0f);
         this.downAnimator.setInterpolator(new QuintEaseOut());
-        this.downAnimator.setDuration(200L);
+        this.downAnimator.setDuration(DOWN_ANIMATION_DURATION);
         this.downAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.1
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -265,7 +227,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         });
         this.upAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
         this.upAnimator.setInterpolator(new QuintEaseOut());
-        this.upAnimator.setDuration(1000L);
+        this.upAnimator.setDuration(UP_ANIMATION_DURATION);
         this.upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.2
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -376,9 +338,9 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private void setBlind() {
-        this.blindLandscape = new Blind[40];
+        this.blindLandscape = new Blind[TOTAL_COLUMN_LANDSCAPE];
         int blindX = 0;
-        for (int i = 0; i < 40; i++) {
+        for (int i = 0; i < TOTAL_COLUMN_LANDSCAPE; i++) {
             int nextX = getBlindX(i + 1, true);
             int blindWidth = nextX - blindX;
             Bitmap pieceBitmap = Bitmap.createBitmap(this.bitmapLandscape, blindX, 0, blindWidth, this.shortWidth);
@@ -389,9 +351,9 @@ public class BlindEffect extends FrameLayout implements IEffectView {
             this.layoutLandscape.addView(blind, blindWidth, this.shortWidth);
             blindX = nextX;
         }
-        this.blindPortrait = new Blind[25];
+        this.blindPortrait = new Blind[TOTAL_COLUMN_PORTRAIT];
         int blindX2 = 0;
-        for (int i2 = 0; i2 < 25; i2++) {
+        for (int i2 = 0; i2 < TOTAL_COLUMN_PORTRAIT; i2++) {
             int nextX2 = getBlindX(i2 + 1, false);
             int blindWidth2 = nextX2 - blindX2;
             Bitmap pieceBitmap2 = Bitmap.createBitmap(this.bitmapPortrait, blindX2, 0, blindWidth2, this.longWidth);
@@ -417,7 +379,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         this.affordanceRunnableDown = new Runnable() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.6
             @Override // java.lang.Runnable
             public void run() {
-                Log.d("BlindEffect", "affordanceRunnableDown");
+                Log.d(TAG, "affordanceRunnableDown");
                 BlindEffect.this.playDownAnimator(BlindEffect.this.affordanceX, BlindEffect.this.affordanceY);
                 BlindEffect.this.startAffordanceRunnableUp(100L);
             }
@@ -425,20 +387,20 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         this.affordanceRunnableUp = new Runnable() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.7
             @Override // java.lang.Runnable
             public void run() {
-                Log.d("BlindEffect", "affordanceRunnableUp");
+                Log.d(TAG, "affordanceRunnableUp");
                 BlindEffect.this.playUpAnimator();
             }
         };
     }
 
     private void backgroundImageUpdate() {
-        Log.d("BlindEffect", "backgroundImageUpdate");
-        for (int i = 0; i < 40; i++) {
+        Log.d(TAG, "backgroundImageUpdate");
+        for (int i = 0; i < TOTAL_COLUMN_LANDSCAPE; i++) {
             Blind blind = this.blindLandscape[i];
             Bitmap pieceBitmap = Bitmap.createBitmap(this.bitmapLandscape, blind.getBlindX(), 0, blind.getBlindWidth(), this.shortWidth);
             blind.changeBitmap(pieceBitmap);
         }
-        for (int i2 = 0; i2 < 25; i2++) {
+        for (int i2 = 0; i2 < TOTAL_COLUMN_PORTRAIT; i2++) {
             Blind blind2 = this.blindPortrait[i2];
             Bitmap pieceBitmap2 = Bitmap.createBitmap(this.bitmapPortrait, blind2.getBlindX(), 0, blind2.getBlindWidth(), this.longWidth);
             blind2.changeBitmap(pieceBitmap2);
@@ -458,10 +420,9 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private int getBlindX(int i, boolean isLandscape) {
-        int column = isLandscape ? 40 : 25;
+        int column = isLandscape ? TOTAL_COLUMN_LANDSCAPE : TOTAL_COLUMN_PORTRAIT;
         int width = isLandscape ? this.longWidth : this.shortWidth;
-        int x = Math.round((i * width) / column);
-        return x;
+        return Math.round((i * width) / column);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -493,12 +454,12 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private void unlockEffect() {
-        Log.d("BlindEffect", "unlockEffect");
+        Log.d(TAG, "unlockEffect");
     }
 
     /* JADX INFO: Access modifiers changed from: private */
     public void unlockFinished() {
-        Log.d("BlindEffect", "unlockFinished");
+        Log.d(TAG, "unlockFinished");
     }
 
     private void clearEffect() {
@@ -506,12 +467,12 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         if (this.blindLandscape != null && this.blindPortrait != null) {
             this.layoutLandscape.setAlpha(1.0f);
             this.layoutPortrait.setAlpha(1.0f);
-            for (int i = 0; i < 40; i++) {
+            for (int i = 0; i < TOTAL_COLUMN_LANDSCAPE; i++) {
                 this.blindLandscape[i].setScaleX(1.0f);
                 this.blindLandscape[i].setScaleY(1.0f);
                 this.blindLandscape[i].setColorFilter((ColorFilter) null);
             }
-            for (int i2 = 0; i2 < 25; i2++) {
+            for (int i2 = 0; i2 < TOTAL_COLUMN_PORTRAIT; i2++) {
                 this.blindPortrait[i2].setScaleX(1.0f);
                 this.blindPortrait[i2].setScaleY(1.0f);
                 this.blindPortrait[i2].setColorFilter((ColorFilter) null);
@@ -528,13 +489,13 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private void show() {
-        Log.d("BlindEffect", "show (BlindEffect)");
+        Log.d(TAG, "show (BlindEffect)");
         clearEffect();
         resetOrientation(true);
     }
 
     private void destroy() {
-        Log.d("BlindEffect", "destroy");
+        Log.d(TAG, "destroy");
         cancelAllAnimator();
     }
 
@@ -552,7 +513,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private void showAffordanceEffect(long startDelay, Rect rect) {
-        Log.d("BlindEffect", "showUnlockAffordance : " + rect.left + ", " + rect.right + ", " + rect.top + ", " + rect.bottom + ", startDelay : " + startDelay);
+        Log.d(TAG, "showUnlockAffordance : " + rect.left + ", " + rect.right + ", " + rect.top + ", " + rect.bottom + ", startDelay : " + startDelay);
         this.affordanceX = rect.left + ((rect.right - rect.left) / 2);
         this.affordanceY = rect.top + ((rect.bottom - rect.top) / 2);
         removeCallbacks(this.affordanceRunnableDown);
@@ -614,10 +575,10 @@ public class BlindEffect extends FrameLayout implements IEffectView {
 
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleTouchEvent(MotionEvent event, View view) {
-        float x = event.getRawX();
-        float y = event.getRawY();
+        float x = event.getX();
+        float y = event.getY();
         if (event.getActionMasked() == 0) {
-            Log.d("BlindEffect", "handleTouchEvent : ACTION_DOWN");
+            Log.d(TAG, "handleTouchEvent : ACTION_DOWN");
             removeCallbacks(this.affordanceRunnableDown);
             removeCallbacks(this.affordanceRunnableUp);
             playDownAnimator(x, y);
@@ -629,7 +590,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
             this.lastX = x;
             this.lastY = y;
         } else if (event.getActionMasked() == 1 || event.getActionMasked() == 3) {
-            Log.d("BlindEffect", "handleTouchEvent : ACTION_UP || ACTION_CANCEL");
+            Log.d(TAG, "handleTouchEvent : ACTION_UP || ACTION_CANCEL");
             playUpAnimator();
         }
     }

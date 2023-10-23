@@ -4,31 +4,39 @@ import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.android.keyguard.sec.KeyguardEffectViewBase;
+import com.android.keyguard.sec.KeyguardEffectViewBouncingColor;
 import com.android.keyguard.sec.KeyguardEffectViewController;
+import com.android.keyguard.sec.KeyguardEffectViewPoppingColor;
+import com.android.keyguard.sec.KeyguardEffectViewRectangleTraveller;
 import com.android.keyguard.sec.KeyguardUnlockView;
 
 public class MainActivity extends Activity {
 
     public static Bitmap bitm;
     public static Canvas canv;
-    public static Button multiactionButton;
+    public Button multiactionButton;
     public static boolean unlockBool;
 
     public static int effect = KeyguardEffectViewController.EFFECT_MONTBLANC;
@@ -40,6 +48,7 @@ public class MainActivity extends Activity {
     FrameLayout mBackgroundRootLayout;
     FrameLayout mForegroundRootLayout;
 
+    @TargetApi(Build.VERSION_CODES.R)
     @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +70,20 @@ public class MainActivity extends Activity {
         }
         mUnlockView.setUnlockView(mEffectView); */
 
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-        bitm = Bitmap.createBitmap(metrics.widthPixels, metrics.heightPixels, Bitmap.Config.ARGB_8888);
+        int width;
+        int height;
+
+        if (BuildConfig.DEBUG) {
+            WindowMetrics metrics = getWindowManager().getCurrentWindowMetrics();
+            width = metrics.getBounds().width();
+            height = metrics.getBounds().height();
+        } else {
+            DisplayMetrics metrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
+            width = metrics.widthPixels;
+            height = metrics.heightPixels;
+        }
+        bitm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canv = new Canvas(bitm);
 
         setContentView(R.layout.activity_main);
@@ -79,38 +99,47 @@ public class MainActivity extends Activity {
         Handler handler = new Handler();*/
 
         multiactionButton = findViewById(R.id.multiact);
-        multiactionButton.setOnClickListener(v -> {
-            mUnlockView.reset();
-            controller.reset();
-            multiactionButton.setAlpha(0.5F);
-            multiactionButton.setText(R.string.wall);
-        });
-        //WallpaperManager wallpaperManager = WallpaperManager.getInstance(this);
         Drawable realWall = getDrawable(R.drawable.bluesky); //wallpaperManager.getFastDrawable();
         Drawable wall = getDrawable(R.drawable.wall);
         Drawable wall1 = getDrawable(R.drawable.wall1);
         Drawable prev = getDrawable(R.drawable.setting_preview_unlock);
-        multiactionButton.setOnLongClickListener(v -> {
+        multiactionButton.setOnClickListener(v -> {
             if (imgView.getDrawable() == prev)
                 imgView.setImageDrawable(wall1);
             else if (imgView.getDrawable() == wall1)
                 imgView.setImageDrawable(realWall);
+            else if (imgView.getDrawable() == realWall)
+                imgView.setImageDrawable(wall);
             else
                 imgView.setImageDrawable(prev);
 
             imgView.draw(canv);
             controller.handleWallpaperImageChanged();
-            return true;
+            /*
+            mUnlockView.reset();
+            controller.reset();
+            multiactionButton.setAlpha(0.5F);
+            multiactionButton.setText(R.string.wall);*/
         });
+        /*multiactionButton.setOnLongClickListener(v -> {
+
+            return true;
+        });*/
 
         Button affordance = findViewById(R.id.affordance);
-        affordance.setOnClickListener(v -> {
-            mUnlockView.showUnlockAffordance();
-        });
+        affordance.setOnClickListener(v -> mUnlockView.showUnlockAffordance());
 
         Switch unlock = findViewById(R.id.unlock);
         unlockBool = unlock.isChecked();
         unlock.setOnCheckedChangeListener((compoundButton, b) -> unlockBool = b);
+
+        LinearLayout buttons = findViewById(R.id.buttons);
+        Switch palette = buttons.findViewById(R.id.palette);
+        Utils.usePCColorPalette = palette.isChecked();
+        palette.setOnCheckedChangeListener((c, b) -> Utils.usePCColorPalette = b);
+        Switch customActions = buttons.findViewById(R.id.customact);
+        Utils.customActions = customActions.isChecked();
+        customActions.setOnCheckedChangeListener((c, b) -> Utils.customActions = b);
 
         Button effectSwitch = findViewById(R.id.effectsw);
         effectSwitch.setText(R.string.unlock_effect);
@@ -164,6 +193,16 @@ public class MainActivity extends Activity {
         controller.screenTurnedOn();
         controller.show();
         mUnlockView.showUnlockAffordance();
+        KeyguardEffectViewBase effect = controller.getUnlockEffect();
+        if (effect instanceof KeyguardEffectViewPoppingColor ||
+                effect instanceof KeyguardEffectViewBouncingColor ||
+                effect instanceof KeyguardEffectViewRectangleTraveller) {
+            findViewById(R.id.palette).setVisibility(View.VISIBLE);
+            findViewById(R.id.customact).setVisibility(View.VISIBLE);
+        } else {
+            findViewById(R.id.palette).setVisibility(View.GONE);
+            findViewById(R.id.customact).setVisibility(View.GONE);
+        }
     }
 
     @Override

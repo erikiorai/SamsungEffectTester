@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -60,7 +61,7 @@ public class ParticleEffect extends View implements IEffectView {
         this.drawingMargin = 11;
         this.nextParticleIndex = -1;
         this.isPaused = false;
-        this.mHandler = new Handler() { // from class: com.samsung.android.visualeffect.lock.particle.ParticleEffect.1
+        this.mHandler = new Handler(Looper.getMainLooper()) { // from class: com.samsung.android.visualeffect.lock.particle.ParticleEffect.1
             @Override // android.os.Handler
             public void handleMessage(Message msg) {
                 if (ParticleEffect.this.isAvailableRect()) {

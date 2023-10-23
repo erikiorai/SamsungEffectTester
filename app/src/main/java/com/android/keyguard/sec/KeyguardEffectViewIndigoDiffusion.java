@@ -19,6 +19,7 @@ import android.view.WindowManager;
 
 import com.aj.effect.MainActivity;
 import com.aj.effect.R;
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.EffectView;
 import com.samsung.android.visualeffect.IEffectListener;
@@ -78,15 +79,15 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
         this.mContext = context;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        this.windowWidth = displayMetrics.widthPixels;
-        this.windowHeight = displayMetrics.heightPixels;
+        Rect rect = Utils.getViewRect(displayMetrics, mWindowManager);
+        windowWidth = rect.width();
+        windowHeight = rect.height();
         setEffect(9);
         EffectDataObj data = new EffectDataObj();
         data.setEffect(9);
         data.indigoDiffuseData.windowWidth = this.windowWidth;
         data.indigoDiffuseData.windowHeight = this.windowHeight;
-        data.indigoDiffuseData.reflectionBitmap = makeResBitmap(R.drawable.reflectionmap);
+        data.indigoDiffuseData.reflectionBitmap = makeResBitmap(R.drawable.keyguard_blind_light); // todo R.drawable.reflectionmap
         changeColor(35, 35, 85);
         init(data);
         this.sounds = new int[4];

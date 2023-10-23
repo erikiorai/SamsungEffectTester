@@ -5,11 +5,13 @@ import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.common.GLTextureView;
 
@@ -46,9 +48,9 @@ public class GLTextureViewRenderer implements GLTextureView.Renderer {
         Log.i(TAG, "onSurfaceCreated");
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        mWidth = displayMetrics.widthPixels;
-        mHeight = displayMetrics.heightPixels;
+        Rect rect = Utils.getViewRect(displayMetrics, mWindowManager);
+        mWidth = rect.width();
+        mHeight = rect.height();
         mIsNeedToReinit = true;
         drawCount = 0;
         ApplicationInfo m1 = mContext.getApplicationInfo();

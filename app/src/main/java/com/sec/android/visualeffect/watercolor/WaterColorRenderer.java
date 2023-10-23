@@ -205,8 +205,8 @@ public class WaterColorRenderer implements GLSurfaceView.Renderer {
     public boolean onTouchEvent(MotionEvent event) {
         int action = event.getActionMasked();
         boolean returnValue = false;
-        this.pointer_xpos[0] = (int) event.getRawX();
-        this.pointer_ypos[0] = (int) event.getRawY();
+        this.pointer_xpos[0] = (int) event.getX();
+        this.pointer_ypos[0] = (int) event.getY();
         Log.d("WaterColor_WaterColorRenderer", "onTouchEvent action = " + action);
         if (this.isCleanup || this.mDrawCount < 2) {
             Log.d("WaterColor_WaterColorRenderer", "isCleanup = " + this.isCleanup + ", mDrawCount = " + this.mDrawCount + "!!! return");
@@ -264,8 +264,8 @@ public class WaterColorRenderer implements GLSurfaceView.Renderer {
 
     public void onTouchEventForPatternLock(MotionEvent event) {
         int action = event.getActionMasked();
-        this.pointer_xpos[0] = (int) event.getRawX();
-        this.pointer_ypos[0] = (int) event.getRawY();
+        this.pointer_xpos[0] = (int) event.getX();
+        this.pointer_ypos[0] = (int) event.getY();
         Log.d("WaterColor_WaterColorRenderer", "onTouchEventForPatternLock action = " + action);
         if (this.isCleanup || this.mDrawCount < 2) {
             Log.d("WaterColor_WaterColorRenderer", "isCleanup = " + this.isCleanup + ", mDrawCount = " + this.mDrawCount + "!!! return");

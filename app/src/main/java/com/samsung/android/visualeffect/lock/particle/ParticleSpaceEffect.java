@@ -13,9 +13,12 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.IEffectView;
+
 import java.util.HashMap;
 
 /* loaded from: classes.dex */
@@ -92,9 +95,9 @@ public class ParticleSpaceEffect extends FrameLayout implements IEffectView {
         //DisplayMetrics dm = getResources().getDisplayMetrics();
         DisplayMetrics dm = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(dm);
-        this.stageWidth = dm.widthPixels;
-        this.stageHeight = dm.heightPixels;
+        Rect rect = Utils.getViewRect(dm, mWindowManager);
+        stageWidth = rect.width();
+        stageHeight = rect.height();
         if (this.DBG) {
             Log.d(this.TAG, "stage : " + this.stageWidth + " x " + this.stageHeight);
         }
@@ -286,8 +289,8 @@ public class ParticleSpaceEffect extends FrameLayout implements IEffectView {
 
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleTouchEvent(MotionEvent event, View view) {
-        this.currentX = event.getRawX();
-        this.currentY = event.getRawY();
+        this.currentX = event.getX();
+        this.currentY = event.getY();
         int color = getColor(this.currentX, this.currentY);
         if (event.getActionMasked() == 0) {
             if (this.DBG) {
@@ -295,7 +298,7 @@ public class ParticleSpaceEffect extends FrameLayout implements IEffectView {
             }
             this.isUnlocked = false;
             this.particleEffect.addDots(this.CREATED_DOTS_AMOUNT_DOWN, this.currentX, this.currentY, color);
-        } else if (event.getActionMasked() == 2 && event.getActionIndex() == 0) {
+        } else if (event.getActionMasked() == MotionEvent.ACTION_MOVE && event.getActionIndex() == 0) {
             if (!this.isUnlocked) {
                 this.particleEffect.addDots(this.CREATED_DOTS_AMOUNT_MOVE, this.currentX, this.currentY, color);
             }

@@ -13,7 +13,7 @@ public class EffectEnum {
     public EffectEnum(Integer name, int assigned, Integer drawable)
     {
         this.name = name == null ? R.string.unlock_effect : name;
-        this.assigned = assigned > 15 ? KeyguardEffectViewController.EFFECT_MONTBLANC : assigned; // TODO default effect
+        this.assigned = assigned; // TODO default effect
         this.drawable = drawable == null ? R.drawable.setting_preview_unlock_none : drawable;
     }
 
@@ -33,6 +33,10 @@ public class EffectEnum {
     public static final EffectEnum WATERDROPLET = new EffectEnum(R.string.unlock_effect_liquid, 13, R.drawable.setting_preview_unlock_liquid_w); // TODO lowres waterdroplet drawable
     public static final EffectEnum SPARKLINGBUBBLES = new EffectEnum(R.string.unlock_effect_particle, 14, R.drawable.setting_preview_unlock_particle);
     public static final EffectEnum COLOURDROPLET = new EffectEnum(R.string.unlock_effect_colour_droplet, 15, R.drawable.setting_preview_unlock_liquid);
+    public static final EffectEnum MORPHING = new EffectEnum(R.string.unlock_effect, 18, null);
+    public static final EffectEnum POPPINGGOODLOCK = new EffectEnum(R.string.unlock_effect_poppinggl, 19, null);
+    public static final EffectEnum RECTANGLETRAVELLER = new EffectEnum(R.string.unlock_effect_rectangle, 20, null);
+    public static final EffectEnum BOUNCINGCOLOR = new EffectEnum(R.string.unlock_effect_bouncing, 21, null);
 
     private static final List<EffectEnum> effectList = Arrays.asList(NONE,
             RIPPLE, LIGHTING, POPPINGCOLOURS, WATERCOLOUR, BLIND, EFFECT_MASS_TENSION,

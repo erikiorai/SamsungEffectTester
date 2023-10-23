@@ -22,6 +22,7 @@ import android.view.WindowManager;
 
 import com.aj.effect.MainActivity;
 import com.aj.effect.R;
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.EffectView;
 import com.samsung.android.visualeffect.IEffectListener;
@@ -112,9 +113,9 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
         };
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        this.windowWidth = displayMetrics.widthPixels;
-        this.windowHeight = displayMetrics.heightPixels;
+        Rect rect = Utils.getViewRect(displayMetrics, mWindowManager);
+        windowWidth = rect.width();
+        windowHeight = rect.height();
         if (true) {
             setEffect(12);
         } else {

@@ -75,9 +75,9 @@ public class KeyguardEffectViewWaterColorOld extends FrameLayout implements Keyg
         this.mContext = context;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        this.windowWidth = displayMetrics.widthPixels;
-        this.windowHeight = displayMetrics.heightPixels;
+        Rect rect = Utils.getViewRect(displayMetrics, mWindowManager);
+        windowWidth = rect.width();
+        windowHeight = rect.height();
         this.isTablet = Utils.isTablet(mContext);
         if (this.isTablet) {
             if (this.windowWidth > this.windowHeight) {

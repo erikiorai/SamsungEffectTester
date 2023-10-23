@@ -112,7 +112,7 @@ public class IndigoDiffusionEffect extends GLTextureView implements IEffectView 
 
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleTouchEvent(MotionEvent event, View view) {
-        this.mRenderer.handleTouchEvent(event.getActionMasked(), event.getSource(), event.getRawX(), event.getRawY(), event.getPressure());
+        this.mRenderer.handleTouchEvent(event.getActionMasked(), event.getSource(), event.getX(), event.getY(), event.getPressure());
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView

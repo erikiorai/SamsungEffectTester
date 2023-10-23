@@ -247,8 +247,8 @@ public class SPhysicsRenderer_GL implements GLSurfaceView.Renderer, ISPhysicsRen
             Log.d(this.TAG, "Return onTouchEvent, Because of mDrawCount = " + this.mDrawCount);
         } else {
             int action = event.getActionMasked();
-            this.pointer_xpos[0] = (int) event.getRawX();
-            this.pointer_ypos[0] = (int) event.getRawY();
+            this.pointer_xpos[0] = (int) event.getX();
+            this.pointer_ypos[0] = (int) event.getY();
             this.mGlView.setRenderMode(1);
             IsExistBubbles();
             switch (action) {

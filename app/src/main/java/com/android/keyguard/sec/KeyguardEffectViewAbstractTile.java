@@ -338,11 +338,7 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
     private void checkSound() {
         ContentResolver cr = this.mContext.getContentResolver();
         int result = Settings.System.getInt(cr, "lockscreen_sounds_enabled", -2);
-        if (result == 1) {
-            this.isSystemSoundChecked = true;
-        } else {
-            this.isSystemSoundChecked = false;
-        }
+        this.isSystemSoundChecked = result == 1;
     }
 
     private void playSound(int soundId) {

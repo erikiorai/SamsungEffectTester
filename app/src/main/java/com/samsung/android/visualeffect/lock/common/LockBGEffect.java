@@ -162,8 +162,8 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
             return;
         }
         final int action = event.getActionMasked();
-        final int normalizedX = (int) event.getRawX();
-        final int normalizedY = (int) event.getRawY();
+        final int normalizedX = (int) event.getX();
+        final int normalizedY = (int) event.getY();
         queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.6
             @Override // java.lang.Runnable
             public void run() {

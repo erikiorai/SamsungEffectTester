@@ -19,6 +19,7 @@ import android.view.WindowManager;
 
 import com.aj.effect.MainActivity;
 import com.aj.effect.R;
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.EffectView;
 import com.samsung.android.visualeffect.IEffectListener;
@@ -74,16 +75,16 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
         this.mContext = context;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
-        mWindowManager.getDefaultDisplay().getRealMetrics(displayMetrics);
-        this.windowWidth = displayMetrics.widthPixels;
-        this.windowHeight = displayMetrics.heightPixels;
+        Rect rect = Utils.getViewRect(displayMetrics, mWindowManager);
+        windowWidth = rect.width();
+        windowHeight = rect.height();
         Log.d("RippleInk_KeyguardEffect", "KeyguardEffectViewRippleInk windowWidth = " + this.windowWidth + ", windowHeight = " + this.windowHeight);
         setEffect(8);
         EffectDataObj data = new EffectDataObj();
         data.setEffect(8);
         data.rippleInkData.windowWidth = this.windowWidth;
         data.rippleInkData.windowHeight = this.windowHeight;
-        data.rippleInkData.reflectionBitmap = makeResBitmap(R.drawable.reflectionmap);
+        data.rippleInkData.reflectionBitmap = makeResBitmap(R.drawable.keyguard_blind_light); // todo R.drawable.reflectionmap
         init(data);
         this.sounds = new int[4];
         HashMap<String, Bitmap> map2 = new HashMap<>();

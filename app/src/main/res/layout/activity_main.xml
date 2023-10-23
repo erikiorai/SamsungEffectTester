@@ -43,7 +43,7 @@
 
         <LinearLayout
             android:id="@+id/buttons"
-            android:layout_width="wrap_content"
+            android:layout_width="210dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/button_margins"
             android:gravity="center"
@@ -56,7 +56,7 @@
                 android:id="@+id/multiact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.5"
+                android:alpha="@integer/alpha"
                 android:text="@string/wall"
                 android:visibility="visible" />
 
@@ -64,7 +64,7 @@
                 android:id="@+id/affordance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.8"
+                android:alpha="@integer/alpha"
                 android:text="@string/show_affordance" />
 
             <Switch
@@ -72,7 +72,7 @@
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.8"
+                android:alpha="@integer/alpha"
                 android:checked="true"
                 android:text="@string/unlock_ability" />
 
@@ -80,8 +80,28 @@
                 android:id="@+id/effectsw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="0.8"
+                android:alpha="@integer/alpha"
                 android:text="effect switch" />
+
+            <Switch
+                android:id="@+id/palette"
+                style="@android:style/Widget.Material.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:alpha="@integer/alpha"
+                android:text="original color palette"
+                android:visibility="gone" />
+
+            <Switch
+                android:id="@+id/customact"
+                style="@android:style/Widget.Material.Button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:alpha="@integer/alpha"
+                android:text="custom actions"
+                android:visibility="gone" />
 
         </LinearLayout>
 

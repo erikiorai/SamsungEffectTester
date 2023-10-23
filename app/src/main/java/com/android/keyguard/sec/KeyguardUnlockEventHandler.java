@@ -73,8 +73,8 @@ public class KeyguardUnlockEventHandler {
             }
             return mUnlockView.handleTouchEvent(view, event);
         }
-        float touchedEventX = event.getRawX();
-        float touchedEventY = event.getRawY();
+        float touchedEventX = event.getX();
+        float touchedEventY = event.getY();
         long delay = 0;
         switch (maskedAction) {
             case MotionEvent.ACTION_DOWN:

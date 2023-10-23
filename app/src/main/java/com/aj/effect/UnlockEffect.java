@@ -2,13 +2,16 @@ package com.aj.effect;
 
 import static com.aj.effect.EffectEnum.ABSTRACTTILES;
 import static com.aj.effect.EffectEnum.BLIND;
+import static com.aj.effect.EffectEnum.BOUNCINGCOLOR;
 import static com.aj.effect.EffectEnum.BRILLIANTCUT;
 import static com.aj.effect.EffectEnum.BRILLIANTRING;
 import static com.aj.effect.EffectEnum.COLOURDROPLET;
 import static com.aj.effect.EffectEnum.GEOMETRICMOSAIC;
-import static com.aj.effect.EffectEnum.LIGHTING;
 import static com.aj.effect.EffectEnum.INDIGODIFFUSION;
+import static com.aj.effect.EffectEnum.LIGHTING;
 import static com.aj.effect.EffectEnum.POPPINGCOLOURS;
+import static com.aj.effect.EffectEnum.POPPINGGOODLOCK;
+import static com.aj.effect.EffectEnum.RECTANGLETRAVELLER;
 import static com.aj.effect.EffectEnum.RIPPLE;
 import static com.aj.effect.EffectEnum.SPARKLINGBUBBLES;
 import static com.aj.effect.EffectEnum.WATERCOLOUR;
@@ -69,7 +72,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     private final EffectEnum[] effects = {ABSTRACTTILES, BRILLIANTRING, BRILLIANTCUT, LIGHTING,
             BLIND, SPARKLINGBUBBLES, POPPINGCOLOURS, COLOURDROPLET, WATERDROPLET, WATERCOLOUR,
-            RIPPLE, INDIGODIFFUSION, GEOMETRICMOSAIC
+            RIPPLE, INDIGODIFFUSION, GEOMETRICMOSAIC, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
 
     @Override // android.app.Activity
