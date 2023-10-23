@@ -20,18 +20,18 @@ import java.util.HashMap;
 
 /* loaded from: classes.dex */
 public class ParticleEffect extends View implements IEffectView {
-    private String TAG;
-    private int dotMaxLimit;
-    private int dotUnlockSpeed;
+    private final String TAG = "VisualEffectParticleEffect";
+    private final int dotMaxLimit = 150;
+    private int dotUnlockSpeed = 5;
     private int drawingBottom;
-    private int drawingDelayTime;
+    private final int drawingDelayTime = 2; // millis. TODO idk why is this here
     private int drawingLeft;
     private int drawingMargin;
     private int drawingRight;
     private int drawingTop;
     private float[] hsvOrigin;
     private float[] hsvTemp;
-    private int initCreatedDotAmount;
+    private final int initCreatedDotAmount = 250;
     private boolean isDrawing;
     private boolean isPaused;
     private int lastAddedColor;
@@ -39,18 +39,11 @@ public class ParticleEffect extends View implements IEffectView {
     private float lastAddedY;
     Handler mHandler;
     private int nextParticleIndex;
-    private ArrayList<Particle> particleAliveList;
-    private ArrayList<Particle> particleTotalList;
+    private ArrayList<Particle> particleAliveList = new ArrayList<>();
+    private ArrayList<Particle> particleTotalList = new ArrayList<>();
 
     public ParticleEffect(Context context) {
         super(context);
-        this.TAG = "VisualEffectParticleEffect";
-        this.particleTotalList = new ArrayList<>();
-        this.particleAliveList = new ArrayList<>();
-        this.drawingDelayTime = 2;
-        this.initCreatedDotAmount = 250;
-        this.dotMaxLimit = 150;
-        this.dotUnlockSpeed = 5;
         this.lastAddedX = 0.0f;
         this.lastAddedY = 0.0f;
         this.lastAddedColor = 0;
@@ -136,13 +129,29 @@ public class ParticleEffect extends View implements IEffectView {
         int totalAdded = this.dotMaxLimit - this.particleAliveList.size();
         addDots(totalAdded, this.lastAddedX, this.lastAddedY, this.lastAddedColor);
         for (Particle particle : this.particleAliveList) {
+            particle.setPhysics(avg);
             particle.unlock(this.dotUnlockSpeed);
         }
     }
 
+    int framesToCount = 16;
+    long time = 0;
+    int ini = 0;
+    float avg;
     @Override // android.view.View
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (framesToCount > ini) {
+            if (ini > 1)
+                avg += (System.nanoTime() - time) / (float) 1000000;
+            if (ini == framesToCount - 1) {
+                avg /= (framesToCount - 1);
+                Log.d(TAG, "AVERAGE MS: " + avg + "\nAVERAGE FPS: " + (1000 / avg));
+            }
+            ini++;
+            time = System.nanoTime();
+            return;
+        }
         if (this.particleAliveList.isEmpty()) {
             stopDrawing();
             return;
@@ -151,6 +160,7 @@ public class ParticleEffect extends View implements IEffectView {
         while (i < this.particleAliveList.size()) {
             Particle dot = this.particleAliveList.get(i);
             if (dot != null && dot.isAlive()) {
+                dot.setPhysics(avg);
                 dot.move();
                 dot.draw(canvas);
                 int left = dot.getLeft();

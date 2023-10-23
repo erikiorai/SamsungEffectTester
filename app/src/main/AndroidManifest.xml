@@ -16,7 +16,7 @@
         android:theme="@style/ActivityTheme">
         <meta-data
             android:name="xposedmodule"
-            android:value="true" />
+            android:value="false" />
         <meta-data
             android:name="xposeddescription"
             android:value="test lockscreen hook" />
