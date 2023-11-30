@@ -150,6 +150,12 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
         this.mRenderer.setListener(this.callBackListener);
     }
 
+    @Override
+    public boolean handleHoverEvent(MotionEvent event) {
+        handleTouchEvent(event, null);
+        return true;
+    }
+
     @Override // com.samsung.android.visualeffect.IEffectView
     public void removeListener() {
         this.callBackListener = null;

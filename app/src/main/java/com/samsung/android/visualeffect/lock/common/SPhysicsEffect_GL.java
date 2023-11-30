@@ -118,6 +118,11 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
     public void setListener(IEffectListener listener) {
     }
 
+    @Override
+    public boolean handleHoverEvent(MotionEvent event) {
+        return false;
+    }
+
     @Override // com.samsung.android.visualeffect.IEffectView
     public void removeListener() {
     }

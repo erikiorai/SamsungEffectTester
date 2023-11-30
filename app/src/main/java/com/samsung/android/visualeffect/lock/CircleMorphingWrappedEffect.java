@@ -354,4 +354,9 @@ public class CircleMorphingWrappedEffect extends CircleMorphingEffect implements
     public void setListener(IEffectListener iEffectListener) {
 
     }
+
+    @Override
+    public boolean handleHoverEvent(MotionEvent event) {
+        return false;
+    }
 }

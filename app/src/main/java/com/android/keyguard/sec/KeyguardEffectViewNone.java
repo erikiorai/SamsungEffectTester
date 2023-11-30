@@ -1,21 +1,6 @@
 package com.android.keyguard.sec;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Rect;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.FrameLayout;
-
-import com.aj.effect.R;
-import com.samsung.android.visualeffect.EffectDataObj;
-import com.samsung.android.visualeffect.EffectView;
-
-import java.util.HashMap;
-
-/* loaded from: classes.dex */
+/* todo doesn't work... yet
 public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffectViewBase {
     public static final int TYPE_SHORTCUT = 1;
     public static final int TYPE_UNLOCK = 0;
@@ -234,4 +219,4 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
     public static String getCounterEffectName() {
         return "Wallpaper";
     }
-}
+}*/
