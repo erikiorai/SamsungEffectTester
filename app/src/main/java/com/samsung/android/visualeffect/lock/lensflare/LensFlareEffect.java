@@ -54,41 +54,40 @@ class BackEaseOut extends BaseInterpolator {
     }
 }
 
-/* loaded from: classes.dex */
 public class LensFlareEffect extends FrameLayout implements IEffectView {
-    private final int AFFORDANCE_OFF_DURATION;
-    private final int AFFORDANCE_ON_DURATION;
-    private final boolean DBG;
-    private final int FADEOUT_ANIMATION_DURATION;
-    private int FINGER_HOVER_Y_OFFSET;
-    private final float FOG_MAX_ALPHA;
-    private final int FOG_ON_DURATION;
-    private final int HEXAGON_CIRCLE_TOTAL;
-    private int HEXAGON_TAP_TOTAL;
+    private final int AFFORDANCE_OFF_DURATION = 1100;
+    private final int AFFORDANCE_ON_DURATION = 200;
+    private final boolean DBG = true;
+    private final int FADEOUT_ANIMATION_DURATION = 500;
+    private int FINGER_HOVER_Y_OFFSET = -80;
+    private final float FOG_MAX_ALPHA = 0.6f;
+    private final int FOG_ON_DURATION = 100;
+    private final int HEXAGON_CIRCLE_TOTAL = 0;
+    private int HEXAGON_TAP_TOTAL = 5;
     private int HEXAGON_TOTAL;
-    private final int HOVER_DURATION;
-    private final int HOVER_LIGHT_IN_DURATION;
-    private final int HOVER_LIGHT_OUT_DURATION;
-    private int MAX_ALPHA_DISTANCE;
-    private int PEN_HOVER_Y_OFFSET;
-    private final int SHOW_ANIMATION_DURATION;
-    private final String TAG;
-    private final int TAP_ANIMATION_DURATION;
-    private int TAP_AREA_RADIUS;
-    private final int UNLOCK_ANIMATION_DURATION;
-    private final long UNLOCK_SOUND_PLAY_TIME;
-    private final int X_OFFSET;
-    private int Y_OFFSET;
+    private final int HOVER_DURATION = 100000;
+    private final int HOVER_LIGHT_IN_DURATION = 500;
+    private final int HOVER_LIGHT_OUT_DURATION = 300;
+    private int MAX_ALPHA_DISTANCE = 1500;
+    private int PEN_HOVER_Y_OFFSET = 0;
+    private final int SHOW_ANIMATION_DURATION = 6000;
+    private final String TAG = "LensFlare";
+    private final int TAP_ANIMATION_DURATION = 4000;
+    private int TAP_AREA_RADIUS = 600;
+    private final int UNLOCK_ANIMATION_DURATION = 1200;
+    private final long UNLOCK_SOUND_PLAY_TIME = 2000L;
+    private final int X_OFFSET = 0;
+    private int Y_OFFSET = -80;
     private float affordanceAnimationValue;
     private ValueAnimator affordanceOffAnimator;
     private ValueAnimator affordanceOnAnimator;
-    private Point affordancePoint;
+    private Point affordancePoint = new Point();
     private Runnable affordanceRunnable;
-    private long createdDelaytime;
+    private long createdDelaytime = 100L;
     private float currentX;
     private float currentY;
-    private Bitmap.Config defaultConfig;
-    private final float defaultInSampleSize = 0.75f; // todo: size
+    private Bitmap.Config defaultConfig = Bitmap.Config.RGB_565;
+    private final float defaultInSampleSize = 0.7f; // todo: size
     private double distance;
     private float distancePerMaxAlpha;
     private ValueAnimator fadeOutAnimator;
@@ -96,7 +95,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     private float fogAlpha;
     private float fogAnimationValue;
     private ValueAnimator fogOnAnimator;
-    private float globalAlpha;
+    private float globalAlpha = 0.8f;
     private ImageViewBlended[] hexagon;
     private ArrayList<Float> hexagonDistance;
     private int[] hexagonRes;
@@ -113,11 +112,11 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     private float hoverX;
     private float hoverY;
     private int hoverlight_id;
-    private boolean isBeforeInit;
-    private boolean isPlayAffordance;
-    private boolean isSoundEnable;
+    private boolean isBeforeInit = true;
+    private boolean isPlayAffordance = false;
+    private boolean isSoundEnable = true;
     private boolean isSystemSoundChecked;
-    private boolean isTouched;
+    private boolean isTouched = false;
     private ImageViewBlended lightFog;
     private FrameLayout lightObj;
     private FrameLayout lightTap;
@@ -161,116 +160,17 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
 
     public LensFlareEffect(Context context) {
         super(context);
-        this.TAG = "LensFlare";
-        this.HEXAGON_CIRCLE_TOTAL = 0;
-        this.HEXAGON_TAP_TOTAL = 5;
-        this.FOG_MAX_ALPHA = 0.6f;
-        this.MAX_ALPHA_DISTANCE = 1500;
-        this.SHOW_ANIMATION_DURATION = 6000;
-        this.TAP_ANIMATION_DURATION = 4000;
-        this.UNLOCK_ANIMATION_DURATION = 1200;
-        this.HOVER_DURATION = 100000;
-        this.HOVER_LIGHT_IN_DURATION = 500;
-        this.HOVER_LIGHT_OUT_DURATION = 300;
-        this.AFFORDANCE_ON_DURATION = 200;
-        this.AFFORDANCE_OFF_DURATION = 1100;
-        this.TAP_AREA_RADIUS = 600;
-        this.FOG_ON_DURATION = 100;
-        this.FADEOUT_ANIMATION_DURATION = 500;
-        this.X_OFFSET = 0;
-        this.Y_OFFSET = -80;
-        this.FINGER_HOVER_Y_OFFSET = -80;
-        this.PEN_HOVER_Y_OFFSET = 0;
-        this.soundpool = null;
-        this.isSoundEnable = true;
-        this.DBG = true;
-        this.isBeforeInit = true;
-        this.mFirstCreatedRunnable = null;
-        this.createdDelaytime = 100L;
-        this.UNLOCK_SOUND_PLAY_TIME = 2000L;
-        this.affordancePoint = new Point();
-        this.isPlayAffordance = false;
-        this.isTouched = false;
-        this.defaultConfig = Bitmap.Config.RGB_565;
-        this.globalAlpha = 0.8f;
         this.mContext = context;
-        this.mFirstCreatedRunnable = null;
     }
 
     public LensFlareEffect(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        this.TAG = "LensFlare";
-        this.HEXAGON_CIRCLE_TOTAL = 0;
-        this.HEXAGON_TAP_TOTAL = 5;
-        this.FOG_MAX_ALPHA = 0.6f;
-        this.MAX_ALPHA_DISTANCE = 1500;
-        this.SHOW_ANIMATION_DURATION = 6000;
-        this.TAP_ANIMATION_DURATION = 4000;
-        this.UNLOCK_ANIMATION_DURATION = 1200;
-        this.HOVER_DURATION = 100000;
-        this.HOVER_LIGHT_IN_DURATION = 500;
-        this.HOVER_LIGHT_OUT_DURATION = 300;
-        this.AFFORDANCE_ON_DURATION = 200;
-        this.AFFORDANCE_OFF_DURATION = 1100;
-        this.TAP_AREA_RADIUS = 600;
-        this.FOG_ON_DURATION = 100;
-        this.FADEOUT_ANIMATION_DURATION = 500;
-        this.X_OFFSET = 0;
-        this.Y_OFFSET = -80;
-        this.FINGER_HOVER_Y_OFFSET = -80;
-        this.PEN_HOVER_Y_OFFSET = 0;
-        this.soundpool = null;
-        this.isSoundEnable = true;
-        this.DBG = true;
-        this.isBeforeInit = true;
-        this.mFirstCreatedRunnable = null;
-        this.createdDelaytime = 100L;
-        this.UNLOCK_SOUND_PLAY_TIME = 2000L;
-        this.affordancePoint = new Point();
-        this.isPlayAffordance = false;
-        this.isTouched = false;
-        this.defaultConfig = Bitmap.Config.RGB_565;
-        this.globalAlpha = 0.8f;
         this.mContext = context;
-        this.mFirstCreatedRunnable = null;
     }
 
     public LensFlareEffect(Context context, AttributeSet attrs) {
         super(context, attrs);
-        this.TAG = "LensFlare";
-        this.HEXAGON_CIRCLE_TOTAL = 0;
-        this.HEXAGON_TAP_TOTAL = 5;
-        this.FOG_MAX_ALPHA = 0.6f;
-        this.MAX_ALPHA_DISTANCE = 1500;
-        this.SHOW_ANIMATION_DURATION = 6000;
-        this.TAP_ANIMATION_DURATION = 4000;
-        this.UNLOCK_ANIMATION_DURATION = 1200;
-        this.HOVER_DURATION = 100000;
-        this.HOVER_LIGHT_IN_DURATION = 500;
-        this.HOVER_LIGHT_OUT_DURATION = 300;
-        this.AFFORDANCE_ON_DURATION = 200;
-        this.AFFORDANCE_OFF_DURATION = 1100;
-        this.TAP_AREA_RADIUS = 600;
-        this.FOG_ON_DURATION = 100;
-        this.FADEOUT_ANIMATION_DURATION = 500;
-        this.X_OFFSET = 0;
-        this.Y_OFFSET = -80;
-        this.FINGER_HOVER_Y_OFFSET = -80;
-        this.PEN_HOVER_Y_OFFSET = 0;
-        this.soundpool = null;
-        this.isSoundEnable = true;
-        this.DBG = true;
-        this.isBeforeInit = true;
-        this.mFirstCreatedRunnable = null;
-        this.createdDelaytime = 100L;
-        this.UNLOCK_SOUND_PLAY_TIME = 2000L;
-        this.affordancePoint = new Point();
-        this.isPlayAffordance = false;
-        this.isTouched = false;
-        this.defaultConfig = Bitmap.Config.RGB_565;
-        this.globalAlpha = 0.8f;
         this.mContext = context;
-        this.mFirstCreatedRunnable = null;
     }
 
     private void setImageResourceId(int hexagon_blue, int hexagon_green, int hexagon_orange, int hoverlight, int light, int long_light, int particle, int rainbow, int ring, int vignetting) {
@@ -295,29 +195,29 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     /* JADX INFO: Access modifiers changed from: private */
     public void lensFlareinit() {
         if (getChildCount() == 0) {
-            Log.d("LensFlare", "this.getChildCount() == 0");
+            Log.d(TAG, "this.getChildCount() == 0");
             DisplayMetrics dm = new DisplayMetrics();
             WindowManager dis = (WindowManager) mContext.getSystemService(Context.WINDOW_SERVICE);
             Rect rect = Utils.getViewRect(dm, dis);
             screenWidth = rect.width();
             screenHeight = rect.height();
             int smallestWidth = Math.min(this.screenWidth, this.screenHeight);
-            Log.d("LensFlare", "lensFlareinit ============================");
-            Log.d("LensFlare", "screenWidth : " + this.screenWidth);
-            Log.d("LensFlare", "screenHeight : " + this.screenHeight);
-            Log.d("LensFlare", "smallestWidth : " + smallestWidth);
-            Log.d("LensFlare", "GLOBALCONFIG_LOCKSCREEN_LIGHT_OPACITY : 0.8");
+            Log.d(TAG, "lensFlareinit ============================");
+            Log.d(TAG, "screenWidth : " + this.screenWidth);
+            Log.d(TAG, "screenHeight : " + this.screenHeight);
+            Log.d(TAG, "smallestWidth : " + smallestWidth);
+            Log.d(TAG, "GLOBALCONFIG_LOCKSCREEN_LIGHT_OPACITY : 0.8");
             this.globalAlpha = Float.parseFloat("0.8");
             if (smallestWidth != 1080) {
                 float ratio = smallestWidth / 1080.0f;
-                Log.d("LensFlare", "ratio : " + ratio);
+                Log.d(TAG, "ratio : " + ratio);
                 this.Y_OFFSET = (int) (this.Y_OFFSET * ratio);
                 this.MAX_ALPHA_DISTANCE = (int) (this.MAX_ALPHA_DISTANCE * ratio);
                 this.TAP_AREA_RADIUS = (int) (this.TAP_AREA_RADIUS * ratio);
             }
-            Log.d("LensFlare", "Y_OFFSET : " + this.Y_OFFSET);
-            Log.d("LensFlare", "MAX_ALPHA_DISTANCE : " + this.MAX_ALPHA_DISTANCE);
-            Log.d("LensFlare", "TAP_AREA_RADIUS : " + this.TAP_AREA_RADIUS);
+            Log.d(TAG, "Y_OFFSET : " + this.Y_OFFSET);
+            Log.d(TAG, "MAX_ALPHA_DISTANCE : " + this.MAX_ALPHA_DISTANCE);
+            Log.d(TAG, "TAP_AREA_RADIUS : " + this.TAP_AREA_RADIUS);
             setLayout();
             setHover();
             setHexagon();
@@ -451,7 +351,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             Collections.shuffle(this.hexagonDistance);
             for (int i2 = 0; i2 < this.HEXAGON_TOTAL; i2++) {
                 ImageViewBlended hex = this.hexagon[i2];
-                if (i2 < this.HEXAGON_TOTAL + 0) {
+                if (i2 < this.HEXAGON_TOTAL) {
                     this.hexagonRotation[i2] = 0;
                     this.hexagonScale[i2] = this.hexagonDistance.get(i2).floatValue() + 0.1f;
                 } else {
@@ -481,14 +381,14 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             this.sound_tap = this.soundpool.load(mContext, tap_sound_path, 1);
             this.sound_unlock = this.soundpool.load(mContext, unlock_sound_path, 1);
             sound_lock = soundpool.load(mContext, lock_sound_path, 1);
-            Log.d("LensFlare", "LensFlare sound : load");
+            Log.d(TAG, "LensFlare sound : load");
         }
     }
 
     private void setAnimator() {
         this.objAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.objAnimator.setInterpolator(new QuintEaseOut());
-        this.objAnimator.setDuration(6000L);
+        this.objAnimator.setDuration(SHOW_ANIMATION_DURATION);
         this.objAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.1
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -496,9 +396,9 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
                 LensFlareEffect.this.animatedDragPos();
             }
         });
-        this.fogOnAnimator = ValueAnimator.ofFloat(0.0f, 0.6f);
+        this.fogOnAnimator = ValueAnimator.ofFloat(0.0f, FOG_MAX_ALPHA);
         this.fogOnAnimator.setInterpolator(new QuintEaseOut());
-        this.fogOnAnimator.setDuration(100L);
+        this.fogOnAnimator.setDuration(FOG_ON_DURATION);
         this.fogOnAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.2
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -508,7 +408,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.tapAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.tapAnimator.setInterpolator(new QuintEaseOut());
-        this.tapAnimator.setDuration(4000L);
+        this.tapAnimator.setDuration(TAP_ANIMATION_DURATION);
         this.tapAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.3
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -518,7 +418,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.fadeOutAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
         this.fadeOutAnimator.setInterpolator(new LinearInterpolator());
-        this.fadeOutAnimator.setDuration(500L);
+        this.fadeOutAnimator.setDuration(FADEOUT_ANIMATION_DURATION);
         this.fadeOutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.4
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -528,7 +428,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.unlockAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.unlockAnimator.setInterpolator(new QuintEaseOut());
-        this.unlockAnimator.setDuration(1200L);
+        this.unlockAnimator.setDuration(UNLOCK_ANIMATION_DURATION);
         this.unlockAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.5
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -539,7 +439,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         this.hoverAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.hoverAnimator.setInterpolator(new LinearInterpolator());
         this.hoverAnimator.setRepeatCount(10000);
-        this.hoverAnimator.setDuration(100000L);
+        this.hoverAnimator.setDuration(HOVER_DURATION);
         this.hoverAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.6
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -548,7 +448,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.hoverLightInAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.hoverLightInAnimator.setInterpolator(new BackEaseOut(8.0f));
-        this.hoverLightInAnimator.setDuration(500L);
+        this.hoverLightInAnimator.setDuration(HOVER_LIGHT_IN_DURATION);
         this.hoverLightInAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.7
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -558,7 +458,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.hoverLightOutAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
         this.hoverLightOutAnimator.setInterpolator(new QuintEaseOut());
-        this.hoverLightOutAnimator.setDuration(300L);
+        this.hoverLightOutAnimator.setDuration(HOVER_LIGHT_OUT_DURATION);
         this.hoverLightOutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.8
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -568,7 +468,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.affordanceOnAnimator = ValueAnimator.ofFloat(0.0f, 0.6f);
         this.affordanceOnAnimator.setInterpolator(new LinearInterpolator());
-        this.affordanceOnAnimator.setDuration(200L);
+        this.affordanceOnAnimator.setDuration(AFFORDANCE_ON_DURATION);
         this.affordanceOnAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.9
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -582,7 +482,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         });
         this.affordanceOffAnimator = ValueAnimator.ofFloat(0.6f, 0.0f);
         this.affordanceOffAnimator.setInterpolator(new LinearInterpolator());
-        this.affordanceOffAnimator.setDuration(1100L);
+        this.affordanceOffAnimator.setDuration(AFFORDANCE_OFF_DURATION);
         this.affordanceOffAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.10
             @Override // android.animation.ValueAnimator.AnimatorUpdateListener
             public void onAnimationUpdate(ValueAnimator animation) {
@@ -649,7 +549,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
 
     private void unlock() {
         if (this.isBeforeInit) {
-            Log.d("LensFlare", "unlock before init");
+            Log.d(TAG, "unlock before init");
             lensFlareinit();
             return;
         }
@@ -877,7 +777,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     }
 
     private void showUnlockAffordance(long startDelay, Rect rect) {
-        Log.d("LensFlare", "showUnlockAffordance : " + rect.left + ", " + rect.right + ", " + rect.top + ", " + rect.bottom + ", startDelay : " + startDelay);
+        Log.d(TAG, "showUnlockAffordance : " + rect.left + ", " + rect.right + ", " + rect.top + ", " + rect.bottom + ", startDelay : " + startDelay);
         stopUnlockAffordance();
         this.affordancePoint.x = rect.left + ((rect.right - rect.left) / 2);
         this.affordancePoint.y = rect.top + ((rect.bottom - rect.top) / 2);
@@ -895,7 +795,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     /* JADX INFO: Access modifiers changed from: private */
     public void playUnlockAffordance() {
         if (!this.isBeforeInit) {
-            Log.d("LensFlare", "playUnlockAffordance");
+            Log.d(TAG, "playUnlockAffordance");
             this.showStartX = this.affordancePoint.x;
             this.showStartY = this.affordancePoint.y;
             setHexagonRandomTarget(false);
@@ -911,31 +811,31 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
 
     private void stopUnlockAffordance() {
         if (this.affordanceRunnable != null) {
-            Log.d("LensFlare", "remove delayed UnlockAffordance callback");
+            Log.d(TAG, "remove delayed UnlockAffordance callback");
             removeCallbacks(this.affordanceRunnable);
             this.affordanceRunnable = null;
         }
     }
 
     private void playLockSound() {
-        Log.d("LensFlare", "playSound");
+        Log.d(TAG, "playSound");
         playSound(sound_lock); // todo: was sound_unlock
     }
 
     private void show() {
-        Log.d("LensFlare", "show");
+        Log.d(TAG, "show");
         this.isPlayAffordance = false;
         if (this.isBeforeInit) {
-            Log.d("LensFlare", "isBeforeInit is true");
+            Log.d(TAG, "isBeforeInit is true");
             if (this.mFirstCreatedRunnable == null) {
                 this.mFirstCreatedRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.12
                     @Override // java.lang.Runnable
                     public void run() {
-                        Log.d("LensFlare", "mFirstCreatedRunnable,  isBeforeInit is True and called lensFlareinit()");
+                        Log.d(TAG, "mFirstCreatedRunnable,  isBeforeInit is True and called lensFlareinit()");
                         LensFlareEffect.this.lensFlareinit();
                     }
                 };
-                Log.d("LensFlare", "this.postDelayed, createdDelaytime = " + this.createdDelaytime);
+                Log.d(TAG, "this.postDelayed, createdDelaytime = " + this.createdDelaytime);
                 postDelayed(this.mFirstCreatedRunnable, this.createdDelaytime);
             }
         }
@@ -943,7 +843,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     }
 
     private void cleanUp() {
-        Log.d("LensFlare", "cleanUp");
+        Log.d(TAG, "cleanUp");
         if (!this.isBeforeInit) {
             cleanUpAllViews();
             this.isPlayAffordance = false;
@@ -952,14 +852,14 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
                 @Override // java.lang.Runnable
                 public void run() {
                     if (LensFlareEffect.this.soundpool != null) {
-                        Log.d("LensFlare", "LensFlare sound : release");
+                        Log.d(TAG, "LensFlare sound : release");
                         LensFlareEffect.this.soundpool.release();
                         LensFlareEffect.this.soundpool = null;
                     }
                     LensFlareEffect.this.releaseSoundRunnable = null;
                 }
             };
-            postDelayed(this.releaseSoundRunnable, 2000L);
+            postDelayed(this.releaseSoundRunnable, UNLOCK_SOUND_PLAY_TIME);
         }
     }
 
@@ -971,7 +871,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     }
 
     private void reset() {
-        Log.d("LensFlare", "reset");
+        Log.d(TAG, "reset");
         if (!this.isBeforeInit) {
             cleanUpAllViews();
             this.isPlayAffordance = false;
@@ -980,7 +880,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     }
 
     private void screenTurnedOn() {
-        Log.d("LensFlare", "screenTurnedOn");
+        Log.d(TAG, "screenTurnedOn");
         this.isPlayAffordance = true;
     }
 
@@ -988,12 +888,12 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         return 300L;
     }
 
-    private boolean handleHoverEvent(MotionEvent event) {
+    public boolean handleHoverEvent(MotionEvent event) {
         if (this.isBeforeInit) {
-            Log.d("LensFlare", "Return handleTouchEvent!!! Becuase isBeforeInit is true");
+            Log.d(TAG, "Return handleTouchEvent!!! Becuase isBeforeInit is true");
         } else {
             switch (event.getActionMasked()) {
-                case 3:
+                case MotionEvent.AXIS_SIZE:
                 case MotionEvent.ACTION_HOVER_EXIT:
                     hoverExit();
                     break;
@@ -1006,7 +906,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
                     } else {
                         this.Y_OFFSET = this.FINGER_HOVER_Y_OFFSET;
                     }
-                    Log.d("LensFlare", "InputDevice.SOURCE_STYLUS = 16386, Y_OFFSET = " + this.Y_OFFSET);
+                    Log.d(TAG, "InputDevice.SOURCE_STYLUS = 16386, Y_OFFSET = " + this.Y_OFFSET);
                     hoverEnter(event.getX(), event.getY());
                     break;
             }
@@ -1058,14 +958,14 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleTouchEvent(MotionEvent event, View view) {
         if (this.isBeforeInit) {
-            Log.d("LensFlare", "Return handleTouchEvent!!! Becuase isBeforeInit is true");
+            Log.d(TAG, "Return handleTouchEvent!!! Becuase isBeforeInit is true");
         } else if (event.getActionMasked() == 0) {
             if ((event.getSource() & 16386) == 16386 || (event.getSource() & 8194) == 8194) {
                 this.Y_OFFSET = this.PEN_HOVER_Y_OFFSET;
             } else {
                 this.Y_OFFSET = this.FINGER_HOVER_Y_OFFSET;
             }
-            Log.d("LensFlare", "InputDevice.SOURCE_STYLUS = 16386, Y_OFFSET = " + this.Y_OFFSET);
+            Log.d(TAG, "InputDevice.SOURCE_STYLUS = 16386, Y_OFFSET = " + this.Y_OFFSET);
             showLight(event.getX(), event.getY());
         } else if (event.getActionMasked() == 2 && event.getActionIndex() == 0) {
             move(event.getX(), event.getY());

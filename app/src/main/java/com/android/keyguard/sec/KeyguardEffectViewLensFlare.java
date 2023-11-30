@@ -138,7 +138,8 @@ public class KeyguardEffectViewLensFlare extends FrameLayout implements Keyguard
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public boolean handleHoverEvent(View view, MotionEvent event) {
-        return false;
+        // todo switch to enable, was disabled
+        return lensFlareEffect.handleHoverEvent(event); //false;
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase

@@ -21,4 +21,5 @@ public interface IEffectView {
 
     void setListener(IEffectListener iEffectListener);
 
+    boolean handleHoverEvent(MotionEvent event);
 }

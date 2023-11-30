@@ -191,6 +191,10 @@ public class KeyguardUnlockEventHandler {
         return mUnlockView.handleTouchEvent(view, event);
     }
 
+    public boolean handleHoverEvent(View view, MotionEvent event) {
+        return mUnlockView.handleHoverEvent(view, event);
+    }
+
     /* JADX INFO: Access modifiers changed from: private */
     @SuppressLint("LongLogTag")
     public void launch() {

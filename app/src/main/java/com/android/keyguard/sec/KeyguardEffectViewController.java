@@ -772,11 +772,12 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
 
     @Override // com.android.keyguard.sec.KeyguardEffectViewBase
     public boolean handleHoverEvent(View view, MotionEvent event) {
-        // TODO: rippleink mention
-        if (this.mUnlockEffectView == null) {// || !(this.mUnlockEffectView instanceof KeyguardEffectViewRippleInk)) {
+        // TODO: rippleink limitation switch
+        if (this.mUnlockEffectView == null) {
             return false;
         }
-        return false; //mUnlockEffectView.handleHoverEvent(view, event);
+        Log.d(TAG, "handleHoverEvent: called");
+        return mUnlockEffectView.handleHoverEvent(view, event);
     }
 
     public boolean handleSensorEvent(SensorEvent event) {

@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+
 import java.util.HashMap;
 
 /* loaded from: classes.dex */
@@ -94,6 +95,15 @@ public class EffectView extends FrameLayout implements IEffectView {
         } else {
             this.mView.handleTouchEvent(event, view);
         }
+    }
+
+    public boolean handleHoverEvent(MotionEvent event) {
+        if (this.mView == null) {
+            Log.d("EffectView", "handleHoverEvent : mView is null");
+        } else {
+            return mView.handleHoverEvent(event);
+        }
+        return false;
     }
 
     public void onCommand(String cmd, HashMap<?, ?> params) {

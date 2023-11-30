@@ -1,5 +1,6 @@
 package com.samsung.android.visualeffect;
 
+import com.samsung.android.visualeffect.lock.data.CircleData;
 import com.samsung.android.visualeffect.lock.data.DropletData;
 import com.samsung.android.visualeffect.lock.data.IndigoDiffuseData;
 import com.samsung.android.visualeffect.lock.data.LensFlareData;
@@ -8,8 +9,8 @@ import com.samsung.android.visualeffect.lock.data.SparklingBullesData;
 
 /* loaded from: classes.dex */
 public class EffectDataObj {
-    /*public CircleData circleData;
-    public ColourDropletData colorDroplet;*/
+    public CircleData circleData;
+    /*public ColourDropletData colorDroplet;*/
     public IndigoDiffuseData indigoDiffuseData;
     //public PoppingColorData poppingColorData;
     public LensFlareData lensFlareData;
@@ -20,8 +21,8 @@ public class EffectDataObj {
     public void setEffect(int effect) {
         switch (effect) {
             case EffectType.CIRCLE:
-                //this.circleData = new CircleData();
-                //return;
+                this.circleData = new CircleData();
+                return;
             case EffectType.POPPING_COLOUR:
             case EffectType.PARTICLE_MUSIC:
             case EffectType.WATERCOLOR /* 5 */:

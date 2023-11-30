@@ -67,7 +67,7 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
 
     @Override
     public boolean onHoverEvent(MotionEvent event) {
-        return super.onHoverEvent(event);
+        return mKeyguardUnlockEventHandler.handleHoverEvent(null, event);
     }
 
     @Override // android.view.View
