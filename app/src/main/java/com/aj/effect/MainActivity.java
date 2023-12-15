@@ -38,6 +38,7 @@ public class MainActivity extends Activity {
     public static Canvas canv;
     public Button multiactionButton;
     public static boolean unlockBool;
+    public static particleRatioLock = true;
 
     public static int effect = KeyguardEffectViewController.EFFECT_MONTBLANC;
 
