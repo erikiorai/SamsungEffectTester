@@ -79,7 +79,7 @@ public class ParticleEffect extends View implements IEffectView {
         int screenWidth = dm.widthPixels;
         int screenHeight = dm.heightPixels;
         int smallestWidth = Math.min(screenWidth, screenHeight);
-        float ratio = Utils.Utils.particleRatioLock ? 1.0f : smallestWidth / 1080.0f;
+        float ratio = Utils.particleRatioLock ? 1.0f : smallestWidth / 1080.0f;
         Log.d(this.TAG, "ParticleEffect : Constructor, " + screenWidth + " x " + screenHeight);
         Log.d(this.TAG, "ParticleEffect : ratio = " + ratio);
         for (int i = 0; i < this.initCreatedDotAmount; i++) {
