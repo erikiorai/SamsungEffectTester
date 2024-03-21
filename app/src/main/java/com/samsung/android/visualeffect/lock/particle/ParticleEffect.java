@@ -8,8 +8,10 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
@@ -26,7 +28,7 @@ public class ParticleEffect extends View implements IEffectView {
     private final int dotMaxLimit = 150;
     private int dotUnlockSpeed = 5;
     private int drawingBottom;
-    private final int drawingDelayTime = 2; // millis. TODO idk why is this here
+    private int drawingDelayTime = 2; // millis. original is 2 TODO idk why is this here
     private int drawingLeft;
     private int drawingMargin;
     private int drawingRight;
@@ -46,6 +48,7 @@ public class ParticleEffect extends View implements IEffectView {
 
     public ParticleEffect(Context context) {
         super(context);
+        float fpsRatio = 60 / ((WindowManager) context.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay().getRefreshRate();
         this.lastAddedX = 0.0f;
         this.lastAddedY = 0.0f;
         this.lastAddedColor = 0;
@@ -56,6 +59,7 @@ public class ParticleEffect extends View implements IEffectView {
         this.drawingMargin = 11;
         this.nextParticleIndex = -1;
         this.isPaused = false;
+        this.drawingDelayTime /= fpsRatio;
         this.mHandler = new Handler(Looper.getMainLooper()) { // from class: com.samsung.android.visualeffect.lock.particle.ParticleEffect.1
             @Override // android.os.Handler
             public void handleMessage(Message msg) {
@@ -83,7 +87,7 @@ public class ParticleEffect extends View implements IEffectView {
         Log.d(this.TAG, "ParticleEffect : Constructor, " + screenWidth + " x " + screenHeight);
         Log.d(this.TAG, "ParticleEffect : ratio = " + ratio);
         for (int i = 0; i < this.initCreatedDotAmount; i++) {
-            Particle dot = new Particle(ratio);
+            Particle dot = new Particle(ratio, fpsRatio);
             this.particleTotalList.add(dot);
         }
     }
@@ -131,29 +135,13 @@ public class ParticleEffect extends View implements IEffectView {
         int totalAdded = this.dotMaxLimit - this.particleAliveList.size();
         addDots(totalAdded, this.lastAddedX, this.lastAddedY, this.lastAddedColor);
         for (Particle particle : this.particleAliveList) {
-            particle.setPhysics(avg);
             particle.unlock(this.dotUnlockSpeed);
         }
     }
 
-    int framesToCount = 16;
-    long time = 0;
-    int ini = 0;
-    float avg;
     @Override // android.view.View
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        if (framesToCount > ini) {
-            if (ini > 1)
-                avg += (System.nanoTime() - time) / (float) 1000000;
-            if (ini == framesToCount - 1) {
-                avg /= (framesToCount - 1);
-                Log.d(TAG, "AVERAGE MS: " + avg + "\nAVERAGE FPS: " + (1000 / avg));
-            }
-            ini++;
-            time = System.nanoTime();
-            return;
-        }
         if (this.particleAliveList.isEmpty()) {
             stopDrawing();
             return;
@@ -162,7 +150,6 @@ public class ParticleEffect extends View implements IEffectView {
         while (i < this.particleAliveList.size()) {
             Particle dot = this.particleAliveList.get(i);
             if (dot != null && dot.isAlive()) {
-                dot.setPhysics(avg);
                 dot.move();
                 dot.draw(canvas);
                 int left = dot.getLeft();

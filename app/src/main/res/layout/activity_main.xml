@@ -56,7 +56,7 @@
                 android:id="@+id/multiact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/alpha"
+                android:alpha="@integer/button_alpha"
                 android:text="@string/wall"
                 android:visibility="visible" />
 
@@ -64,7 +64,7 @@
                 android:id="@+id/affordance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/alpha"
+                android:alpha="@integer/button_alpha"
                 android:text="@string/show_affordance" />
 
             <Switch
@@ -72,7 +72,7 @@
                 style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/alpha"
+                android:alpha="@integer/button_alpha"
                 android:checked="true"
                 android:text="@string/unlock_ability" />
 
@@ -80,7 +80,7 @@
                 android:id="@+id/effectsw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/alpha"
+                android:alpha="@integer/button_alpha"
                 android:text="effect switch" />
 
             <Switch
@@ -89,7 +89,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:alpha="@integer/alpha"
+                android:alpha="@integer/button_alpha"
                 android:text="original color palette"
                 android:visibility="gone" />
 
@@ -99,7 +99,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:checked="true"
-                android:alpha="@integer/alpha"
+                android:alpha="@integer/button_alpha"
                 android:text="custom actions"
                 android:visibility="gone" />
 

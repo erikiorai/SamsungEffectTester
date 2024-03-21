@@ -2,6 +2,7 @@ package com.samsung.android.visualeffect.lock.particle;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -16,7 +17,7 @@ public class Particle {
     private float x;
     private float y;
     private String TAG = "VisualEffectParticleEffect";
-    private final float fpsUsual = 1000 / (float) 60; // tie to millis, assume 60fps for usual screens
+    private float fpsRatio;
     private float gravity = 4.0f; // px/usual frame
     private float maxSpeed = 7.0f;
     private int dotAlpha = 200;
@@ -26,8 +27,11 @@ public class Particle {
 
     private float ratio;
 
-    public Particle(float ratio) {
+    public Particle(float ratio, float fpsRatio) {
         this.ratio = ratio;
+        this.fpsRatio = fpsRatio;
+        maxSpeed = (maxSpeed * this.fpsRatio) * ratio;
+        gravity = (gravity * this.fpsRatio) * ratio;
         this.smallRadius = (int) (smallRadius * ratio);
         this.bigRadius = (int) (bigRadius * ratio);
         this.paint.setAntiAlias(true);
@@ -35,18 +39,17 @@ public class Particle {
 
     public void initialize(float x, float y, int color) {
         Random rnd = new Random();
-        life = rnd.nextInt(100) + 50;
+        life = (int) (rnd.nextInt((int) ((100 / fpsRatio))) + (50 / fpsRatio));
         float rndTotal = rnd.nextInt(randomTotal) / (float) randomTotal;
         rad = rnd.nextInt(10) == 0 ? (int) (bigRadius * rndTotal) : (int) (smallRadius * rndTotal);
-        /*dx = (float) ((this.maxSpeed * Math.random()) - (this.maxSpeed / 2.0f));
-        dy = (float) (((this.maxSpeed * Math.random()) - (this.maxSpeed / 2.0f)) - this.gravity);
-*/
+        dx = (float) ((maxSpeed * Math.random()) - (maxSpeed / (2.0f)));
+        dy = (float) (((maxSpeed * Math.random()) - (maxSpeed / (2.0f)) - gravity));
+
         isAlive = true;
         isUnlocked = false;
         this.x = x;
         this.y = y;
         paint.setColor(color);
-        physSet = false;
     }
 
     public void move() {
@@ -54,27 +57,11 @@ public class Particle {
         y += dy;
     }
 
-    private boolean physSet = false;
-    private float millis = 0.0f;
-    public void setPhysics(float millis) {
-        if (!physSet && !isUnlocked) {
-            this.millis = millis;
-            life = (int) ((fpsUsual * life) / millis);
-            float targetMaxSpeed = fpsUsual / maxSpeed;
-            float targetGravity = fpsUsual / gravity; // pix/ms
-            float maxSpeed = (millis / targetMaxSpeed) * ratio;
-            float gravity = (millis / targetGravity) * ratio;
-            dx = (float) ((maxSpeed * Math.random()) - (maxSpeed / 2.0f));
-            dy = (float) (((maxSpeed * Math.random()) - (maxSpeed / 2.0f)) - gravity);
-            physSet = true;
-        }
-    }
-
     public void unlock(float speed) {
         isUnlocked = true;
         dx *= speed;
         dy *= speed;
-        life = (int) ((fpsUsual * 19) / millis);
+        life = (int) (19 / fpsRatio);
     }
 
     public boolean isAlive() {
@@ -98,7 +85,7 @@ public class Particle {
     }
 
     public void draw(Canvas canvas) {
-        int alphaReduceStartFrame = (int) (isUnlocked ? ((fpsUsual * 20) / millis) : ((fpsUsual * 30) / millis));
+        int alphaReduceStartFrame = (int) (isUnlocked ? (20 / fpsRatio) : (30 / fpsRatio));
         int alpha = life < alphaReduceStartFrame ? (dotAlpha * life) / alphaReduceStartFrame : dotAlpha;
         paint.setAlpha(alpha);
         canvas.drawCircle(x, y, rad, paint);

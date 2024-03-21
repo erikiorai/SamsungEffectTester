@@ -38,7 +38,7 @@ public class EffectEnum {
     public static final EffectEnum RECTANGLETRAVELLER = new EffectEnum(R.string.unlock_effect_rectangle, 20, null);
     public static final EffectEnum BOUNCINGCOLOR = new EffectEnum(R.string.unlock_effect_bouncing, 21, null);
 
-    private static final List<EffectEnum> effectList = Arrays.asList(NONE,
+    public static final List<EffectEnum> effectList = Arrays.asList(NONE,
             RIPPLE, LIGHTING, POPPINGCOLOURS, WATERCOLOUR, BLIND, EFFECT_MASS_TENSION,
             EFFECT_MASS_RIPPLE, BRILLIANTRING, BRILLIANTCUT, INDIGODIFFUSION, ABSTRACTTILES,
             GEOMETRICMOSAIC, WATERDROPLET, SPARKLINGBUBBLES, COLOURDROPLET);

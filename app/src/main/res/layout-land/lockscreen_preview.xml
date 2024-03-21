@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="horizontal"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
     <ImageView
         android:id="@+id/preview_image"
         android:layout_width="@dimen/unlock_effect_image_width"
         android:layout_height="@dimen/unlock_effect_image_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/unlock_effect_image_top_margin"
-        android:layout_marginBottom="@dimen/unlock_effect_image_bottom_margin"
+        android:layout_gravity="center_vertical"
+        android:layout_marginEnd="@dimen/alert_dialog_padding_left_right"
+        android:layout_marginVertical="@dimen/alert_dialog_padding_left_right"
         android:scaleType="fitXY"
         android:src="@drawable/setting_preview_unlock_none" />
 
@@ -17,11 +17,15 @@
         android:layout_width="@dimen/unlock_effect_image_width_for_mobile_keyboard"
         android:layout_height="@dimen/unlock_effect_image_height_for_mobile_keyboard"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/unlock_effect_image_top_margin_for_mobile_keyboard"
-        android:layout_marginBottom="@dimen/unlock_effect_image_bottom_margin_for_mobile_keyboard"
+        android:layout_marginEnd="@dimen/alert_dialog_padding_left_right"
         android:scaleType="fitXY"
         android:src="@drawable/setting_preview_unlock_none"
         android:visibility="gone" />
-    <ListView android:id="@android:id/list" android:layout_width="match_parent" android:layout_height="0dp"
-        android:choiceMode="singleChoice" android:layout_weight="1"/>
+
+    <ListView
+        android:id="@android:id/list"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:choiceMode="singleChoice"
+        android:layout_weight="1"/>
 </LinearLayout>

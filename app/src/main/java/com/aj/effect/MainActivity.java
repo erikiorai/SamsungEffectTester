@@ -53,12 +53,13 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Window w = getWindow();
+        /*Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         w.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         View decorView = getWindow().getDecorView();
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);
+        decorView.setSystemUiVisibility(uiOptions);*/
+
         /*EffectView mEffectView = new EffectView(this);
         KeyguardEffectViewBase mEffectView = new KeyguardEffectViewBrilliantRing(this);
         KeyguardUnlockView mUnlockView = new KeyguardUnlockView(this);
@@ -73,7 +74,7 @@ public class MainActivity extends Activity {
         int width;
         int height;
 
-        if (BuildConfig.DEBUG) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             WindowMetrics metrics = getWindowManager().getCurrentWindowMetrics();
             width = metrics.getBounds().width();
             height = metrics.getBounds().height();
