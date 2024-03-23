@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ActivityTheme" parent="android:Theme.DeviceDefault.NoActionBar.Fullscreen" >
+    <style name="ActivityTheme" parent="android:Theme.Material.NoActionBar" >
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
         <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@android:anim/fade_in</item>
-        <item name="android:windowExitTransition">@android:anim/fade_out</item>
-        <item name="android:windowSharedElementEnterTransition">@android:anim/fade_in</item>
-        <item name="android:windowSharedElementExitTransition">@android:anim/fade_out</item>
+        <item name="android:windowEnterTransition">@android:transition/fade</item>
+        <item name="android:windowExitTransition">@android:transition/fade</item>
+        <item name="android:windowSharedElementEnterTransition">@android:transition/fade</item>
+        <item name="android:windowSharedElementExitTransition">@android:transition/fade</item>
     </style>
-    <style name="Theme.ActionBar" parent="@android:style/Widget.DeviceDefault.ActionBar">
+    <style name="Theme.ActionBar" parent="android:Widget.Material.ActionBar">
         <item name="android:displayOptions">showTitle</item>
         <item name="android:contentInsetStart">@dimen/actionbar_contentInsetStart</item>
     </style>
-    <style name="Theme.DialogWhenLarge" parent="android:Theme.DeviceDefault.DialogWhenLarge">
+    <style name="Theme.DialogWhenLarge" parent="@android:style/Theme.Material.DialogWhenLarge">
         <!--item name="android:colorBackground">@android:color/white</item-->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -31,6 +31,8 @@
     <style name="keyguard_text_shadow" parent="">
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2</item>
+        <item name="android:fontFamily">@font/samsungneonum3t</item>
+        <item name="fontFamily">@font/samsungneonum3t</item>
     </style>
     <style name="list_title_text_style">
         <item name="android:textAppearance">?android:attr/textAppearanceListItem</item>

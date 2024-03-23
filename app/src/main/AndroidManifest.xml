@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="ProtectedPermissions">
 
     <application
         android:allowBackup="true"
@@ -14,6 +15,7 @@
         tools:targetApi="31"
         android:extractNativeLibs="true"
         android:hardwareAccelerated="true"
+        android:largeHeap="true"
         android:theme="@style/ActivityTheme">
         <!-- meta-data
             android:name="xposedmodule"
@@ -49,5 +51,6 @@
             </intent-filter>
         </activity>
     </application>
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
 </manifest>

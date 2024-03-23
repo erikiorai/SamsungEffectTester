@@ -17,7 +17,7 @@ public class EffectEnum {
         this.drawable = drawable == null ? R.drawable.setting_preview_unlock_none : drawable;
     }
 
-    public static final EffectEnum NONE = new EffectEnum(R.string.unlock_effect_none, 0, null);
+    public static final EffectEnum NONE = new EffectEnum(R.string.unlock_effect_none, 0, R.drawable.setting_preview_unlock_none);
     public static final EffectEnum RIPPLE = new EffectEnum(R.string.unlock_effect_ripple, 1, R.drawable.setting_preview_unlock_ripple);
     public static final EffectEnum LIGHTING = new EffectEnum(R.string.light_effect, 2, R.drawable.setting_preview_unlock_light);
     public static final EffectEnum POPPINGCOLOURS = new EffectEnum(R.string.unlock_effect_popping, 3, R.drawable.setting_preview_unlock_poppingcolor);
@@ -43,11 +43,11 @@ public class EffectEnum {
             EFFECT_MASS_RIPPLE, BRILLIANTRING, BRILLIANTCUT, INDIGODIFFUSION, ABSTRACTTILES,
             GEOMETRICMOSAIC, WATERDROPLET, SPARKLINGBUBBLES, COLOURDROPLET);
 
-    public static EffectEnum getByInt(int assigned) {
+    /*public static EffectEnum getByInt(int assigned) {
         for (EffectEnum e : effectList) {
             if (e.assigned == assigned)
                 return e;
         }
         return INDIGODIFFUSION; // TODO DEFAULT EFFECT;
-    }
+    }*/
 }

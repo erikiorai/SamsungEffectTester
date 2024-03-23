@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
-        android:src="@drawable/wall" />
+        android:src="@drawable/setting_preview_unlock" />
 
     <FrameLayout
         android:id="@+id/keyguard_effect_behind"
@@ -107,7 +107,7 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/clock"
         style="@style/keyguard_text_shadow"
         android:layout_width="wrap_content"
@@ -115,7 +115,6 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/kg_singleclock_margin_top"
         android:layout_marginBottom="1dp"
-        android:fontFamily="@font/samsungneonum3t"
         android:shadowColor="#cc000000"
         android:text="12:45"
         android:textColor="@color/white"

@@ -33,7 +33,7 @@ public class Utils {
 
     public static boolean usePCColorPalette = true;
     public static boolean customActions = true;
-    public static boolean particleRatioLock = true;
+    public static boolean particleRatioLock = false;
     
     public static int getPoppingHue(int color, Random random) {
         int r = Color.red(color);

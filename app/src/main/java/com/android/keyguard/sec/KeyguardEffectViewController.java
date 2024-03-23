@@ -9,6 +9,7 @@ import android.hardware.SensorEvent;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.PowerManager;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -383,7 +384,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     public void handleWallpaperTypeChanged() {
         if (this.mBackgroundRootLayout != null) {
             // TODO: get effect
-            this.mCurrentEffect = MainActivity.effect; //Settings.System.getIntForUser(this.mContext.getContentResolver(), "lockscreen_ripple_effect", 0, -2);
+            this.mCurrentEffect = MainActivity.effect; //todo Settings.System.getInt(mContext.getContentResolver(), "lockscreen_ripple_effect", 1); // todo 0 getIntForUser(this.mContext.getContentResolver(), "lockscreen_ripple_effect", 0, -2);
             /*if (this.mForegroundCircleView == null) {
                 this.mForegroundCircleView = new KeyguardEffectViewNone(this.mContext);
             }

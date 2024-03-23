@@ -6,11 +6,13 @@ import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -48,42 +50,23 @@ public class MainActivity extends Activity {
     FrameLayout mBackgroundRootLayout;
     FrameLayout mForegroundRootLayout;
 
-    @TargetApi(Build.VERSION_CODES.R)
-    @SuppressLint("MissingPermission")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        /*Window w = getWindow();
+        Window w = getWindow();
         w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         w.addFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
         View decorView = getWindow().getDecorView();
-        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_FULLSCREEN;
-        decorView.setSystemUiVisibility(uiOptions);*/
-
-        /*EffectView mEffectView = new EffectView(this);
-        KeyguardEffectViewBase mEffectView = new KeyguardEffectViewBrilliantRing(this);
-        KeyguardUnlockView mUnlockView = new KeyguardUnlockView(this);
-        mEffectView.setEffect(7);
-        if (mEffectView != null) {
-            mEffectView.reset();
-            mEffectView.show();
-            mEffectView.update();
-        }
-        mUnlockView.setUnlockView(mEffectView); */
+        int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
+        decorView.setSystemUiVisibility(uiOptions);
 
         int width;
         int height;
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            WindowMetrics metrics = getWindowManager().getCurrentWindowMetrics();
-            width = metrics.getBounds().width();
-            height = metrics.getBounds().height();
-        } else {
-            DisplayMetrics metrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getRealMetrics(metrics);
-            width = metrics.widthPixels;
-            height = metrics.heightPixels;
-        }
+        Rect viewRect = Utils.getViewRect(new DisplayMetrics(), getWindowManager());
+        width = viewRect.width();
+        height = viewRect.height();
+
         bitm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canv = new Canvas(bitm);
 
@@ -96,36 +79,25 @@ public class MainActivity extends Activity {
         mBackgroundRootLayout = findViewById(R.id.keyguard_effect_behind);
         mForegroundRootLayout = findViewById(R.id.keyguard_effect_front);
 
-        /*KeyguardUnlockView mUnlockView = findViewById(R.id.keyguard_unlock_view);
-        Handler handler = new Handler();*/
-
         multiactionButton = findViewById(R.id.multiact);
         Drawable realWall = getDrawable(R.drawable.bluesky); //wallpaperManager.getFastDrawable();
-        Drawable wall = getDrawable(R.drawable.wall);
-        Drawable wall1 = getDrawable(R.drawable.wall1);
         Drawable prev = getDrawable(R.drawable.setting_preview_unlock);
         multiactionButton.setOnClickListener(v -> {
             if (imgView.getDrawable() == prev)
-                imgView.setImageDrawable(wall1);
-            else if (imgView.getDrawable() == wall1)
                 imgView.setImageDrawable(realWall);
-            else if (imgView.getDrawable() == realWall)
-                imgView.setImageDrawable(wall);
             else
                 imgView.setImageDrawable(prev);
 
             imgView.draw(canv);
             controller.handleWallpaperImageChanged();
-            /*
-            mUnlockView.reset();
-            controller.reset();
-            multiactionButton.setAlpha(0.5F);
-            multiactionButton.setText(R.string.wall);*/
         });
-        /*multiactionButton.setOnLongClickListener(v -> {
-
+        multiactionButton.setOnLongClickListener(v -> {
+            Intent picker = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+            picker.addCategory(Intent.CATEGORY_OPENABLE);
+            picker.setType("image/*");
+            startActivityForResult(picker, 0);
             return true;
-        });*/
+        });
 
         Button affordance = findViewById(R.id.affordance);
         affordance.setOnClickListener(v -> mUnlockView.showUnlockAffordance());
@@ -145,24 +117,10 @@ public class MainActivity extends Activity {
         Button effectSwitch = findViewById(R.id.effectsw);
         effectSwitch.setText(R.string.unlock_effect);
         effectSwitch.setOnClickListener(view -> {
-            //findViewById(R.id.buttons).setAlpha(0.0f);
             controller.playLockSound();
             switchActivity(this);
-            /*if (effect == KeyguardEffectViewController.EFFECT_ABSTRACTTILE) {
-                effectSwitch.setText(R.string.unlock_effect_brilliant_ring);
-                effect = KeyguardEffectViewController.EFFECT_BRILLIANTRING;
-            } else if (effect == KeyguardEffectViewController.EFFECT_BRILLIANTRING) {
-                effectSwitch.setText(R.string.light_effect);
-                effect = KeyguardEffectViewController.EFFECT_LIGHT;
-            } else if (effect == KeyguardEffectViewController.EFFECT_LIGHT) {
-                effectSwitch.setText(R.string.blind_effect);
-                effect = KeyguardEffectViewController.EFFECT_BLIND;
-            } else {
-                effectSwitch.setText(R.string.unlock_effect_abstract);
-                effect = KeyguardEffectViewController.EFFECT_ABSTRACTTILE;
-            }*/
-
         });
+
         TextView clock = findViewById(R.id.clock);
         FrameLayout.LayoutParams lp = (FrameLayout.LayoutParams) clock.getLayoutParams();
         int fontSize = this.getResources().getDimensionPixelSize(R.dimen.kg_singleclock_time_text_size_normal);
@@ -183,6 +141,14 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 0 && resultCode == RESULT_OK) {
+            imgView.setImageURI(data.getData());
+        }
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         controller.screenTurnedOff();
@@ -191,6 +157,8 @@ public class MainActivity extends Activity {
     @Override
     public void onResume() {
         super.onResume();
+        imgView.draw(canv);
+        controller.handleWallpaperImageChanged();
         controller.screenTurnedOn();
         controller.show();
         mUnlockView.showUnlockAffordance();
@@ -209,8 +177,6 @@ public class MainActivity extends Activity {
     @Override
     protected void onPostResume() {
         super.onPostResume();
-        imgView.draw(canv);
-        controller.update();
     }
 
 }

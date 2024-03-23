@@ -9,6 +9,7 @@ import static com.aj.effect.EffectEnum.COLOURDROPLET;
 import static com.aj.effect.EffectEnum.GEOMETRICMOSAIC;
 import static com.aj.effect.EffectEnum.INDIGODIFFUSION;
 import static com.aj.effect.EffectEnum.LIGHTING;
+import static com.aj.effect.EffectEnum.NONE;
 import static com.aj.effect.EffectEnum.POPPINGCOLOURS;
 import static com.aj.effect.EffectEnum.POPPINGGOODLOCK;
 import static com.aj.effect.EffectEnum.RECTANGLETRAVELLER;
@@ -21,9 +22,11 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,17 +65,16 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
             R.string.unlock_effect_colour_droplet};
     private static String[] mModeItem;
     private RadioAdapter adapter;
-    int[] backgroundImage;
-    String[] dbValues;
     private ListView mListView;
     private View mTabletView;
     private boolean mIsTablet;
-    private int mDefaultUnlock = 0;
+    public static int mDefaultUnlock = 1; // todo 0
     private ImageView mImageView = null;
 
-    private final EffectEnum[] effects = {ABSTRACTTILES, BRILLIANTRING, BRILLIANTCUT, LIGHTING,
-            BLIND, SPARKLINGBUBBLES, POPPINGCOLOURS, COLOURDROPLET, WATERDROPLET, WATERCOLOUR,
-            RIPPLE, INDIGODIFFUSION, GEOMETRICMOSAIC, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
+    private final EffectEnum[] order = {INDIGODIFFUSION, COLOURDROPLET, WATERDROPLET, SPARKLINGBUBBLES,
+            ABSTRACTTILES, GEOMETRICMOSAIC, BRILLIANTRING, POPPINGCOLOURS,
+            WATERCOLOUR, RIPPLE, BRILLIANTCUT, LIGHTING, // todo fix a bit s5 order
+            BLIND, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
 
     @Override // android.app.Activity
@@ -80,6 +82,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         this.mIsTablet = Utils.isTablet(this);
         ImageView imageViewforkeyboard;
         super.onCreate(savedInstanceState);
+        //permissionCheck();
         if (!this.mIsTablet) {
             setContentView(R.layout.lockscreen_preview);
             if (getActionBar() != null) {
@@ -115,6 +118,19 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         }
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (!(requestCode == 1 && resultCode == RESULT_OK)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("The permission was not granted.").setTitle("Force exit");
+            builder.setNeutralButton(android.R.string.ok, (dialogInterface, i) -> UnlockEffect.this.finishAffinity());
+            AlertDialog dialog = builder.create();
+            dialog.setOnCancelListener((dialogInterface) -> UnlockEffect.this.finishAffinity());
+            dialog.show();
+        }
+    }
+
     private void createDialogforTablet() {
         this.mTabletView = getLayoutInflater().inflate(R.layout.unlock_effect_dialog, (ViewGroup) null);
         initViewforTablet();
@@ -125,8 +141,8 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         alertDialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() { // from class: com.android.settings.UnlockEffect.1
             @Override // android.content.DialogInterface.OnClickListener
             public void onClick(DialogInterface dialog, int id) {
-                MainActivity.effect = mDefaultUnlock; // TODO Settings.System.putInt(UnlockEffect.this.getContentResolver(), "lockscreen_ripple_effect", UnlockEffect.this.mDefaultUnlock);
-                Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + UnlockEffect.this.mDefaultUnlock);
+                MainActivity.effect = mDefaultUnlock;// todo Settings.System.putInt(UnlockEffect.this.getContentResolver(), "lockscreen_ripple_effect", mDefaultUnlock);
+                Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + mDefaultUnlock);
                 KeyguardEffectViewController.getInstance(UnlockEffect.this).handleWallpaperTypeChanged();
                 UnlockEffect.this.finish();
             }
@@ -148,6 +164,13 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         alertDialog.show();
     }
 
+    private void permissionCheck() {
+        if (!Settings.System.canWrite(UnlockEffect.this)) {
+            Intent set = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            startActivityForResult(set, 1);
+        }
+    }
+
     private void initViewforTablet() {
         this.mListView = (ListView) this.mTabletView.findViewById(android.R.id.list);
         this.mImageView = (ImageView) this.mTabletView.findViewById(R.id.preview_image);
@@ -161,11 +184,11 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void updateImageResource() {
-        this.mDefaultUnlock = MainActivity.effect; // TODO Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 0);
-        for (int i = 0; i < this.dbValues.length; i++) {
-            if (Integer.parseInt(this.dbValues[i]) == this.mDefaultUnlock) {
+        this.mDefaultUnlock = MainActivity.effect; // todo Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 1); // todo 0
+        for (int i = 0; i < order.length; i++) {
+            if (order[i].assigned == this.mDefaultUnlock) {
                 this.mListView.setItemChecked(i, true);
-                this.mImageView.setImageResource(this.backgroundImage[i]);
+                this.mImageView.setImageResource(order[i].drawable);
             }
         }
     }
@@ -181,7 +204,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         super.onRestoreInstanceState(savedInstanceState);
         int idx = savedInstanceState.getInt("selected_idx");
         try {
-            this.mImageView.setImageResource(this.backgroundImage[idx]);
+            this.mImageView.setImageResource(order[idx].drawable);
         } catch (ArrayIndexOutOfBoundsException e) {
             Log.d("UnlockEffect", "ArrayIndexOutOfBoundsException Occured.  set to Popping Colour.");
         }
@@ -189,12 +212,12 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        this.mImageView.setImageResource(this.backgroundImage[position]);
-        int effect = Integer.parseInt(this.dbValues[this.mListView.getCheckedItemPosition()]);
+        this.mImageView.setImageResource(order[position].drawable);
+        int effect = order[this.mListView.getCheckedItemPosition()].assigned;
         if (this.mIsTablet) {
             this.mDefaultUnlock = effect;
         } else {
-            MainActivity.effect = effect; //TODO Settings.System.putInt(getContentResolver(), "lockscreen_ripple_effect", Integer.parseInt(this.dbValues[this.mListView.getCheckedItemPosition()]));
+            MainActivity.effect = effect; // todo Settings.System.putInt(getContentResolver(), "lockscreen_ripple_effect", effect);
         }
         controller.handleWallpaperTypeChanged();;
         Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + effect); //Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 0));
@@ -202,93 +225,12 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     // TODO: rework
     void populateUnlockEffectsOptions() {
-        int ctr = 0;
-        List<EffectEnum> available = new LinkedList<>(Arrays.asList(effects));
         List<String> aChangedEffectEntry = new ArrayList<>();
-        List<String> aChangedEffectEntryValue = new ArrayList<>();
-        this.backgroundImage = new int[16];
-        /*aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_none));
-        aChangedEffectEntryValue.add("0");
-        int ctr2 = 1;*/
-        this.backgroundImage[0] = R.drawable.setting_preview_unlock_none;
-        if (available.contains(INDIGODIFFUSION)) {//Utils.hasPackage(this, "com.sec.android.app.montblanc")) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_montblanc));
-            aChangedEffectEntryValue.add("10");
-            available.remove(INDIGODIFFUSION);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_montblanc;
-            ctr++;
+        Resources res = this.getResources();
+        for (EffectEnum e : order) {
+            aChangedEffectEntry.add(res.getString(e.name));
         }
-        if (available.contains(COLOURDROPLET)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_colour_droplet));
-            aChangedEffectEntryValue.add("15");
-            available.remove(COLOURDROPLET);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_liquid;
-            ctr++;
-        }
-        if (available.contains(WATERDROPLET)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_liquid));
-            aChangedEffectEntryValue.add("13");
-            available.remove(WATERDROPLET);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_liquid_w;
-            ctr++;
-        }
-        if (available.contains(SPARKLINGBUBBLES)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_particle));
-            aChangedEffectEntryValue.add("14");
-            available.remove(SPARKLINGBUBBLES);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_particle;
-            ctr++;
-        }
-        if (available.contains(ABSTRACTTILES)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_abstract));
-            aChangedEffectEntryValue.add("11");
-            available.remove(ABSTRACTTILES);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_abstract_tiles;
-            ctr++;
-        }
-        if (available.contains(GEOMETRICMOSAIC)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_geometric_mosaic));
-            aChangedEffectEntryValue.add("12");
-            available.remove(GEOMETRICMOSAIC);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_geometric_mosaic;
-            ctr++;
-        }
-        if (available.contains(BRILLIANTRING)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_brilliant_ring));
-            aChangedEffectEntryValue.add("8");
-            available.remove(BRILLIANTRING);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_brilliantring;
-            ctr++;
-        }
-        if (available.contains(POPPINGCOLOURS)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_popping));
-            aChangedEffectEntryValue.add("3");
-            available.remove(POPPINGCOLOURS);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_poppingcolor;
-            ctr++;
-        }
-        if (available.contains(WATERCOLOUR)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_watercolor));
-            aChangedEffectEntryValue.add("4");
-            available.remove(WATERCOLOUR);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_watercolor;
-            ctr++;
-        }
-        if (available.contains(RIPPLE)) {
-            aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_ripple));
-            aChangedEffectEntryValue.add("1");
-            available.remove(RIPPLE);
-            this.backgroundImage[ctr] = R.drawable.setting_preview_unlock_ripple;
-            ctr++;
-        }
-        for (EffectEnum e : available) {
-            aChangedEffectEntry.add(getResources().getString(e.name));
-            aChangedEffectEntryValue.add(String.valueOf(e.assigned));
-            backgroundImage[ctr] = e.drawable;
-            ctr++;
-        }
-        mModeItem = aChangedEffectEntry.toArray(new String[aChangedEffectEntry.size()]);
-        this.dbValues = aChangedEffectEntryValue.toArray(new String[aChangedEffectEntryValue.size()]);
+        mModeItem = aChangedEffectEntry.toArray(new String[order.length]);
     }
 
     /* loaded from: classes.dex */

@@ -1,4 +1,4 @@
-package com.aj.effect;
+/*package com.aj.effect;
 
 import static com.aj.effect.BuildConfig.DEBUG;
 import static de.robv.android.xposed.XposedBridge.log;
@@ -91,4 +91,4 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     });
         }
     }
-}
+}*/
