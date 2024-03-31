@@ -1,5 +1,6 @@
 package com.samsung.android.visualeffect.common;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -12,6 +13,7 @@ import android.util.AttributeSet;
 import android.widget.ImageView;
 
 /* loaded from: classes.dex */
+@SuppressLint("AppCompatCustomView")
 public class ImageViewBlended extends ImageView {
     private Bitmap mBitmap;
     private Paint mPaint;

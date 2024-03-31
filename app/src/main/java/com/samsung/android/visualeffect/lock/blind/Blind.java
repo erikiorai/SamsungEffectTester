@@ -1,10 +1,12 @@
 package com.samsung.android.visualeffect.lock.blind;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 /* loaded from: classes.dex */
+@SuppressLint("AppCompatCustomView")
 public class Blind extends ImageView {
     private int blindWidth;
     private int blindX;
