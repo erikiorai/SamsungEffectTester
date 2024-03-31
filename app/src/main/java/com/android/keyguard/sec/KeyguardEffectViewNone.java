@@ -1,6 +1,23 @@
 package com.android.keyguard.sec;
 
-/* todo doesn't work... yet
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Rect;
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.FrameLayout;
+
+import com.aj.effect.R;
+import com.aj.effect.SoundManager;
+import com.aj.effect.Utils;
+import com.samsung.android.visualeffect.EffectDataObj;
+import com.samsung.android.visualeffect.EffectView;
+
+import java.util.HashMap;
+
 public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffectViewBase {
     public static final int TYPE_SHORTCUT = 1;
     public static final int TYPE_UNLOCK = 0;
@@ -11,30 +28,31 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
     private HashMap<String, Object> touchHashmap;
     private static final int LOCK_SOUND_PATH = R.raw.ve_none_lock;
     private static final int UNLOCK_SOUND_PATH = R.raw.ve_none_unlock;
+    private boolean soundLoaded = false;
 
     public KeyguardEffectViewNone(Context context) {
         super(context);
-        init(context, 0, true);
+        init(context, TYPE_UNLOCK);
     }
 
-    public void init(Context context, int type, boolean mWallpaperProcessSeparated) {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : Constructor");
-        this.mContext = context.getApplicationContext();
-        DisplayMetrics dm = getResources().getDisplayMetrics();
-        int screenWidth = dm.widthPixels;
-        int screenHeight = dm.heightPixels;
+    public void init(Context context, int type) {
+        Log.d(TAG, "KeyguardEffectViewNone : Constructor");
+        mContext = context.getApplicationContext();
+        Rect dm = Utils.getViewRect(new DisplayMetrics(), (WindowManager) context.getSystemService(Context.WINDOW_SERVICE));
+        int screenWidth = dm.width();
+        int screenHeight = dm.height();
         int smallestWidth = Math.min(screenWidth, screenHeight);
         float ratio = smallestWidth / 1080.0f;
-        Log.d("VisualEffectCircleUnlockEffect", "screenWidth : " + screenWidth);
-        Log.d("VisualEffectCircleUnlockEffect", "screenHeight : " + screenHeight);
-        Log.d("VisualEffectCircleUnlockEffect", "ratio : " + ratio);
-        this.touchHashmap = new HashMap<>();
-        int circleUnlockMaxWidth = 0;
-        if (type == 0) {
-            circleUnlockMaxWidth = ((int) this.mContext.getResources().getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2;
-        } else if (type == 1) {
-            circleUnlockMaxWidth = ((int) this.mContext.getResources().getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2; // shortcut usage, but both the same
-        }
+        Log.d(TAG, "screenWidth : " + screenWidth);
+        Log.d(TAG, "screenHeight : " + screenHeight);
+        Log.d(TAG, "ratio : " + ratio);
+        touchHashmap = new HashMap<>();
+        int circleUnlockMaxWidth = /*0;
+        if (type == TYPE_UNLOCK) {
+            circleUnlockMaxWidth = */((int) mContext.getResources().getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2;
+        /*} else if (type == TYPE_SHORTCUT) {
+            circleUnlockMaxWidth = ((int) mContext.getResources().getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2; // shortcut usage, but both the same
+        }*/
         int outerStrokeWidth = (int) (4.0f * ratio);
         int innerStrokeWidth = (int) (6.0f * ratio);
         int[] lockSequenceImageId = {
@@ -69,8 +87,8 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
                 R.drawable.keyguard_none_lock_29,
                 R.drawable.keyguard_none_lock_30
         };
-        this.circleEffect = new EffectView(this.mContext);
-        this.circleEffect.setEffect(2);
+        circleEffect = new EffectView(mContext);
+        circleEffect.setEffect(2);
         EffectDataObj data = new EffectDataObj();
         data.setEffect(2);
         data.circleData.circleUnlockMaxWidth = circleUnlockMaxWidth;
@@ -78,97 +96,108 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
         data.circleData.innerStrokeWidth = innerStrokeWidth;
         data.circleData.lockSequenceImageId = lockSequenceImageId;
         data.circleData.arrowId = R.drawable.keyguard_none_arrow;
-        data.circleData.hasNoOuterCircle = KeyguardProperties.isUSAFeature(); // todo implement usa switch
-        this.circleEffect.init(data);
-        if (KeyguardProperties.isLatestPhoneUX() || KeyguardProperties.isLatestTabletUX()) { // todo implement latest switch
-            setMinWidthOffset((int) this.mContext.getResources().getDimension(R.dimen.keyguard_shortcut_min_width_offset)); // 0dp?
+        data.circleData.hasNoOuterCircle = false; // KeyguardProperties.isUSAFeature(); todo implement usa switch
+        circleEffect.init(data);
+        /*if (KeyguardProperties.isLatestPhoneUX() || KeyguardProperties.isLatestTabletUX()) { // todo shortcut parameters
+            setMinWidthOffset((int) mContext.getResources().getDimension(R.dimen.keyguard_shortcut_min_width_offset)); // 0dp?
             setArrowForButton(R.drawable.keyguard_shortcut_arrow);
         }
         if (KeyguardProperties.isLatestShortcutEffect()) {
             setOuterCircleType(false);
             showSwipeCircleEffect(false);
+        }*/
+        addView(circleEffect);
+        loadSound();
+    }
+
+    private void loadSound() {
+        if (!soundLoaded) {
+            SoundManager.loadSound(mContext, 0, 0, LOCK_SOUND_PATH, UNLOCK_SOUND_PATH);
+            soundLoaded = true;
         }
-        addView(this.circleEffect);
     }
 
     public void setMinWidthOffset(int offset) {
         EffectDataObj data = new EffectDataObj();
         data.setEffect(2);
         data.circleData.minWidthOffset = offset;
-        this.circleEffect.reInit(data);
+        circleEffect.reInit(data);
     }
 
     public void showSwipeCircleEffect(boolean value) {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : showSwipeCircleEffect");
+        Log.d(TAG, "KeyguardEffectViewNone : showSwipeCircleEffect");
         HashMap<String, Boolean> hm = new HashMap<>();
-        hm.put("showSwipeCircleEffect", Boolean.valueOf(value));
-        this.circleEffect.handleCustomEvent(99, hm);
+        hm.put("showSwipeCircleEffect", value);
+        circleEffect.handleCustomEvent(99, hm);
     }
 
     private void setOuterCircleType(boolean isStroke) {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : setOuterCircleType");
+        Log.d(TAG, "KeyguardEffectViewNone : setOuterCircleType");
         HashMap<String, Boolean> hm = new HashMap<>();
-        hm.put("setOuterCircleType", Boolean.valueOf(isStroke));
-        this.circleEffect.handleCustomEvent(99, hm);
+        hm.put("setOuterCircleType", isStroke);
+        circleEffect.handleCustomEvent(99, hm);
     }
 
     public void setArrowForButton(int arrowForButtonId) {
         EffectDataObj data = new EffectDataObj();
         data.setEffect(2);
         data.circleData.arrowForButtonId = arrowForButtonId;
-        this.circleEffect.reInit(data);
+        circleEffect.reInit(data);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public boolean handleTouchEvent(View view, MotionEvent event) {
-        this.circleEffect.handleTouchEvent(event, view);
+        circleEffect.handleTouchEvent(event, view);
         return true;
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void show() {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : show");
-        if (this.circleEffect != null) {
-            this.circleEffect.clearScreen();
+        Log.d(TAG, "KeyguardEffectViewNone : show");
+        loadSound();
+        if (circleEffect != null) {
+            circleEffect.clearScreen();
         }
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void reset() {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : reset");
-        if (this.circleEffect != null) {
-            this.circleEffect.clearScreen();
+        Log.d(TAG, "KeyguardEffectViewNone : reset");
+        if (circleEffect != null) {
+            circleEffect.clearScreen();
         }
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void cleanUp() {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : cleanUp");
+        SoundManager.loadSound(mContext, 0);
+        soundLoaded = false;
+        Log.d(TAG, "KeyguardEffectViewNone : cleanUp");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : update");
+        Log.d(TAG, "KeyguardEffectViewNone : update");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOn() {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : screenTurnedOn");
+        Log.d(TAG, "KeyguardEffectViewNone : screenTurnedOn");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOff() {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : screenTurnedOff");
+        Log.d(TAG, "KeyguardEffectViewNone : screenTurnedOff");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void showUnlockAffordance(long startDelay, Rect rect) {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : showUnlockAffordance");
-        if (this.circleEffect != null) {
+        Log.d(TAG, "KeyguardEffectViewNone : showUnlockAffordance");
+        if (circleEffect != null) {
             HashMap<String, Object> hm = new HashMap<>();
-            hm.put("StartDelay", Long.valueOf(startDelay));
+            hm.put("StartDelay", startDelay);
             hm.put("Rect", rect);
-            this.circleEffect.handleCustomEvent(1, hm);
+            circleEffect.handleCustomEvent(1, hm);
         }
     }
 
@@ -179,16 +208,17 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void handleUnlock(View view, MotionEvent event) {
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : handleUnlock");
-        if (this.circleEffect != null) {
-            this.circleEffect.handleCustomEvent(2, (HashMap) null);
+        Log.d(TAG, "KeyguardEffectViewNone : handleUnlock");
+        if (circleEffect != null) {
+            circleEffect.handleCustomEvent(2, null);
         }
+        SoundManager.playSound(mContext, SoundManager.UNLOCK, 0.3f, 0.3f, 1, 0, 1);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void playLockSound() {
-        // todo play lock sound betch
-        Log.d("VisualEffectCircleUnlockEffect", "KeyguardEffectViewNone : playLockSound");
+        SoundManager.playSound(mContext, SoundManager.LOCK, 0.3f,0.3f,1,0,1);
+        Log.d(TAG, "KeyguardEffectViewNone : playLockSound");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
@@ -198,8 +228,8 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void setHidden(boolean isHidden) {
-        if (this.circleEffect != null) {
-            this.circleEffect.clearScreen();
+        if (circleEffect != null) {
+            circleEffect.clearScreen();
         }
     }
 
@@ -219,4 +249,4 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
     public static String getCounterEffectName() {
         return "Wallpaper";
     }
-}*/
+}

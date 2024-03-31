@@ -19,7 +19,7 @@ import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.aj.effect.QuintEaseOut;
+import com.aj.effect.interpolator.QuintEaseOut;
 import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;

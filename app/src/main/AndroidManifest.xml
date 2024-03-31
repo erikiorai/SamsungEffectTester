@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:ignore="ProtectedPermissions">
 
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,7 +14,6 @@
         android:configChanges="orientation|screenLayout|screenSize"
         android:supportsRtl="true"
         tools:targetApi="31"
-        android:extractNativeLibs="true"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:theme="@style/ActivityTheme">
@@ -51,6 +51,5 @@
             </intent-filter>
         </activity>
     </application>
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
 
 </manifest>

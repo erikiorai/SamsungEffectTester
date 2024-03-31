@@ -14,7 +14,7 @@
         android:paddingEnd="@dimen/image_pad_grid_new"
         android:layout_gravity="center_horizontal"
         android:scaleType="fitXY"
-        android:src="@drawable/setting_preview_unlock_none" />
+        android:src="@drawable/setting_preview_unlock_nothing" />
 
     <CheckedTextView
         android:ellipsize="marquee"

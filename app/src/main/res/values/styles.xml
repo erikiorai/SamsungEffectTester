@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="ActivityTheme" parent="android:Theme.Material.NoActionBar" >
+    <style name="ActivityTheme" parent="android:Theme.DeviceDefault.Light.NoActionBar" >
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
@@ -10,11 +10,11 @@
         <item name="android:windowSharedElementEnterTransition">@android:transition/fade</item>
         <item name="android:windowSharedElementExitTransition">@android:transition/fade</item>
     </style>
-    <style name="Theme.ActionBar" parent="android:Widget.Material.ActionBar">
+    <style name="Theme.ActionBar" parent="android:Widget.DeviceDefault.Light.ActionBar">
         <item name="android:displayOptions">showTitle</item>
         <item name="android:contentInsetStart">@dimen/actionbar_contentInsetStart</item>
     </style>
-    <style name="Theme.DialogWhenLarge" parent="@android:style/Theme.Material.DialogWhenLarge">
+    <style name="Theme.DialogWhenLarge" parent="@android:style/Theme.DeviceDefault.Light.DialogWhenLarge">
         <!--item name="android:colorBackground">@android:color/white</item-->
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@android:color/transparent</item>
@@ -27,6 +27,9 @@
         <item name="android:windowSharedElementExitTransition">@android:transition/no_transition</item>
 
         <!--item name="preferenceBackgroundColor">@drawable/preference_background</item>-->
+    </style>
+    <style name="Theme.Button" parent="android:Widget.DeviceDefault.Light.Button">
+
     </style>
     <style name="keyguard_text_shadow" parent="">
         <item name="android:shadowDy">2</item>

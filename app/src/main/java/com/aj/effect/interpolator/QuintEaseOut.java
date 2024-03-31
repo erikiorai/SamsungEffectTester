@@ -1,4 +1,4 @@
-package com.aj.effect;
+package com.aj.effect.interpolator;
 
 import android.view.animation.BaseInterpolator;
 

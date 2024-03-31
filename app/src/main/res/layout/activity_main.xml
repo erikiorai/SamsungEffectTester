@@ -43,9 +43,10 @@
 
         <LinearLayout
             android:id="@+id/buttons"
-            android:layout_width="210dp"
+            android:layout_width="220dp"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/button_margins"
+            android:alpha="@integer/button_alpha"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -56,7 +57,7 @@
                 android:id="@+id/multiact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/button_alpha"
+                android:layout_marginTop="@dimen/button_top_margin"
                 android:text="@string/wall"
                 android:visibility="visible" />
 
@@ -64,15 +65,15 @@
                 android:id="@+id/affordance"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/button_alpha"
+                android:layout_marginTop="@dimen/button_top_margin"
                 android:text="@string/show_affordance" />
 
             <Switch
                 android:id="@+id/unlock"
-                style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/button_alpha"
+                android:layout_marginTop="@dimen/button_top_margin"
+                style="@style/Theme.Button"
                 android:checked="true"
                 android:text="@string/unlock_ability" />
 
@@ -80,26 +81,25 @@
                 android:id="@+id/effectsw"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:alpha="@integer/button_alpha"
+                android:layout_marginTop="@dimen/button_top_margin"
                 android:text="effect switch" />
 
             <Switch
                 android:id="@+id/palette"
-                style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/button_top_margin"
                 android:checked="true"
-                android:alpha="@integer/button_alpha"
+                style="@style/Theme.Button"
                 android:text="original color palette"
                 android:visibility="gone" />
 
             <Switch
                 android:id="@+id/customact"
-                style="@android:style/Widget.Material.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:checked="true"
-                android:alpha="@integer/button_alpha"
+                android:layout_marginTop="@dimen/button_top_margin"
+                style="@style/Theme.Button"
                 android:text="custom actions"
                 android:visibility="gone" />
 

@@ -10,7 +10,7 @@
         android:layout_marginEnd="@dimen/alert_dialog_padding_left_right"
         android:layout_marginVertical="@dimen/alert_dialog_padding_left_right"
         android:scaleType="fitXY"
-        android:src="@drawable/setting_preview_unlock_none" />
+        android:src="@drawable/setting_preview_unlock_nothing" />
 
     <ImageView
         android:id="@+id/preview_image_for_mobile_keyboard"
@@ -19,7 +19,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginEnd="@dimen/alert_dialog_padding_left_right"
         android:scaleType="fitXY"
-        android:src="@drawable/setting_preview_unlock_none"
+        android:src="@drawable/setting_preview_unlock_nothing"
         android:visibility="gone" />
 
     <ListView

@@ -41,7 +41,7 @@ public class MainActivity extends Activity {
     public Button multiactionButton;
     public static boolean unlockBool;
 
-    public static int effect = KeyguardEffectViewController.EFFECT_MONTBLANC;
+    public static int effect = EffectEnum.NONE.assigned;
 
     ImageView imgView;
 
@@ -127,11 +127,6 @@ public class MainActivity extends Activity {
         lp.leftMargin = -((int) (fontSize / 15.0f));
         clock.setLayoutParams(lp);
         controller.setEffectLayout(mBackgroundRootLayout, mForegroundRootLayout, null);
-        /*mBackgroundRootLayout.addView(controller, -1, -1);
-        controller.update();
-        /*getWindow().setBackgroundDrawableResource(R.drawable.wall);
-        FrameLayout view = findViewById(R.id.lay);
-        view.addView(mUnlockView); */
     }
 
     public static void switchActivity(Context context) {
@@ -159,9 +154,11 @@ public class MainActivity extends Activity {
         super.onResume();
         imgView.draw(canv);
         controller.handleWallpaperImageChanged();
+
         controller.screenTurnedOn();
         controller.show();
         mUnlockView.showUnlockAffordance();
+
         KeyguardEffectViewBase effect = controller.getUnlockEffect();
         if (effect instanceof KeyguardEffectViewPoppingColor ||
                 effect instanceof KeyguardEffectViewBouncingColor ||

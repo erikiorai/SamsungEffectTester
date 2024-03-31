@@ -14,7 +14,7 @@ public class EffectEnum {
     {
         this.name = name == null ? R.string.unlock_effect : name;
         this.assigned = assigned; // TODO default effect
-        this.drawable = drawable == null ? R.drawable.setting_preview_unlock_none : drawable;
+        this.drawable = drawable == null ? R.drawable.setting_preview_unlock_nothing : drawable;
     }
 
     public static final EffectEnum NONE = new EffectEnum(R.string.unlock_effect_none, 0, R.drawable.setting_preview_unlock_none);

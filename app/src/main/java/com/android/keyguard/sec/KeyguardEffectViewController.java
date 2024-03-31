@@ -384,11 +384,11 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     public void handleWallpaperTypeChanged() {
         if (this.mBackgroundRootLayout != null) {
             // TODO: get effect
-            this.mCurrentEffect = MainActivity.effect; //todo Settings.System.getInt(mContext.getContentResolver(), "lockscreen_ripple_effect", 1); // todo 0 getIntForUser(this.mContext.getContentResolver(), "lockscreen_ripple_effect", 0, -2);
-            /*if (this.mForegroundCircleView == null) {
+            this.mCurrentEffect = mContext.getSharedPreferences("settings", 0).getInt("lockscreen_ripple_effect", MainActivity.effect); //todo Settings.System.getInt(mContext.getContentResolver(), "lockscreen_ripple_effect", 0); // getIntForUser(this.mContext.getContentResolver(), "lockscreen_ripple_effect", 0, -2);
+            if (this.mForegroundCircleView == null) {
                 this.mForegroundCircleView = new KeyguardEffectViewNone(this.mContext);
             }
-            if (isZoomPanningEffectEnabled() && isRichLockWallpaper()) {
+            /*if (isZoomPanningEffectEnabled() && isRichLockWallpaper()) {
                 this.mCurrentEffect = 80;
             }
             if (handleFestivalEffect()) {
@@ -401,6 +401,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
             //this.mBackgroundRootLayout.setBackgroundColor(Color.GRAY);//WHITE);
             if (this.mOldEffect != this.mCurrentEffect) {
                 this.mOldEffect = this.mCurrentEffect;
+                cleanUp();
                 // TODO: make use of reloadLockSound(); in future
             }
             /*
@@ -501,10 +502,9 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         }
         if (this.mForegroundView != null) {
             this.mForegroundRootLayout.addView((View) this.mForegroundView, -1, -1);
-            //this.mForegroundRootLayout.addView((View) this.mForegroundCircleView, -1, -1);
-            return;
+        } else {
+            this.mForegroundRootLayout.addView((View) this.mForegroundCircleView, -1, -1);
         }
-        // TODO: null child this.mForegroundRootLayout.addView((View) this.mForegroundCircleView, -1, -1);
     }
 
     private void setBackground() {
@@ -741,6 +741,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     public void handleUnlock(View view, MotionEvent event) {
         if (view != null && this.mForegroundCircleView != null) {
             this.mForegroundCircleView.handleUnlock(view, event);
+            MainActivity.switchActivity(mContext);
         } else if (this.mUnlockEffectView != null) {
             this.mUnlockEffectView.handleUnlock(view, event);
             // todo handle un;lock
@@ -1280,7 +1281,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     }
 
     private String getEffectClassName(String nameOfEffect) {
-        if (nameOfEffect == null || nameOfEffect.length() == 0) {
+        if (nameOfEffect == null || nameOfEffect.isEmpty()) {
             return null;
         }
         if ("LiveWallpaper".equals(nameOfEffect)) {
@@ -1468,10 +1469,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
                 Log.d(TAG, "mBackgroundView is not null");
                 setBackground();
                 this.mBackgroundView.update();
-            }
-            if (mBackgroundView == null) // TODO set when background is null
-                setBackground();
-            setForeground();
+            } else setForeground(); // TODO set when background is null
             this.mUserSwitching = false;
         } else if (this.mBackgroundView != null && !true) {//this.mWallpaperProcessSeparated) {
             this.mBackgroundView.update();

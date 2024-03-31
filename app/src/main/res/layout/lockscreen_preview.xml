@@ -10,7 +10,7 @@
         android:layout_marginTop="@dimen/unlock_effect_image_top_margin"
         android:layout_marginBottom="@dimen/unlock_effect_image_bottom_margin"
         android:scaleType="fitXY"
-        android:src="@drawable/setting_preview_unlock_none" />
+        android:src="@drawable/setting_preview_unlock_nothing" />
 
     <ImageView
         android:id="@+id/preview_image_for_mobile_keyboard"
@@ -20,7 +20,7 @@
         android:layout_marginTop="@dimen/unlock_effect_image_top_margin_for_mobile_keyboard"
         android:layout_marginBottom="@dimen/unlock_effect_image_bottom_margin_for_mobile_keyboard"
         android:scaleType="fitXY"
-        android:src="@drawable/setting_preview_unlock_none"
+        android:src="@drawable/setting_preview_unlock_nothing"
         android:visibility="gone" />
     <ListView android:id="@android:id/list" android:layout_width="match_parent" android:layout_height="0dp"
         android:choiceMode="singleChoice" android:layout_weight="1"/>

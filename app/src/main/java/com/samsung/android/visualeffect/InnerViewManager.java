@@ -7,6 +7,7 @@ import com.samsung.android.visualeffect.lock.abstracttile.AbstractTileEffect;
 import com.samsung.android.visualeffect.lock.blind.BlindEffect;
 import com.samsung.android.visualeffect.lock.brilliantcut.BrilliantCutEffect;
 import com.samsung.android.visualeffect.lock.brilliantring.BrilliantRingEffect;
+import com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect;
 import com.samsung.android.visualeffect.lock.droplet.DropletEffect_GL;
 import com.samsung.android.visualeffect.lock.geometricmosaic.GeometricMosaicEffect;
 import com.samsung.android.visualeffect.lock.indigodiffusion.IndigoDiffusionEffect;
@@ -25,10 +26,10 @@ public class InnerViewManager {
         }
         else if (argv == EffectType.GEOMETRIC_MOSAIC) {
             return new GeometricMosaicEffect(context);
-        }/*
-        else if (argv == 2) {
+        }
+        else if (argv == EffectType.CIRCLE) {
             return new CircleUnlockEffect(context);
-        }*/
+        }
         else if (argv == EffectType.POPPING_COLOUR) {
             return new ParticleSpaceEffect(context);
         }
