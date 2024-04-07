@@ -10,9 +10,8 @@ import android.view.View;
 import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 
-/* loaded from: classes.dex */
 public class KeyguardUnlockEventHandler {
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false; // todo debug logs
     private static final String TAG = "KeyguardUnlockEventHandler";
     private UnlockCallback mCallback = null;
     private final int mFirstBorder;
@@ -47,14 +46,10 @@ public class KeyguardUnlockEventHandler {
         this.mSecondBorder = (int) res.getDimension(R.dimen.keyguard_lockscreen_second_border);
     }
 
-    /* JADX WARN: Can't fix incorrect switch cases order, some code will duplicate */
-    /* JADX WARN: Removed duplicated region for block: B:59:0x0172  */
-    /*
-        Code decompiled incorrectly, please refer to instructions dump.
-    */
     @SuppressLint("LongLogTag")
     public boolean handleTouchEvent(View view, MotionEvent event) {
-        Log.d(TAG, "mIsUnlockStarted - " + this.mIsUnlockStarted);
+        if (DEBUG)
+            Log.d(TAG, "mIsUnlockStarted - " + this.mIsUnlockStarted);
         int action = event.getAction();
         int maskedAction = action & 255;
         if (mIsUnlockStarted) {
@@ -88,12 +83,14 @@ public class KeyguardUnlockEventHandler {
             case MotionEvent.ACTION_UP:
                 if (event.getPointerCount() <= 1) {
                     mIsMultiTouch = false;
-                    Log.d(TAG, "mIsMultiTouch false");
+                    if (DEBUG)
+                        Log.d(TAG, "mIsMultiTouch false");
                 }
                 if (mCallback != null) {
                     mCallback.onUnlockViewReleased();
                 }
-                Log.d(TAG, "ACTION_UP mDistance: " + mDistance);
+                if (DEBUG)
+                    Log.d(TAG, "ACTION_UP mDistance: " + mDistance);
                 //TODO : unlock switch
                 if (mFirstBorder < mDistance && mDistance < mSecondBorder && !mIsMultiTouch && MainActivity.unlockBool) {
                     mIsUnlockStarted = true;
@@ -102,8 +99,6 @@ public class KeyguardUnlockEventHandler {
                         delay = mUnlockView.getUnlockDelay();
                     }
                     if (mCallback != null) {
-                        // from class: com.android.keyguard.sec.KeyguardUnlockEventHandler.2
-// java.lang.Runnable
                         ((View) mCallback).postDelayed(() -> {
                             if (mCallback != null) {
                                 mCallback.userActivity();
@@ -114,7 +109,7 @@ public class KeyguardUnlockEventHandler {
                     }
                 }
                 break;
-            case MotionEvent.AXIS_PRESSURE:
+            case MotionEvent.ACTION_MOVE:
                 if (mCallback != null) {
                     mCallback.userActivity();
                 }
@@ -137,8 +132,6 @@ public class KeyguardUnlockEventHandler {
                         delay = mUnlockView.getUnlockDelay();
                     }
                     if (mCallback != null) {
-                        // from class: com.android.keyguard.sec.KeyguardUnlockEventHandler.1
-// java.lang.Runnable
                         ((View) mCallback).postDelayed(() -> {
                             if (mCallback != null) {
                                 mCallback.userActivity();
@@ -153,7 +146,8 @@ public class KeyguardUnlockEventHandler {
             case MotionEvent.ACTION_CANCEL:
                 if (event.getPointerCount() <= 1) {
                     mIsMultiTouch = false;
-                    Log.d(TAG, "mIsMultiTouch false");
+                    if (DEBUG)
+                        Log.d(TAG, "mIsMultiTouch false");
                 }
                 if (mCallback != null) {
                     mCallback.onUnlockViewReleased();
@@ -163,13 +157,14 @@ public class KeyguardUnlockEventHandler {
             case MotionEvent.ACTION_POINTER_DOWN:
                 if (event.getPointerCount() >= 2) {
                     mIsMultiTouch = true;
-                    Log.d(TAG, "mIsMultiTouch true");
-                    break;
+                    if (DEBUG)
+                        Log.d(TAG, "mIsMultiTouch true");
                 } else {
                     mIsMultiTouch = false;
-                    Log.d(TAG, "mIsMultiTouch false");
-                    break;
+                    if (DEBUG)
+                        Log.d(TAG, "mIsMultiTouch false");
                 }
+                break;
             case MotionEvent.ACTION_POINTER_UP:
                 int pointer_index = (MotionEvent.ACTION_POINTER_INDEX_MASK & action) >> MotionEvent.ACTION_POINTER_INDEX_SHIFT;
                 int pointer_id = event.getPointerId(pointer_index);
@@ -195,9 +190,8 @@ public class KeyguardUnlockEventHandler {
         return mUnlockView.handleHoverEvent(view, event);
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
     @SuppressLint("LongLogTag")
-    public void launch() {
+    private void launch() {
         Log.d(TAG, "launch() - mIsKeyguardDismissing=" + mIsKeyguardDismissing);
         if (!mIsKeyguardDismissing) {
             mIsKeyguardDismissing = true;

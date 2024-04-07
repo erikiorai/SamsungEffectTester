@@ -17,7 +17,7 @@ public class SoundManager {
     static private int[] sounds = new int[4];
 
 
-    static AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
+    public static AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
     static SoundPool soundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
 
     /**

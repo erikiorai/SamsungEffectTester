@@ -127,7 +127,11 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
         data.dropletData.windowHeight = this.windowHeight;
         data.dropletData.mIEffectListener = this.mIEffectListener;
         data.dropletData.resNormal = makeResBitmap(R.drawable.normal_low_z_256);
-        data.dropletData.resEdgeDensity = makeResBitmap(R.drawable.edge_density_720);
+        if (Math.min(this.windowWidth, this.windowHeight) >= 720) {
+            data.dropletData.resEdgeDensity = makeResBitmap(R.drawable.edge_density_720);
+        } else {
+            data.dropletData.resEdgeDensity = makeResBitmap(R.drawable.edge_density_360);
+        }
         init(data);
         this.sounds = new int[3];
         this.mSensorManager = (SensorManager) context.getSystemService(Context.SENSOR_SERVICE);

@@ -9,7 +9,6 @@ import android.hardware.SensorEvent;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.PowerManager;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -503,7 +502,12 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         if (this.mForegroundView != null) {
             this.mForegroundRootLayout.addView((View) this.mForegroundView, -1, -1);
         } else {
-            this.mForegroundRootLayout.addView((View) this.mForegroundCircleView, -1, -1);
+            try {
+                this.mForegroundRootLayout.addView((View) this.mForegroundCircleView, -1, -1);
+            } catch (Exception e) {
+                Log.d(TAG, "setForeground: exceprion");
+                e.printStackTrace();
+            }
         }
     }
 
@@ -749,7 +753,6 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
             handler.postDelayed(() -> {
                 MainActivity.switchActivity(mContext);
             }, getUnlockDelay()+250L);
-
         }
     }
 

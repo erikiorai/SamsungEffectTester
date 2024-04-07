@@ -3,29 +3,27 @@ package com.aj.effect;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.drawable.Drawable;
 import android.graphics.Rect;
-import android.os.Build;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.view.WindowMetrics;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Switch;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.android.keyguard.sec.KeyguardEffectViewBase;
 import com.android.keyguard.sec.KeyguardEffectViewBouncingColor;
@@ -155,6 +153,8 @@ public class MainActivity extends Activity {
         imgView.draw(canv);
         controller.handleWallpaperImageChanged();
 
+        mUnlockView.reset();
+
         controller.screenTurnedOn();
         controller.show();
         mUnlockView.showUnlockAffordance();
@@ -176,4 +176,10 @@ public class MainActivity extends Activity {
         super.onPostResume();
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //imgView.draw(canv);
+        //controller.handleWallpaperTypeChanged();
+    }
 }

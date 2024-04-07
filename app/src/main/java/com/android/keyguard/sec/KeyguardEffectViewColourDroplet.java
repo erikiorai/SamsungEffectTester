@@ -120,7 +120,7 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
         if (Math.min(this.windowWidth, this.windowHeight) >= 720) {
             data.dropletData.resEdgeDensity = makeResBitmap(R.drawable.edge_density_720);
         } else {
-            data.dropletData.resEdgeDensity = makeResBitmap(R.drawable.edge_density_720); // todo 360);
+            data.dropletData.resEdgeDensity = makeResBitmap(R.drawable.edge_density_360);
         }
         init(data);
         this.sounds = new int[3];

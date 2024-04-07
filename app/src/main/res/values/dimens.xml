@@ -19,6 +19,8 @@
     <dimen name="list_divider_additional_inset">0dp</dimen>
     <dimen name="list_item_padding">16dp</dimen>
 
+    <dimen name="tension_line_delete">20dp</dimen>
+
     <dimen name="alert_dialog_padding_left_right">24dp</dimen>
 
     <dimen name="kg_singleclock_time_text_size_small">59dp</dimen>

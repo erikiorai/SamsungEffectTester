@@ -6,6 +6,7 @@ import static com.aj.effect.EffectEnum.BOUNCINGCOLOR;
 import static com.aj.effect.EffectEnum.BRILLIANTCUT;
 import static com.aj.effect.EffectEnum.BRILLIANTRING;
 import static com.aj.effect.EffectEnum.COLOURDROPLET;
+import static com.aj.effect.EffectEnum.EFFECT_MASS_TENSION;
 import static com.aj.effect.EffectEnum.GEOMETRICMOSAIC;
 import static com.aj.effect.EffectEnum.INDIGODIFFUSION;
 import static com.aj.effect.EffectEnum.LIGHTING;
@@ -15,6 +16,7 @@ import static com.aj.effect.EffectEnum.POPPINGGOODLOCK;
 import static com.aj.effect.EffectEnum.RECTANGLETRAVELLER;
 import static com.aj.effect.EffectEnum.RIPPLE;
 import static com.aj.effect.EffectEnum.SPARKLINGBUBBLES;
+import static com.aj.effect.EffectEnum.STONESKIPPING;
 import static com.aj.effect.EffectEnum.WATERCOLOUR;
 import static com.aj.effect.EffectEnum.WATERDROPLET;
 
@@ -41,8 +43,6 @@ import android.widget.ListView;
 import com.android.keyguard.sec.KeyguardEffectViewController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /* loaded from: classes.dex */
@@ -59,7 +59,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     private final EffectEnum[] order = {NONE, INDIGODIFFUSION, COLOURDROPLET, WATERDROPLET, SPARKLINGBUBBLES,
             ABSTRACTTILES, GEOMETRICMOSAIC, BRILLIANTRING, POPPINGCOLOURS,
-            WATERCOLOUR, RIPPLE, BRILLIANTCUT, LIGHTING, // todo fix a bit s5 order
+            WATERCOLOUR, RIPPLE, STONESKIPPING, EFFECT_MASS_TENSION, BRILLIANTCUT, LIGHTING, // todo fix a bit s5 order
             BLIND, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
 

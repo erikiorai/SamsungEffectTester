@@ -3,27 +3,23 @@ package com.samsung.android.visualeffect.lock.circleunlock;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
-import android.os.Handler;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
-import com.aj.effect.interpolator.QuintEaseIn;
-import com.aj.effect.interpolator.QuintEaseOut;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+
+import com.aj.effect.interpolator.QuintEaseIn;
+import com.aj.effect.interpolator.QuintEaseOut;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.IEffectView;
 
-import java.io.File;
-import java.io.FileOutputStream;
 import java.util.HashMap;
 
 /* loaded from: classes.dex */
@@ -270,7 +266,7 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
             circleUnlockMinRadius = circleUnlockMinWidth / 2;
             circle.setCircleMinWidth(circleUnlockMinWidth);
             circle.setIsForShortcut(isForShortcut);
-            circle.setOuterCircleType(true);
+            circle.setOuterCircleType(isStroke);
             circle.showSwipeCircleEffect(true);
         }
         arrow.setVisibility(View.VISIBLE);
@@ -319,21 +315,6 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
             circleInAnimator.setInterpolator(new QuintEaseOut());
             circleInAnimator.start();
             long delay = startDelay + IN_ANIMATION_DURATION_FOR_AFFORDANCE + SHOWING_DURATION_FOR_AFFORDANCE;
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-                Handler handler = new Handler();
-                handler.postDelayed(() -> {
-                    Bitmap bitmap = Bitmap.createBitmap(circleGroup.getWidth(), circleGroup.getHeight(), Bitmap.Config.ARGB_8888, false);
-                    Canvas canvas = new Canvas(bitmap);
-                    circleGroup.draw(canvas);
-                    File file = new File(mContext.getExternalFilesDir(null), "lock" + System.currentTimeMillis() + ".png");
-                    try {
-                        bitmap.compress(Bitmap.CompressFormat.PNG, 100, new FileOutputStream(file));
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }, startDelay + IN_ANIMATION_DURATION_FOR_AFFORDANCE);
-            }
-
             circleOutAnimator.setStartDelay(delay);
             circleOutAnimator.setDuration(OUT_ANIMATION_DURATION_FOR_AFFORDANCE);
             circleOutAnimator.setInterpolator(new QuintEaseIn());
@@ -395,8 +376,8 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
                 changeModeForCircleUnlock();
             }
         }
-        float touchX = event.getRawX();
-        float touchY = event.getRawY();
+        float touchX = event.getX();
+        float touchY = event.getY();
         if (event.getActionMasked() == MotionEvent.ACTION_DOWN) {
             Log.d(TAG, "handleTouchEvent : ACTION_DOWN");
             isUnlocked = false;

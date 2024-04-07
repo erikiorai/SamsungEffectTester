@@ -78,6 +78,10 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
         }
     }
 
+
+    public void reset() { // todo avoid softlock
+        mKeyguardUnlockEventHandler.reset();
+    }
     // idk even what is this.
     /*private void pokeWakelockWithTimeCheck() {
         long now = System.currentTimeMillis();

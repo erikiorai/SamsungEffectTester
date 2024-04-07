@@ -24,7 +24,7 @@ public class EffectEnum {
     public static final EffectEnum WATERCOLOUR = new EffectEnum(R.string.unlock_effect_watercolor, 4, R.drawable.setting_preview_unlock_watercolor);
     public static final EffectEnum BLIND = new EffectEnum(R.string.blind_effect, 5, R.drawable.setting_preview_unlock_blind);
     public static final EffectEnum EFFECT_MASS_TENSION = new EffectEnum(null, KeyguardEffectViewController.EFFECT_MASS_TENSION, null); // TODO: tension
-    public static final EffectEnum EFFECT_MASS_RIPPLE = new EffectEnum(R.string.unlock_effect_simple_ripple, 7, R.drawable.setting_preview_unlock_stoneskipping);
+    public static final EffectEnum STONESKIPPING = new EffectEnum(R.string.unlock_effect_simple_ripple, 7, R.drawable.setting_preview_unlock_stoneskipping);
     public static final EffectEnum BRILLIANTRING = new EffectEnum(R.string.unlock_effect_brilliant_ring, 8, R.drawable.setting_preview_unlock_brilliantring);
     public static final EffectEnum BRILLIANTCUT = new EffectEnum(R.string.brilliant_cut, 9, R.drawable.setting_preview_unlock_brilliantcut);
     public static final EffectEnum INDIGODIFFUSION = new EffectEnum(R.string.unlock_effect_montblanc, 10, R.drawable.setting_preview_unlock_montblanc);
@@ -40,7 +40,7 @@ public class EffectEnum {
 
     public static final List<EffectEnum> effectList = Arrays.asList(NONE,
             RIPPLE, LIGHTING, POPPINGCOLOURS, WATERCOLOUR, BLIND, EFFECT_MASS_TENSION,
-            EFFECT_MASS_RIPPLE, BRILLIANTRING, BRILLIANTCUT, INDIGODIFFUSION, ABSTRACTTILES,
+            STONESKIPPING, BRILLIANTRING, BRILLIANTCUT, INDIGODIFFUSION, ABSTRACTTILES,
             GEOMETRICMOSAIC, WATERDROPLET, SPARKLINGBUBBLES, COLOURDROPLET);
 
     /*public static EffectEnum getByInt(int assigned) {

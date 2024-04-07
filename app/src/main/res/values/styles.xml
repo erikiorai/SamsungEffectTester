@@ -4,33 +4,33 @@
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:windowTranslucentNavigation">true</item>
 
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@android:transition/fade</item>
-        <item name="android:windowExitTransition">@android:transition/fade</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/fade</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/fade</item>
+        <item name="android:windowAnimationStyle">@style/Animation.LockScreen</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
     </style>
+    <style name="Animation.LockScreen" parent="@android:style/Animation">
+        <item name="android:activityOpenEnterAnimation">@anim/lock_screen_enter</item>
+        <item name="android:activityOpenExitAnimation">@anim/lock_screen_exit</item>
+        <item name="android:activityCloseEnterAnimation">@anim/lock_screen_enter</item>
+        <item name="android:activityCloseExitAnimation">@anim/lock_screen_exit</item>
+    </style>
+
     <style name="Theme.ActionBar" parent="android:Widget.DeviceDefault.Light.ActionBar">
         <item name="android:displayOptions">showTitle</item>
         <item name="android:contentInsetStart">@dimen/actionbar_contentInsetStart</item>
     </style>
     <style name="Theme.DialogWhenLarge" parent="@android:style/Theme.DeviceDefault.Light.DialogWhenLarge">
         <!--item name="android:colorBackground">@android:color/white</item-->
-        <item name="android:statusBarColor">@android:color/transparent</item>
+        <!--item name="android:statusBarColor">@android:color/transparent</item-->
         <item name="android:navigationBarColor">@android:color/transparent</item>
         <item name="android:actionBarStyle">@style/Theme.ActionBar</item>
 
-        <item name="android:windowActivityTransitions">true</item>
-        <item name="android:windowEnterTransition">@android:transition/no_transition</item>
-        <item name="android:windowExitTransition">@android:transition/no_transition</item>
-        <item name="android:windowSharedElementEnterTransition">@android:transition/no_transition</item>
-        <item name="android:windowSharedElementExitTransition">@android:transition/no_transition</item>
-
+        <item name="android:windowAnimationStyle">@style/Animation.LockScreen</item>
+        <item name="android:windowAllowEnterTransitionOverlap">true</item>
+        <item name="android:windowAllowReturnTransitionOverlap">true</item>
         <!--item name="preferenceBackgroundColor">@drawable/preference_background</item>-->
     </style>
-    <style name="Theme.Button" parent="android:Widget.DeviceDefault.Light.Button">
-
-    </style>
+    <style name="Theme.Button" parent="android:Widget.DeviceDefault.Light.Button"/>
     <style name="keyguard_text_shadow" parent="">
         <item name="android:shadowDy">2</item>
         <item name="android:shadowRadius">2</item>
