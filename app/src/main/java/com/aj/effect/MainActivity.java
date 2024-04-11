@@ -86,6 +86,7 @@ public class MainActivity extends Activity {
             else
                 imgView.setImageDrawable(prev);
 
+            imgView.setScaleType(ImageView.ScaleType.FIT_XY);
             imgView.draw(canv);
             controller.handleWallpaperImageChanged();
         });
@@ -138,6 +139,7 @@ public class MainActivity extends Activity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 0 && resultCode == RESULT_OK) {
             imgView.setImageURI(data.getData());
+            imgView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         }
     }
 

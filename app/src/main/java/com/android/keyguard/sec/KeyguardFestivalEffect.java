@@ -3,9 +3,22 @@ package com.android.keyguard.sec;
 import android.content.Context;
 import android.os.Handler;
 
-/* loaded from: classes.dex */
+import com.android.keyguard.sec.festivaleffect.FestivalQuery;
+import com.android.keyguard.sec.festivaleffect.unlockeffect.autumn.KeyguardEffectViewAutumn;
+import com.android.keyguard.sec.festivaleffect.unlockeffect.spring.KeyguardEffectViewSpring;
+import com.android.keyguard.sec.festivaleffect.unlockeffect.summer.KeyguardEffectViewSummer;
+import com.android.keyguard.sec.festivaleffect.unlockeffect.winter.KeyguardEffectViewWinter;
+
+import java.util.Locale;
+
+/* todo FIX EVERY SINGLE THING */
 public class KeyguardFestivalEffect {
+    private Context context;
+    private KeyguardEffectViewBase mUnlockViewBase;
+
+
     public KeyguardFestivalEffect(Context context, Handler handler) {
+        this.context = context;
     }
 
     public boolean isActivated() {
@@ -17,7 +30,7 @@ public class KeyguardFestivalEffect {
     }
 
     public boolean isUnlockEffectEnabled() {
-        return false;
+        return true;
     }
 
     public boolean isChargeEffectEnable() {
@@ -37,8 +50,24 @@ public class KeyguardFestivalEffect {
     }
 
     public KeyguardEffectViewBase getUnlockEffectView() {
-        return null;
+        mUnlockViewBase = createView(FestivalQuery.getCurrentSeason());
+        return mUnlockViewBase;
     }
+
+    private KeyguardEffectViewBase createView(int currentSeason) {
+        switch (currentSeason) {
+            case FestivalQuery.SPRING_EFFECT:
+                return new KeyguardEffectViewSpring(context);
+            case FestivalQuery.SUMMER_EFFECT:
+                return new KeyguardEffectViewSummer(context);
+            case FestivalQuery.AUTUMN_EFFECT:
+                return new KeyguardEffectViewAutumn(context);
+            case FestivalQuery.WINTER_EFFECT:
+                return new KeyguardEffectViewWinter(context);
+        }
+        return getUnlockEffectView();
+    }
+
 
     public boolean isFestivalToday() {
         return false;
@@ -71,7 +100,23 @@ public class KeyguardFestivalEffect {
     }
 
     public String getFestivalEffectClassName(String nameOfEffect) {
-        return null;
+        if (nameOfEffect == "Seasonal") {
+            switch (FestivalQuery.getCurrentSeason()) {
+                case FestivalQuery.SPRING_EFFECT:
+                    nameOfEffect = "Spring";
+                    break;
+                case FestivalQuery.SUMMER_EFFECT:
+                    nameOfEffect = "Summer";
+                    break;
+                case FestivalQuery.AUTUMN_EFFECT:
+                    nameOfEffect = "Autumn";
+                    break;
+                case FestivalQuery.WINTER_EFFECT:
+                    nameOfEffect = "Winter";
+                    break;
+            }
+        }
+        return "com.android.keyguard.sec.festivaleffect.unlockeffect." + nameOfEffect.toLowerCase(Locale.ENGLISH) + ".KeyguardEffectView" + nameOfEffect;
     }
 
     public void pauseAnimation() {

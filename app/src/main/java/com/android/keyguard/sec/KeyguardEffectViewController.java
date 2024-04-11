@@ -1246,6 +1246,9 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
             case EFFECT_COLOURDROPLET:
                 nameOfEffect = "ColourDroplet";
                 break;
+            case 16:
+                nameOfEffect = "Liquid";
+                break;
             case 18: // todo NEW EFFECTS
                 nameOfEffect = "Morphing";
                 break;
@@ -1456,7 +1459,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
                 if (primaryEffect != this.mForegroundCircleView) {
                     this.mForegroundView = primaryEffect;
                 }
-                this.mOldPrimaryEffect = primaryEffect.getClass().getName().toString();
+                this.mOldPrimaryEffect = primaryEffect.getClass().getName();
                 this.mUnlockEffectView = primaryEffect;
                 Log.d(TAG, "Sets foreground view first");
             }

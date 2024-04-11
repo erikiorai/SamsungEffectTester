@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">Effect</string>
     <string name="wall">wallpaper change</string>
-    <string name="reset"><![CDATA[press -> reset unlock state]]></string>
     <string name="show_affordance">show affordance</string>
     <string name="unlock_ability">unlock ability</string>
 
@@ -16,6 +15,7 @@
     <string name="unlock_effect_watercolor">Watercolour</string>
     <string name="unlock_effect_ripple">Ripple</string>
     <string name="unlock_effect_liquid">Water droplet</string>
+    <string name="unlock_effect_liquid_old">Liquid</string>
     <string name="unlock_effect_colour_droplet">Coloured Droplets</string>
     <string name="light_effect">Light effect</string>
     <string name="blind_effect">Blind</string>
@@ -24,5 +24,14 @@
     <string name="unlock_effect_poppinggl">Popping color (Good Lock)</string>
     <string name="unlock_effect_bouncing">Bouncing color</string>
     <string name="unlock_effect_rectangle">Rectangle traveller</string>
+    <string name="tension_effect">Tension</string>
+
+
+    <string name="festival_effect_spring">Spring</string>
+    <string name="festival_effect_summer">Summer</string>
+    <string name="festival_effect_fall">Autumn</string>
+    <string name="festival_effect_winter">Winter</string>
+    <string name="festival_seasonal">Seasonal</string>
+
 
 </resources>

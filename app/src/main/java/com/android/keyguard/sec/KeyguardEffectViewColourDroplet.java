@@ -92,7 +92,7 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
                         }*/
                         return;
                     case 1:
-                        KeyguardEffectViewColourDroplet.this.update(KeyguardEffectViewColourDroplet.this.setBackground(), 1);
+                        KeyguardEffectViewColourDroplet.this.update(KeyguardEffectViewUtil.getCurrentWallpaper(context), 1);
                         KeyguardEffectViewColourDroplet.this.mTouchFlagForMobileKeyboard = false;
                         Log.d("KeyguardEffectViewColourDroplet", "mIEffectListener callback, update(1) mTouchFlagForMobileKeyboard = " + KeyguardEffectViewColourDroplet.this.mTouchFlagForMobileKeyboard);
                         return;
@@ -162,7 +162,7 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
         Log.d("KeyguardEffectViewColourDroplet", "update(0)");
-        update(setBackground(), 0);
+        update(KeyguardEffectViewUtil.getCurrentWallpaper(mContext), 0);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -271,24 +271,6 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
             Log.d("KeyguardEffectViewColourDroplet", "setHidden() - call screenTurnedOn() cause by SHOW_WHEN_LOCKED");
             screenTurnedOn();
         }
-    }
-
-    /* JADX INFO: Access modifiers changed from: private */
-    public Bitmap setBackground() {
-        Log.d("KeyguardEffectViewColourDroplet", "setBackground");
-        /* todo BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
-        if (newBitmapDrawable == null) {
-            Log.i("KeyguardEffectViewColourDroplet", "newBitmapDrawable  is null");
-            return null;
-        }
-        Bitmap pBitmap = newBitmapDrawable.getBitmap();*/
-        Bitmap pBitmap = MainActivity.bitm;
-        if (pBitmap == null) {
-            Log.i("KeyguardEffectViewColourDroplet", "pBitmap  is null");
-            return pBitmap;
-        }
-        Log.d("KeyguardEffectViewColourDroplet", "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
-        return pBitmap;
     }
 
     private Bitmap makeResBitmap(int res) {

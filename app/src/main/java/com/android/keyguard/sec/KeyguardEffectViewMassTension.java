@@ -1,5 +1,8 @@
 package com.android.keyguard.sec;
 
+import static com.aj.effect.SoundManager.LOCK;
+import static com.aj.effect.SoundManager.TAP;
+import static com.aj.effect.SoundManager.UNLOCK;
 import static com.aj.effect.SoundManager.attr;
 
 import android.content.ContentResolver;
@@ -27,12 +30,13 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.aj.effect.R;
+import com.aj.effect.SoundManager;
 
 import java.io.File;
 
 /* loaded from: classes.dex */
 public class KeyguardEffectViewMassTension extends FrameLayout implements KeyguardEffectViewBase {
-    private static final String sound_tap_path = "/system/media/audio/ui/Tap_tension.ogg";
+    private static final int sound_tap_path = R.raw.tap_tension;
     private final int CIRCLE_MAX_ALPHA;
     private final float CIRCLE_MAX_ALPHA_FACTOR;
     private final int CIRCLE_MIN_ALPHA;
@@ -84,7 +88,7 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
     private long prevPressTime;
     private double radian;
     private Runnable releaseSoundRunnable;
-    private int sounds;
+    private int[] sounds = new int[4];
 
     public KeyguardEffectViewMassTension(Context context) {
         super(context);
@@ -231,11 +235,11 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
                 this.mX = event.getRawX();
                 this.mY = event.getRawY();
                 this.mCircleOuter.setVisibility(View.VISIBLE);
-                this.mCircleOuter.setX(((int) event.getRawX()) - ((float) this.mCircleOuter.getMeasuredWidth() / 2));
-                this.mCircleOuter.setY(((int) event.getRawY()) - ((float) this.mCircleOuter.getMeasuredHeight() / 2));
+                this.mCircleOuter.setX(((int) event.getRawX()) - (mCircleOuter.getMeasuredWidth() / 2.0f));
+                this.mCircleOuter.setY(((int) event.getRawY()) - (mCircleOuter.getMeasuredHeight() / 2.0f));
                 this.mCircleFinger.setVisibility(View.VISIBLE);
-                this.mCircleFinger.setX(((int) event.getRawX()) - ((float) this.mCircleFinger.getMeasuredWidth() / 2));
-                this.mCircleFinger.setY(((int) event.getRawY()) - ((float) this.mCircleFinger.getMeasuredHeight() / 2));
+                this.mCircleFinger.setX(((int) event.getRawX()) - (mCircleFinger.getMeasuredWidth() / 2.0f));
+                this.mCircleFinger.setY(((int) event.getRawY()) - (mCircleFinger.getMeasuredHeight() / 2.0f));
                 this.mCircleCenterDot.setVisibility(View.VISIBLE);
                 this.mCircleCenterDot.setX(((int) event.getRawX()) - ((float) this.mCircleCenterDot.getMeasuredWidth() / 2));
                 this.mCircleCenterDot.setY(((int) event.getRawY()) - ((float) this.mCircleCenterDot.getMeasuredHeight() / 2));
@@ -245,38 +249,38 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
                 this.mCircleLine.setScaleX(0.0f);
                 this.prevPressTime = SystemClock.uptimeMillis();
                 this.diffPressTime = 0L;
-                playSound();
+                playSound(TAP);
                 break;
             case 1:
                 this.mCircleOuter.setVisibility(View.INVISIBLE);
                 this.mCircleFinger.setVisibility(View.INVISIBLE);
                 this.mCircleLine.setVisibility(View.INVISIBLE);
-                this.mCircleOuterRoot.setX(((int) this.mX) - (this.mCircleOuterAfter.getMeasuredWidth() / 2));
-                this.mCircleOuterRoot.setY(((int) this.mY) - (this.mCircleOuterAfter.getMeasuredHeight() / 2));
+                this.mCircleOuterRoot.setX(((int) this.mX) - ((float) this.mCircleOuterAfter.getMeasuredWidth() / 2));
+                this.mCircleOuterRoot.setY(((int) this.mY) - ((float) this.mCircleOuterAfter.getMeasuredHeight() / 2));
                 this.mCircleOuterAfter.startAnimation(this.mCircleOuterAnim);
                 this.betweenLineX = (int) (this.mX + ((event.getRawX() - this.mX) / 40.0f));
                 this.betweenLineY = (int) (this.mY + ((event.getRawY() - this.mY) / 40.0f));
                 this.diffPressTime = SystemClock.uptimeMillis() - this.prevPressTime;
                 if (this.mDistanceRatio < 1.399999976158142d) {
-                    this.mCircleFingerRoot.setX(((int) event.getRawX()) - (this.mCircleFingerAfter.getMeasuredWidth() / 2));
-                    this.mCircleFingerRoot.setY(((int) event.getRawY()) - (this.mCircleFingerAfter.getMeasuredHeight() / 2));
+                    this.mCircleFingerRoot.setX(((int) event.getRawX()) - ((float) this.mCircleFingerAfter.getMeasuredWidth() / 2));
+                    this.mCircleFingerRoot.setY(((int) event.getRawY()) - ((float) this.mCircleFingerAfter.getMeasuredHeight() / 2));
                     this.mCircleFingerAfter.startAnimation(this.mCircleFingerAnim);
-                    this.mCircleCenterDotRoot.setX(this.betweenLineX - (this.mCircleCenterDotAfter.getMeasuredWidth() / 2));
-                    this.mCircleCenterDotRoot.setY(this.betweenLineY - (this.mCircleCenterDotAfter.getMeasuredHeight() / 2));
+                    this.mCircleCenterDotRoot.setX(this.betweenLineX - ((float) this.mCircleCenterDotAfter.getMeasuredWidth() / 2));
+                    this.mCircleCenterDotRoot.setY(this.betweenLineY - ((float) this.mCircleCenterDotAfter.getMeasuredHeight() / 2));
                     this.mCircleCenterDotAfter.startAnimation(this.mCircleCenterDotAnim);
                     this.mCircleCenterDot.setVisibility(View.INVISIBLE);
                     if (this.diffPressTime > 600) {
-                        playSound();
+                        playSound(TAP);
                         break;
                     }
                 } else if (this.mDistanceRatio >= 1.399999976158142d && this.mDistanceRatio <= 2.0999999046325684d) {
-                    this.mCircleFingerRoot.setX(((int) event.getRawX()) - (this.mCircleFingerAfter.getMeasuredWidth() / 2));
-                    this.mCircleFingerRoot.setY(((int) event.getRawY()) - (this.mCircleFingerAfter.getMeasuredHeight() / 2));
+                    this.mCircleFingerRoot.setX(((int) event.getRawX()) - ((float) this.mCircleFingerAfter.getMeasuredWidth() / 2));
+                    this.mCircleFingerRoot.setY(((int) event.getRawY()) - ((float) this.mCircleFingerAfter.getMeasuredHeight() / 2));
                     this.mCircleFingerAfter.startAnimation(this.mCircleFingerReleaseAnim);
                     this.mCircleLineRoot.setX(this.betweenLineX);
-                    this.mCircleLineRoot.setY(this.betweenLineY - (this.mCircleLine.getMeasuredHeight() / 2));
+                    this.mCircleLineRoot.setY(this.betweenLineY - ((float) this.mCircleLine.getMeasuredHeight() / 2));
                     this.mCircleLineRoot.setPivotX(0.0f);
-                    this.mCircleLineRoot.setPivotY(this.mCircleLineAfter.getMeasuredHeight() / 2);
+                    this.mCircleLineRoot.setPivotY((float) this.mCircleLineAfter.getMeasuredHeight() / 2);
                     this.mCircleLineRoot.setRotation((float) this.degree);
                     setLineAnim(this.lineSize, 0.0f);
                     this.mCircleLineAfter.startAnimation(this.mLineAnim);
@@ -290,7 +294,7 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
                 int diffY = (int) (event.getRawY() - this.mY);
                 double distance_square = Math.pow(diffX, 2.0d) + Math.pow(diffY, 2.0d);
                 double distance = Math.sqrt(distance_square);
-                double threshold = this.mCircleOuter.getWidth() / 2;
+                double threshold = (double) this.mCircleOuter.getWidth() / 2;
                 this.mDistanceRatio = distance / threshold;
                 this.betweenLineX = (int) (this.mX + ((event.getRawX() - this.mX) / 40.0f));
                 this.betweenLineY = (int) (this.mY + ((event.getRawY() - this.mY) / 40.0f));
@@ -299,37 +303,37 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
                 double absY = (-1.0f) * (event.getRawY() - this.mY);
                 this.radian = Math.atan2(absY, absX);
                 this.degree = ((-this.radian) / 3.141592653589793d) * 180.0d;
-                this.outerTensionFactorX = this.mX + ((((this.mCircleFinger.getMeasuredWidth() / 2) + (this.mCircleOuter.getMeasuredWidth() / 2)) - 5) * Math.cos((this.degree / 180.0d) * 3.141592653589793d));
-                this.outerTensionFactorY = this.mY - ((((this.mCircleFinger.getMeasuredHeight() / 2) + (this.mCircleOuter.getMeasuredHeight() / 2)) - 5) * Math.sin(((-this.degree) / 180.0d) * 3.141592653589793d));
+                this.outerTensionFactorX = this.mX + (((((double) this.mCircleFinger.getMeasuredWidth() / 2) + ((double) this.mCircleOuter.getMeasuredWidth() / 2)) - 5) * Math.cos((this.degree / 180.0d) * 3.141592653589793d));
+                this.outerTensionFactorY = this.mY - (((((double) this.mCircleFinger.getMeasuredHeight() / 2) + ((double) this.mCircleOuter.getMeasuredHeight() / 2)) - 5) * Math.sin(((-this.degree) / 180.0d) * 3.141592653589793d));
                 if (this.mDistanceRatio < 1.2000000476837158d) {
-                    this.mCircleFinger.setX(((int) event.getRawX()) - (this.mCircleFinger.getMeasuredWidth() / 2));
-                    this.mCircleFinger.setY(((int) event.getRawY()) - (this.mCircleFinger.getMeasuredHeight() / 2));
-                    this.mCircleCenterDot.setX(this.betweenLineX - (this.mCircleCenterDot.getMeasuredWidth() / 2));
-                    this.mCircleCenterDot.setY(this.betweenLineY - (this.mCircleCenterDot.getMeasuredHeight() / 2));
+                    this.mCircleFinger.setX(((int) event.getRawX()) - ((float) this.mCircleFinger.getMeasuredWidth() / 2));
+                    this.mCircleFinger.setY(((int) event.getRawY()) - ((float) this.mCircleFinger.getMeasuredHeight() / 2));
+                    this.mCircleCenterDot.setX(this.betweenLineX - ((float) this.mCircleCenterDot.getMeasuredWidth() / 2));
+                    this.mCircleCenterDot.setY(this.betweenLineY - ((float) this.mCircleCenterDot.getMeasuredHeight() / 2));
                     this.mCircleLine.setX(this.betweenLineX);
-                    this.mCircleLine.setY(this.betweenLineY - (this.mCircleLine.getMeasuredHeight() / 2));
+                    this.mCircleLine.setY(this.betweenLineY - ((float) this.mCircleLine.getMeasuredHeight() / 2));
                     this.mCircleLine.setPivotX(0.0f);
-                    this.mCircleLine.setPivotY(this.mCircleLine.getMeasuredHeight() / 2);
+                    this.mCircleLine.setPivotY((float) this.mCircleLine.getMeasuredHeight() / 2);
                     float lineSizebaseX = event.getRawX() - (this.mX + ((event.getRawX() - this.mX) / 40.0f));
                     float lineSizebaseY = event.getRawY() - (this.mY + ((event.getRawY() - this.mY) / 40.0f));
                     this.lineSize = (float) ((Math.sqrt((lineSizebaseX * lineSizebaseX) + (lineSizebaseY * lineSizebaseY)) - (this.mCircleCenterDot.getMeasuredWidth() / 2)) - this.TENSION_LINE_DELETE);
-                    this.lineSize = this.lineSize > 0.0f ? this.lineSize : 0.0f;
+                    this.lineSize = Math.max(this.lineSize, 0.0f);
                     this.mCircleLine.setScaleX(this.lineSize);
                     this.mCircleLine.setRotation((float) this.degree);
                     break;
                 } else if (this.mDistanceRatio >= 1.2000000476837158d && this.mDistanceRatio <= 2.0999999046325684d) {
                     this.mCircleFinger.setX((int) (this.outerTensionFactorX - (this.mCircleFinger.getMeasuredWidth() / 2)));
                     this.mCircleFinger.setY((int) (this.outerTensionFactorY - (this.mCircleFinger.getMeasuredHeight() / 2)));
-                    this.mCircleCenterDot.setX(this.betweenLineX - (this.mCircleCenterDot.getMeasuredWidth() / 2));
-                    this.mCircleCenterDot.setY(this.betweenLineY - (this.mCircleCenterDot.getMeasuredHeight() / 2));
+                    this.mCircleCenterDot.setX(this.betweenLineX - ((float) this.mCircleCenterDot.getMeasuredWidth() / 2));
+                    this.mCircleCenterDot.setY(this.betweenLineY - ((float) this.mCircleCenterDot.getMeasuredHeight() / 2));
                     this.mCircleLine.setX(this.betweenLineX);
-                    this.mCircleLine.setY(this.betweenLineY - (this.mCircleLine.getMeasuredHeight() / 2));
+                    this.mCircleLine.setY(this.betweenLineY - ((float) this.mCircleLine.getMeasuredHeight() / 2));
                     this.mCircleLine.setPivotX(0.0f);
-                    this.mCircleLine.setPivotY(this.mCircleLine.getMeasuredHeight() / 2);
+                    this.mCircleLine.setPivotY((float) this.mCircleLine.getMeasuredHeight() / 2);
                     float lineSizebaseX2 = (float) (this.outerTensionFactorX - this.betweenLineX);
                     float lineSizebaseY2 = (float) (this.outerTensionFactorY - this.betweenLineY);
                     this.lineSize = (float) ((Math.sqrt((lineSizebaseX2 * lineSizebaseX2) + (lineSizebaseY2 * lineSizebaseY2)) - (this.mCircleCenterDot.getMeasuredWidth() / 2)) - this.TENSION_LINE_DELETE);
-                    this.lineSize = this.lineSize > 0.0f ? this.lineSize : 0.0f;
+                    this.lineSize = Math.max(this.lineSize, 0.0f);
                     this.mCircleLine.setScaleX(this.lineSize);
                     this.mCircleLine.setRotation((float) this.degree);
                     break;
@@ -340,13 +344,13 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
                     this.mCircleFingerRoot.setX((int) (event.getRawX() - (this.mCircleFingerAfter.getMeasuredWidth() / 2)));
                     this.mCircleFingerRoot.setY((int) (event.getRawY() - (this.mCircleFingerAfter.getMeasuredHeight() / 2)));
                     this.mCircleFingerAfter.startAnimation(this.mCircleFingerReleaseAnim);
-                    this.mCircleOuterRoot.setX(((int) this.mX) - (this.mCircleOuterAfter.getMeasuredWidth() / 2));
-                    this.mCircleOuterRoot.setY(((int) this.mY) - (this.mCircleOuterAfter.getMeasuredHeight() / 2));
+                    this.mCircleOuterRoot.setX(((int) this.mX) - ((float) this.mCircleOuterAfter.getMeasuredWidth() / 2));
+                    this.mCircleOuterRoot.setY((this.mY) - (this.mCircleOuterAfter.getMeasuredHeight() / 2.0f));
                     this.mCircleOuterAfter.startAnimation(this.mCircleOuterAnim);
                     this.mCircleLineRoot.setX(this.betweenLineX);
-                    this.mCircleLineRoot.setY(this.betweenLineY - (this.mCircleLine.getMeasuredHeight() / 2));
+                    this.mCircleLineRoot.setY(this.betweenLineY - (this.mCircleLine.getMeasuredHeight() / 2.0f));
                     this.mCircleLineRoot.setPivotX(0.0f);
-                    this.mCircleLineRoot.setPivotY(this.mCircleLineAfter.getMeasuredHeight() / 2);
+                    this.mCircleLineRoot.setPivotY(this.mCircleLineAfter.getMeasuredHeight() / 2.0f);
                     this.mCircleLineRoot.setRotation((float) this.degree);
                     setLineAnim(this.lineSize, 0.0f);
                     this.mCircleLineAfter.startAnimation(this.mLineAnim);
@@ -372,6 +376,7 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void handleUnlock(View view, MotionEvent event) {
+        playSound(UNLOCK);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
@@ -407,6 +412,7 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void playLockSound() {
+        playSound(LOCK);
     }
 
     @Override // android.view.View
@@ -444,25 +450,22 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
         } catch (Settings.SettingNotFoundException e) {
             e.printStackTrace();
         }
-        if (result == 1) {
-            this.isSystemSoundChecked = true;
-        } else {
-            this.isSystemSoundChecked = false;
-        }
+        this.isSystemSoundChecked = result == 1;
     }
 
     private void setSound() {
         if (this.mSoundPool == null) {
             Log.d(this.TAG, "show mSoundPool is null");
-            new File(sound_tap_path);
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds = this.mSoundPool.load(sound_tap_path, 1);
+            this.sounds[TAP] = this.mSoundPool.load(mContext, sound_tap_path, 1);
+            sounds[LOCK] = mSoundPool.load(mContext, R.raw.lock_tension, 1);
+            sounds[UNLOCK] = mSoundPool.load(mContext, R.raw.unlock_tension, 1);
         }
     }
 
-    private void playSound() {
+    private void playSound(int sound) {
         if (this.isSystemSoundChecked && this.mSoundPool != null) {
-            this.mSoundPool.play(this.sounds, this.mLockSoundVolume, this.mLockSoundVolume, 1, 0, 1.0f);
+            this.mSoundPool.play(this.sounds[sound], this.mLockSoundVolume, this.mLockSoundVolume, 1, 0, 1.0f);
         }
     }
 

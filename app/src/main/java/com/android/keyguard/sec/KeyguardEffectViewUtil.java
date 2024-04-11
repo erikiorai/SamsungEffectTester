@@ -1,9 +1,12 @@
 package com.android.keyguard.sec;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.util.Log;
+
+import com.aj.effect.MainActivity;
 
 public class KeyguardEffectViewUtil {
     private static final String TAG = "KeyguardEffectViewUtil";
@@ -26,4 +29,7 @@ public class KeyguardEffectViewUtil {
         return srcBitmap;
     }
 
+    public static Bitmap getCurrentWallpaper(Context mContext) {
+        return MainActivity.bitm; // todo botmap
+    }
 }

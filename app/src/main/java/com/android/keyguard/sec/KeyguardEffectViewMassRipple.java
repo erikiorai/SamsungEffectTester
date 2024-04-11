@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.aj.effect.SoundManager.attr;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -298,6 +300,7 @@ public class KeyguardEffectViewMassRipple extends FrameLayout implements Keyguar
         this.firstTouch_Y = -1;
         this.prevMovingDistance = 0.0f;
         this.isStartUnlock = true;
+        playSound(3);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
@@ -351,6 +354,7 @@ public class KeyguardEffectViewMassRipple extends FrameLayout implements Keyguar
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void playLockSound() {
+        playSound(2);
     }
 
     private void checkSound() {
@@ -368,11 +372,12 @@ public class KeyguardEffectViewMassRipple extends FrameLayout implements Keyguar
         if (this.mSoundPool == null) {
             Log.d(TAG, "show mSoundPool is null");
 
-            AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds = new int[2];
+            this.sounds = new int[4];
             this.sounds[0] = this.mSoundPool.load(this.mContext, this.mRDownId, 1);
             this.sounds[1] = this.mSoundPool.load(this.mContext, this.mRUpId, 1);
+            sounds[2] = mSoundPool.load(mContext, R.raw.lock_ripple, 1);
+            sounds[3] = mSoundPool.load(mContext, R.raw.unlock_ripple, 1);
         }
     }
 

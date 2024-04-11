@@ -1,12 +1,17 @@
 package com.aj.effect;
 
 import static com.aj.effect.EffectEnum.ABSTRACTTILES;
+import static com.aj.effect.EffectEnum.AUTUMN;
 import static com.aj.effect.EffectEnum.BLIND;
 import static com.aj.effect.EffectEnum.BOUNCINGCOLOR;
 import static com.aj.effect.EffectEnum.BRILLIANTCUT;
 import static com.aj.effect.EffectEnum.BRILLIANTRING;
 import static com.aj.effect.EffectEnum.COLOURDROPLET;
-import static com.aj.effect.EffectEnum.EFFECT_MASS_TENSION;
+import static com.aj.effect.EffectEnum.LIQUID;
+import static com.aj.effect.EffectEnum.SEASONAL;
+import static com.aj.effect.EffectEnum.SPRING;
+import static com.aj.effect.EffectEnum.SUMMER;
+import static com.aj.effect.EffectEnum.TENSION;
 import static com.aj.effect.EffectEnum.GEOMETRICMOSAIC;
 import static com.aj.effect.EffectEnum.INDIGODIFFUSION;
 import static com.aj.effect.EffectEnum.LIGHTING;
@@ -19,6 +24,7 @@ import static com.aj.effect.EffectEnum.SPARKLINGBUBBLES;
 import static com.aj.effect.EffectEnum.STONESKIPPING;
 import static com.aj.effect.EffectEnum.WATERCOLOUR;
 import static com.aj.effect.EffectEnum.WATERDROPLET;
+import static com.aj.effect.EffectEnum.WINTER;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -57,9 +63,10 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
     private ImageView mImageView = null;
     private SharedPreferences prefs;
 
-    private final EffectEnum[] order = {NONE, INDIGODIFFUSION, COLOURDROPLET, WATERDROPLET, SPARKLINGBUBBLES,
-            ABSTRACTTILES, GEOMETRICMOSAIC, BRILLIANTRING, POPPINGCOLOURS,
-            WATERCOLOUR, RIPPLE, STONESKIPPING, EFFECT_MASS_TENSION, BRILLIANTCUT, LIGHTING, // todo fix a bit s5 order
+    private final EffectEnum[] order = { NONE, SEASONAL, SPRING, SUMMER, AUTUMN, WINTER,
+            COLOURDROPLET, LIQUID, WATERDROPLET, SPARKLINGBUBBLES, ABSTRACTTILES,
+            GEOMETRICMOSAIC, BRILLIANTRING, POPPINGCOLOURS, STONESKIPPING, TENSION,
+            WATERCOLOUR, RIPPLE, INDIGODIFFUSION, BRILLIANTCUT, LIGHTING,
             BLIND, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
 
