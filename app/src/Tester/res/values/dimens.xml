@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Values used for tester -->
+    <dimen name="button_margins">105dp</dimen>
+    <dimen name="button_top_margin">5dp</dimen>
+
+</resources>

@@ -1,8 +1,5 @@
 <resources>
-    <string name="app_name">Effect</string>
-    <string name="wall">wallpaper change</string>
-    <string name="show_affordance">show affordance</string>
-    <string name="unlock_ability">unlock ability</string>
+    <string name="app_name">Samsung Unlock Effects</string>
 
     <string name="unlock_effect_none">None</string>
     <string name="unlock_effect_montblanc">Ink in water</string>

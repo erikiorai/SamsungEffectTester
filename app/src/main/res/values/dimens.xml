@@ -4,8 +4,6 @@
     <dimen name="keyguard_lockscreen_second_border">216dp</dimen>
     <dimen name="keyguard_shortcut_min_width_offset">0dp</dimen>
 
-    <dimen name="button_margins">105dp</dimen>
-
     <dimen name="unlock_effect_image_width">169dp</dimen>
     <dimen name="unlock_effect_image_height">300dp</dimen>
     <dimen name="unlock_effect_image_top_margin">12dp</dimen>
@@ -35,6 +33,5 @@
 
     <!-- own -->
     <dimen name="image_pad_grid_new">8dp</dimen>
-    <dimen name="button_top_margin">5dp</dimen>
 
 </resources>

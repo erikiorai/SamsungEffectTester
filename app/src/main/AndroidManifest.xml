@@ -10,46 +10,12 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:configChanges="orientation|screenLayout|screenSize"
         android:supportsRtl="true"
         tools:targetApi="31"
         android:hardwareAccelerated="true"
         android:largeHeap="true"
         android:theme="@style/ActivityTheme">
-        <!-- meta-data
-            android:name="xposedmodule"
-            android:value="false" />
-        <meta-data
-            android:name="xposeddescription"
-            android:value="test lockscreen hook" />
-        <meta-data
-            android:name="xposedminversion"
-            android:value="82" />
-        <meta-data
-            android:name="xposedscope"
-            android:value="com.android.systemui" / -->
-        <activity
-            android:name=".MainActivity"
-            android:exported="true"
-            android:resizeableActivity="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
-        <activity android:theme="@style/Theme.DialogWhenLarge" android:label="@string/unlock_effect" android:name="com.aj.effect.UnlockEffect" android:uiOptions="none"
-            android:exported="true"
-            android:resizeableActivity="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <action android:name="com.samsung.settings.UnlockEffect"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-            </intent-filter>
-        </activity>
     </application>
 
 </manifest>

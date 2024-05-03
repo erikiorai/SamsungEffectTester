@@ -117,7 +117,7 @@
         android:layout_marginBottom="1dp"
         android:shadowColor="#cc000000"
         android:text="12:45"
-        android:textColor="@color/white"
+        android:textColor="@android:color/white"
         android:textSize="@dimen/kg_singleclock_time_text_size_large"
         android:typeface="normal" />
 
