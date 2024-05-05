@@ -3,6 +3,7 @@ package com.android.keyguard.sec;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Resources;
+import android.os.Handler;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,6 +25,7 @@ public class KeyguardUnlockEventHandler {
     private boolean mIsMultiTouch = false;
     private boolean mIsUnlockStarted = false;
     private boolean mIsIgnoreTouch = false;
+    private final Context mContext;
 
     /* loaded from: classes.dex */
     public interface UnlockCallback {
@@ -41,6 +43,7 @@ public class KeyguardUnlockEventHandler {
     public KeyguardUnlockEventHandler(KeyguardEffectViewBase unlockView, Context context) {
         this.mUnlockView = unlockView;
         //this.mCallback = callback;
+        mContext = context;
         Resources res = context.getResources();
         this.mFirstBorder = (int) res.getDimension(R.dimen.keyguard_lockscreen_first_border);
         this.mSecondBorder = (int) res.getDimension(R.dimen.keyguard_lockscreen_second_border);
@@ -48,6 +51,7 @@ public class KeyguardUnlockEventHandler {
 
     @SuppressLint("LongLogTag")
     public boolean handleTouchEvent(View view, MotionEvent event) {
+        Handler handler = new Handler();
         if (DEBUG)
             Log.d(TAG, "mIsUnlockStarted - " + this.mIsUnlockStarted);
         int action = event.getAction();
@@ -97,6 +101,10 @@ public class KeyguardUnlockEventHandler {
                     if (mUnlockView != null) {
                         mUnlockView.handleUnlock(view, event);
                         delay = mUnlockView.getUnlockDelay();
+
+                        handler.postDelayed(() -> {
+                            MainActivity.switchActivity(mContext);
+                        }, delay+250L);
                     }
                     if (mCallback != null) {
                         ((View) mCallback).postDelayed(() -> {
@@ -130,6 +138,10 @@ public class KeyguardUnlockEventHandler {
                     if (mUnlockView != null) {
                         mUnlockView.handleUnlock(view, event);
                         delay = mUnlockView.getUnlockDelay();
+
+                        handler.postDelayed(() -> {
+                            MainActivity.switchActivity(mContext);
+                        }, delay+250L);
                     }
                     if (mCallback != null) {
                         ((View) mCallback).postDelayed(() -> {

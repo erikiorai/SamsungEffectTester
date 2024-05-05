@@ -85,15 +85,14 @@ public class KeyguardEffectViewFestival extends FrameLayout implements KeyguardE
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.festivaleffect.unlockeffect.autumn.KeyguardEffectViewAutumn.1
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewFestival.this.mSoundPool != null) {
-                    KeyguardEffectViewFestival.this.mSoundPool.release();
-                    KeyguardEffectViewFestival.this.mSoundPool = null;
-                }
-                KeyguardEffectViewFestival.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.festivaleffect.unlockeffect.autumn.KeyguardEffectViewAutumn.1
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewFestival.this.mSoundPool != null) {
+                KeyguardEffectViewFestival.this.mSoundPool.release();
+                KeyguardEffectViewFestival.this.mSoundPool = null;
             }
+            KeyguardEffectViewFestival.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, UNLOCK_SOUND_PLAY_TIME);
     }

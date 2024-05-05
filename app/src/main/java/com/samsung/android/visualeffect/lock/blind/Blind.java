@@ -16,7 +16,7 @@ public class Blind extends ImageView {
         super(context);
         this.blindX = blindX;
         this.blindWidth = blindWidth;
-        this.midPoint = (blindWidth / 2) + blindX;
+        this.midPoint = ((float) blindWidth / 2) + blindX;
         setImageBitmap(pieceBitmap);
     }
 

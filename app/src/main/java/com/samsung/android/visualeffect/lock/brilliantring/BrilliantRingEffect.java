@@ -23,12 +23,11 @@ public class BrilliantRingEffect extends LockBGEffect {
         }
         final int normalizedX = rect.centerX();
         final int normalizedY = rect.centerY();
-        postDelayed(new Runnable() { // from class: com.samsung.android.visualeffect.lock.brilliantring.BrilliantRingEffect.1
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.i(BrilliantRingEffect.this.TAG, "showAffordanceEffect Renderer.handleTouchEvent(0, " + normalizedX + ", " + normalizedY);
-                BrilliantRingEffect.this.mRenderer.handleTouchEvent(0, normalizedX, normalizedY);
-            }
+        // from class: com.samsung.android.visualeffect.lock.brilliantring.BrilliantRingEffect.1
+// java.lang.Runnable
+        postDelayed(() -> {
+            Log.i(BrilliantRingEffect.this.TAG, "showAffordanceEffect Renderer.handleTouchEvent(0, " + normalizedX + ", " + normalizedY);
+            BrilliantRingEffect.this.mRenderer.handleTouchEvent(0, normalizedX, normalizedY);
         }, startDelay);
     }
 }

@@ -410,12 +410,12 @@ public class GLTextureViewRendererForRippleType implements GLTextureView.Rendere
             for (int i = 0; i < this.SURFACE_DETAILS_HEIGHT; i++) {
                 for (int j = 0; j < this.SURFACE_DETAILS_WIDTH; j++) {
                     int idx = ((this.SURFACE_DETAILS_HEIGHT * j) + i) * 3;
-                    this.gpuHeights[idx + 0] = this.heights[((j + 2) * this.NUM_DETAILS_WIDTH) + i + 2];
+                    this.gpuHeights[idx] = this.heights[((j + 2) * this.NUM_DETAILS_WIDTH) + i + 2];
                     this.gpuHeights[idx + 1] = this.heights[((j + 2) * this.NUM_DETAILS_WIDTH) + i + 1];
                     this.gpuHeights[idx + 2] = this.heights[((j + 1) * this.NUM_DETAILS_WIDTH) + i + 2];
                     if (i - 7 > 0) {
                         float[] fArr = this.gpuHeights;
-                        int i2 = idx + 0;
+                        int i2 = idx;
                         fArr[i2] = fArr[i2] + this.heightsSub1[(((j + 2) * this.NUM_DETAILS_WIDTH) + i) - 6];
                         float[] fArr2 = this.gpuHeights;
                         int i3 = idx + 1;
@@ -424,7 +424,7 @@ public class GLTextureViewRendererForRippleType implements GLTextureView.Rendere
                         int i4 = idx + 2;
                         fArr3[i4] = fArr3[i4] + this.heightsSub1[(((j + 1) * this.NUM_DETAILS_WIDTH) + i) - 6];
                         float[] fArr4 = this.gpuHeights;
-                        int i5 = idx + 0;
+                        int i5 = idx;
                         fArr4[i5] = fArr4[i5] + this.heightsSub2[(((j + 2) * this.NUM_DETAILS_WIDTH) + i) - 6];
                         float[] fArr5 = this.gpuHeights;
                         int i6 = idx + 1;
@@ -644,32 +644,31 @@ public class GLTextureViewRendererForRippleType implements GLTextureView.Rendere
         this.defaultY = rect.centerY();
         if (this.mDefaultRunnable == null) {
             Log.d(this.TAG, "mDefaultRunnable,  new Runnable()!!!");
-            this.mDefaultRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.GLTextureViewRendererForRippleType.1
-                @Override // java.lang.Runnable
-                public void run() {
-                    if (GLTextureViewRendererForRippleType.this.drawCount > 0) {
-                        if (GLTextureViewRendererForRippleType.this.mLandscape) {
-                            GLTextureViewRendererForRippleType.this.glX = (GLTextureViewRendererForRippleType.this.defaultX - (GLTextureViewRendererForRippleType.this.mScreenWidth / 2.0f)) - GLTextureViewRendererForRippleType.this.XRatioAdjustLandscape;
-                            GLTextureViewRendererForRippleType.this.glX *= GLTextureViewRendererForRippleType.this.XRatioForLandscape / GLTextureViewRendererForRippleType.this.mScreenWidth;
-                            GLTextureViewRendererForRippleType.this.glY = (GLTextureViewRendererForRippleType.this.mScreenHeight - GLTextureViewRendererForRippleType.this.defaultY) - (GLTextureViewRendererForRippleType.this.mScreenHeight / 2.0f);
-                            GLTextureViewRendererForRippleType.this.glY = (-GLTextureViewRendererForRippleType.this.glY) * (GLTextureViewRendererForRippleType.this.YRatioForLandscape / GLTextureViewRendererForRippleType.this.mScreenHeight);
-                        } else {
-                            GLTextureViewRendererForRippleType.this.glX = (GLTextureViewRendererForRippleType.this.defaultX - (GLTextureViewRendererForRippleType.this.mScreenWidth / 2.0f)) - GLTextureViewRendererForRippleType.this.XRatioAdjustPortrait;
-                            GLTextureViewRendererForRippleType.this.glX *= GLTextureViewRendererForRippleType.this.XRatioForPortrait / GLTextureViewRendererForRippleType.this.mScreenWidth;
-                            GLTextureViewRendererForRippleType.this.glY = (GLTextureViewRendererForRippleType.this.mScreenHeight - GLTextureViewRendererForRippleType.this.defaultY) - (GLTextureViewRendererForRippleType.this.mScreenHeight / 2.0f);
-                            GLTextureViewRendererForRippleType.this.glY = (-GLTextureViewRendererForRippleType.this.glY) * (GLTextureViewRendererForRippleType.this.YRatioForPortrait / GLTextureViewRendererForRippleType.this.mScreenHeight);
-                        }
-                        Log.d(GLTextureViewRendererForRippleType.this.TAG, "mDefaultRunnable run, and ripple()");
-                        GLTextureViewRendererForRippleType.this.ripple(GLTextureViewRendererForRippleType.this.glY, GLTextureViewRendererForRippleType.this.glX, GLTextureViewRendererForRippleType.this.intensityForRipple * 4.0f);
-                        if (GLTextureViewRendererForRippleType.this.isIndigoDiffusion) {
-                            GLTextureViewRendererForRippleType.this.native_onTouch((int) GLTextureViewRendererForRippleType.this.defaultX, (int) GLTextureViewRendererForRippleType.this.defaultY, 0, 1.0f);
-                        }
-                        GLTextureViewRendererForRippleType.this.mDefaultRunnable = null;
-                        return;
+            // from class: com.samsung.android.visualeffect.lock.common.GLTextureViewRendererForRippleType.1
+// java.lang.Runnable
+            this.mDefaultRunnable = () -> {
+                if (GLTextureViewRendererForRippleType.this.drawCount > 0) {
+                    if (GLTextureViewRendererForRippleType.this.mLandscape) {
+                        GLTextureViewRendererForRippleType.this.glX = (GLTextureViewRendererForRippleType.this.defaultX - (GLTextureViewRendererForRippleType.this.mScreenWidth / 2.0f)) - GLTextureViewRendererForRippleType.this.XRatioAdjustLandscape;
+                        GLTextureViewRendererForRippleType.this.glX *= GLTextureViewRendererForRippleType.this.XRatioForLandscape / GLTextureViewRendererForRippleType.this.mScreenWidth;
+                        GLTextureViewRendererForRippleType.this.glY = (GLTextureViewRendererForRippleType.this.mScreenHeight - GLTextureViewRendererForRippleType.this.defaultY) - (GLTextureViewRendererForRippleType.this.mScreenHeight / 2.0f);
+                        GLTextureViewRendererForRippleType.this.glY = (-GLTextureViewRendererForRippleType.this.glY) * (GLTextureViewRendererForRippleType.this.YRatioForLandscape / GLTextureViewRendererForRippleType.this.mScreenHeight);
+                    } else {
+                        GLTextureViewRendererForRippleType.this.glX = (GLTextureViewRendererForRippleType.this.defaultX - (GLTextureViewRendererForRippleType.this.mScreenWidth / 2.0f)) - GLTextureViewRendererForRippleType.this.XRatioAdjustPortrait;
+                        GLTextureViewRendererForRippleType.this.glX *= GLTextureViewRendererForRippleType.this.XRatioForPortrait / GLTextureViewRendererForRippleType.this.mScreenWidth;
+                        GLTextureViewRendererForRippleType.this.glY = (GLTextureViewRendererForRippleType.this.mScreenHeight - GLTextureViewRendererForRippleType.this.defaultY) - (GLTextureViewRendererForRippleType.this.mScreenHeight / 2.0f);
+                        GLTextureViewRendererForRippleType.this.glY = (-GLTextureViewRendererForRippleType.this.glY) * (GLTextureViewRendererForRippleType.this.YRatioForPortrait / GLTextureViewRendererForRippleType.this.mScreenHeight);
                     }
-                    Log.d(GLTextureViewRendererForRippleType.this.TAG, "Because drawCount = " + GLTextureViewRendererForRippleType.this.drawCount + ", mDefaultRunnable, postDelayed()!!!");
-                    GLTextureViewRendererForRippleType.this.mParent.postDelayed(GLTextureViewRendererForRippleType.this.mDefaultRunnable, 250L);
+                    Log.d(GLTextureViewRendererForRippleType.this.TAG, "mDefaultRunnable run, and ripple()");
+                    GLTextureViewRendererForRippleType.this.ripple(GLTextureViewRendererForRippleType.this.glY, GLTextureViewRendererForRippleType.this.glX, GLTextureViewRendererForRippleType.this.intensityForRipple * 4.0f);
+                    if (GLTextureViewRendererForRippleType.this.isIndigoDiffusion) {
+                        GLTextureViewRendererForRippleType.this.native_onTouch((int) GLTextureViewRendererForRippleType.this.defaultX, (int) GLTextureViewRendererForRippleType.this.defaultY, 0, 1.0f);
+                    }
+                    GLTextureViewRendererForRippleType.this.mDefaultRunnable = null;
+                    return;
                 }
+                Log.d(GLTextureViewRendererForRippleType.this.TAG, "Because drawCount = " + GLTextureViewRendererForRippleType.this.drawCount + ", mDefaultRunnable, postDelayed()!!!");
+                GLTextureViewRendererForRippleType.this.mParent.postDelayed(GLTextureViewRendererForRippleType.this.mDefaultRunnable, 250L);
             };
         }
         Log.d(this.TAG, "mDefaultRunnable, postDelayed()!!!");

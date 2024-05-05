@@ -238,21 +238,21 @@ public class ColorManager {
     public static ArrayList<Integer> getSampleColors() {
         ArrayList<Integer> arrayList;
         synchronized (mSampleColorList) {
-            if (mSampleColorList.size() == 0) {
+            if (mSampleColorList.isEmpty()) {
                 for (float brightness = 0.8f; brightness >= 0.0f; brightness -= 0.1f) {
                     float[] hsvColor = {0.0f, 0.0f, brightness};
-                    mSampleColorList.add(Integer.valueOf(Color.HSVToColor(hsvColor)));
+                    mSampleColorList.add(Color.HSVToColor(hsvColor));
                 }
                 for (float brightness2 = 0.2f; brightness2 <= 1.0f; brightness2 += 0.4f) {
                     for (float colorTemperature = 0.0f; colorTemperature < 360.0f; colorTemperature += 10.0f) {
                         float[] hsvColor2 = {colorTemperature, 1.0f, brightness2};
-                        mSampleColorList.add(Integer.valueOf(Color.HSVToColor(hsvColor2)));
+                        mSampleColorList.add(Color.HSVToColor(hsvColor2));
                     }
                 }
                 for (float colorSaturation = 0.7f; colorSaturation > 0.0f; colorSaturation -= 0.3f) {
                     for (float colorTemperature2 = 0.0f; colorTemperature2 < 360.0f; colorTemperature2 += 10.0f) {
                         float[] hsvColor3 = {colorTemperature2, colorSaturation, 1.0f};
-                        mSampleColorList.add(Integer.valueOf(Color.HSVToColor(hsvColor3)));
+                        mSampleColorList.add(Color.HSVToColor(hsvColor3));
                     }
                 }
             }

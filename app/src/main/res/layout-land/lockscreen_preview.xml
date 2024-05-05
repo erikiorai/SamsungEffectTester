@@ -7,7 +7,8 @@
         android:layout_width="@dimen/unlock_effect_image_width"
         android:layout_height="@dimen/unlock_effect_image_height"
         android:layout_gravity="center_vertical"
-        android:layout_marginEnd="@dimen/alert_dialog_padding_left_right"
+        android:layout_marginStart="@dimen/unlock_effect_image_top_margin"
+        android:layout_marginEnd="@dimen/unlock_effect_image_bottom_margin"
         android:layout_marginVertical="@dimen/alert_dialog_padding_left_right"
         android:scaleType="fitXY"
         android:src="@drawable/setting_preview_unlock_nothing" />

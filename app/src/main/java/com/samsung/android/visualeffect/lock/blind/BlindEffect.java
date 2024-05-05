@@ -218,25 +218,23 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         this.downAnimator = ValueAnimator.ofFloat(0.3f, 1.0f);
         this.downAnimator.setInterpolator(new QuintEaseOut());
         this.downAnimator.setDuration(DOWN_ANIMATION_DURATION);
-        this.downAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                BlindEffect.this.animationValue = (((Float) animation.getAnimatedValue()).floatValue() * (1.0f - BlindEffect.this.pushAnimationMin)) + BlindEffect.this.pushAnimationMin;
-                BlindEffect.this.lightView.setAlpha(BlindEffect.this.animationValue * 0.15f);
-            }
+        // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.1
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.downAnimator.addUpdateListener(animation -> {
+            BlindEffect.this.animationValue = ((Float) animation.getAnimatedValue() * (1.0f - BlindEffect.this.pushAnimationMin)) + BlindEffect.this.pushAnimationMin;
+            BlindEffect.this.lightView.setAlpha(BlindEffect.this.animationValue * 0.15f);
         });
         this.upAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
         this.upAnimator.setInterpolator(new QuintEaseOut());
         this.upAnimator.setDuration(UP_ANIMATION_DURATION);
-        this.upAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.2
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = ((Float) animation.getAnimatedValue()).floatValue();
-                BlindEffect.this.animationValue = BlindEffect.this.pushAnimationMax * value;
-                BlindEffect.this.lightView.setAlpha(BlindEffect.this.animationValue * 0.15f);
-                BlindEffect.this.pointX -= (1.0f - BlindEffect.this.animationValue) * 50.0f;
-                BlindEffect.this.point2X += (1.0f - BlindEffect.this.animationValue) * 50.0f;
-            }
+        // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.2
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.upAnimator.addUpdateListener(animation -> {
+            float value = (Float) animation.getAnimatedValue();
+            BlindEffect.this.animationValue = BlindEffect.this.pushAnimationMax * value;
+            BlindEffect.this.lightView.setAlpha(BlindEffect.this.animationValue * 0.15f);
+            BlindEffect.this.pointX -= (1.0f - BlindEffect.this.animationValue) * 50.0f;
+            BlindEffect.this.point2X += (1.0f - BlindEffect.this.animationValue) * 50.0f;
         });
         this.upAnimator.addListener(new Animator.AnimatorListener() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.3
             @Override // android.animation.Animator.AnimatorListener
@@ -260,15 +258,14 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         this.moveAnimator.setInterpolator(new LinearInterpolator());
         this.moveAnimator.setRepeatCount(-1);
         this.moveAnimator.setDuration(3600000L);
-        this.moveAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.4
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                BlindEffect.chang1(BlindEffect.this, (BlindEffect.this.currentX - BlindEffect.this.pointX) * 0.17f);
-                BlindEffect.chang2(BlindEffect.this, (BlindEffect.this.currentY - BlindEffect.this.pointY) * 0.17f);
-                BlindEffect.chang3(BlindEffect.this, (BlindEffect.this.currentX - BlindEffect.this.point2X) * 0.17f);
-                for (int i = 0; i < BlindEffect.this.totalColumn; i++) {
-                    BlindEffect.this.setScale(i);
-                }
+        // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.4
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.moveAnimator.addUpdateListener(animation -> {
+            BlindEffect.chang1(BlindEffect.this, (BlindEffect.this.currentX - BlindEffect.this.pointX) * 0.17f);
+            BlindEffect.chang2(BlindEffect.this, (BlindEffect.this.currentY - BlindEffect.this.pointY) * 0.17f);
+            BlindEffect.chang3(BlindEffect.this, (BlindEffect.this.currentX - BlindEffect.this.point2X) * 0.17f);
+            for (int i = 0; i < BlindEffect.this.totalColumn; i++) {
+                BlindEffect.this.setScale(i);
             }
         });
         this.unlockAlphaAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
@@ -326,10 +323,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
             dis2 *= -1.0f;
         }
         float dis3 = ((this.stageWidth / brightRange) - dis2) / 1000.0f;
-        if (dis3 < 0.0f) {
-            return 0.0f;
-        }
-        return dis3;
+        return Math.max(dis3, 0.0f);
     }
 
     private void setBrightness(ColorMatrix cm, float scale) {
@@ -376,20 +370,18 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     }
 
     private void setAffordanceRunnable() {
-        this.affordanceRunnableDown = new Runnable() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.6
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.d(TAG, "affordanceRunnableDown");
-                BlindEffect.this.playDownAnimator(BlindEffect.this.affordanceX, BlindEffect.this.affordanceY);
-                BlindEffect.this.startAffordanceRunnableUp(100L);
-            }
+        // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.6
+// java.lang.Runnable
+        this.affordanceRunnableDown = () -> {
+            Log.d(TAG, "affordanceRunnableDown");
+            BlindEffect.this.playDownAnimator(BlindEffect.this.affordanceX, BlindEffect.this.affordanceY);
+            BlindEffect.this.startAffordanceRunnableUp(100L);
         };
-        this.affordanceRunnableUp = new Runnable() { // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.7
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.d(TAG, "affordanceRunnableUp");
-                BlindEffect.this.playUpAnimator();
-            }
+        // from class: com.samsung.android.visualeffect.lock.blind.BlindEffect.7
+// java.lang.Runnable
+        this.affordanceRunnableUp = () -> {
+            Log.d(TAG, "affordanceRunnableUp");
+            BlindEffect.this.playUpAnimator();
         };
     }
 
@@ -422,7 +414,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     private int getBlindX(int i, boolean isLandscape) {
         int column = isLandscape ? TOTAL_COLUMN_LANDSCAPE : TOTAL_COLUMN_PORTRAIT;
         int width = isLandscape ? this.longWidth : this.shortWidth;
-        return Math.round((i * width) / column);
+        return Math.round((float) (i * width) / column);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -514,8 +506,8 @@ public class BlindEffect extends FrameLayout implements IEffectView {
 
     private void showAffordanceEffect(long startDelay, Rect rect) {
         Log.d(TAG, "showUnlockAffordance : " + rect.left + ", " + rect.right + ", " + rect.top + ", " + rect.bottom + ", startDelay : " + startDelay);
-        this.affordanceX = rect.left + ((rect.right - rect.left) / 2);
-        this.affordanceY = rect.top + ((rect.bottom - rect.top) / 2);
+        this.affordanceX = rect.left + ((float) (rect.right - rect.left) / 2);
+        this.affordanceY = rect.top + ((float) (rect.bottom - rect.top) / 2);
         removeCallbacks(this.affordanceRunnableDown);
         removeCallbacks(this.affordanceRunnableUp);
         postDelayed(this.affordanceRunnableDown, startDelay);
@@ -533,10 +525,10 @@ public class BlindEffect extends FrameLayout implements IEffectView {
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleCustomEvent(int cmd, HashMap<?, ?> params) {
         if (cmd == 1) {
-            showAffordanceEffect(((Long) params.get("StartDelay")).longValue(), (Rect) params.get("Rect"));
+            showAffordanceEffect((Long) params.get("StartDelay"), (Rect) params.get("Rect"));
         } else if (cmd == 2) {
             if (params.get("unlockDelay") != null) {
-                setUnlockDelayDuration(((Long) params.get("unlockDelay")).longValue());
+                setUnlockDelayDuration((Long) params.get("unlockDelay"));
             } else if (params.get("unlock") != null) {
                 unlockEffect();
             }
@@ -549,7 +541,7 @@ public class BlindEffect extends FrameLayout implements IEffectView {
             }
         } else if (cmd == 99) {
             if (params.get("onConfigurationChanged") != null) {
-                resetOrientation(((Boolean) params.get("onConfigurationChanged")).booleanValue());
+                resetOrientation((Boolean) params.get("onConfigurationChanged"));
             } else if (params.get("show") != null) {
                 show();
             } else if (params.get("destroy") != null) {

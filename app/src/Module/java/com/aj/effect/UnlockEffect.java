@@ -1,37 +1,47 @@
 package com.aj.effect;
 
 import static com.aj.effect.EffectEnum.ABSTRACTTILES;
+import static com.aj.effect.EffectEnum.AUTUMN;
 import static com.aj.effect.EffectEnum.BLIND;
 import static com.aj.effect.EffectEnum.BOUNCINGCOLOR;
 import static com.aj.effect.EffectEnum.BRILLIANTCUT;
 import static com.aj.effect.EffectEnum.BRILLIANTRING;
 import static com.aj.effect.EffectEnum.COLOURDROPLET;
+import static com.aj.effect.EffectEnum.LIQUID;
+import static com.aj.effect.EffectEnum.SEASONAL;
+import static com.aj.effect.EffectEnum.SPRING;
+import static com.aj.effect.EffectEnum.SUMMER;
+import static com.aj.effect.EffectEnum.TENSION;
 import static com.aj.effect.EffectEnum.GEOMETRICMOSAIC;
 import static com.aj.effect.EffectEnum.INDIGODIFFUSION;
 import static com.aj.effect.EffectEnum.LIGHTING;
+import static com.aj.effect.EffectEnum.NONE;
 import static com.aj.effect.EffectEnum.POPPINGCOLOURS;
 import static com.aj.effect.EffectEnum.POPPINGGOODLOCK;
 import static com.aj.effect.EffectEnum.RECTANGLETRAVELLER;
 import static com.aj.effect.EffectEnum.RIPPLE;
 import static com.aj.effect.EffectEnum.SPARKLINGBUBBLES;
+import static com.aj.effect.EffectEnum.STONESKIPPING;
 import static com.aj.effect.EffectEnum.WATERCOLOUR;
 import static com.aj.effect.EffectEnum.WATERDROPLET;
+import static com.aj.effect.EffectEnum.WINTER;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.CheckedTextView;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
@@ -39,64 +49,77 @@ import android.widget.ListView;
 import com.android.keyguard.sec.KeyguardEffectViewController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /* loaded from: classes.dex */
 public class UnlockEffect extends Activity implements AdapterView.OnItemClickListener {
     // TODO: add mass tension and other effect names!!!!!!!!!!!! s3 firmware
-    static final int[] EffectName = {R.string.unlock_effect_none,
-            R.string.unlock_effect_ripple,
-            R.string.light_effect,
-            R.string.unlock_effect_popping,
-            R.string.unlock_effect_watercolor,
-            R.string.blind_effect,
-            R.string.unlock_effect, // TODO: mass tension
-            R.string.unlock_effect_simple_ripple,
-            R.string.unlock_effect_brilliant_ring,
-            R.string.brilliant_cut,
-            R.string.unlock_effect_montblanc,
-            R.string.unlock_effect_abstract,
-            R.string.unlock_effect_geometric_mosaic,
-            R.string.unlock_effect_liquid,
-            R.string.unlock_effect_particle,
-            R.string.unlock_effect_colour_droplet};
-    private static List<EffectEnum> mModeItem;
-    String[] dbValues;
-    private GridView mListView;
+    private static String[] mModeItem;
+    private RadioAdapter adapter;
+    private ListView mListView;
     private View mTabletView;
     private boolean mIsTablet;
-    private int mDefaultUnlock = 0;
+    public static int mDefaultUnlock = Utils.defaultUnlock;
     private ImageView mImageView = null;
 
-    private int checked = -1;
-
-    private final EffectEnum[] effects = {ABSTRACTTILES, BRILLIANTRING, BRILLIANTCUT, LIGHTING,
-            BLIND, SPARKLINGBUBBLES, POPPINGCOLOURS, COLOURDROPLET, WATERDROPLET, WATERCOLOUR,
-            RIPPLE, INDIGODIFFUSION, GEOMETRICMOSAIC, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
+    private final EffectEnum[] order = { NONE, SEASONAL, SPRING, SUMMER, AUTUMN, WINTER,
+            COLOURDROPLET, LIQUID, WATERDROPLET, SPARKLINGBUBBLES, ABSTRACTTILES,
+            GEOMETRICMOSAIC, BRILLIANTRING, POPPINGCOLOURS, STONESKIPPING, TENSION,
+            WATERCOLOUR, RIPPLE, INDIGODIFFUSION, BRILLIANTCUT, LIGHTING,
+            BLIND, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
 
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
         this.mIsTablet = Utils.isTablet(this);
+        ImageView imageViewforkeyboard;
         super.onCreate(savedInstanceState);
+        //permissionCheck();
         if (!this.mIsTablet) {
-            setContentView(R.layout.new_lockscreen_preview);
+            setContentView(R.layout.lockscreen_preview);
             if (getActionBar() != null) {
                 getActionBar().setDisplayHomeAsUpEnabled(true);
                 getActionBar().setHomeButtonEnabled(true);
             }
-            this.mListView = findViewById(android.R.id.list);
+            this.mListView = (ListView) findViewById(android.R.id.list);
+            this.mImageView = (ImageView) findViewById(R.id.preview_image);
+            if (Utils.ConnectedMobileKeypad(this) && (imageViewforkeyboard = (ImageView) findViewById(R.id.preview_image_for_mobile_keyboard)) != null) {
+                this.mImageView.setVisibility(View.GONE);
+                this.mImageView = imageViewforkeyboard;
+                this.mImageView.setVisibility(View.VISIBLE);
+            }
             populateUnlockEffectsOptions();
-            GridAdapter adapter = new GridAdapter(this, mModeItem);
-            this.mListView.setAdapter(adapter);
+            Resources resources = getResources();
+            int divider_inset_size = resources.getDimensionPixelSize(R.dimen.list_item_padding) + resources.getDimensionPixelSize(R.dimen.list_divider_additional_inset) + resources.getDimensionPixelSize(R.dimen.list_radiobox_width_for_divider_inset);
+            if (Utils.isRTL(this)) {
+                InsetDrawable insetdivider = new InsetDrawable(this.mListView.getDivider(), 0, 0, divider_inset_size, 0);
+                this.mListView.setDivider(insetdivider);
+            } else {
+                InsetDrawable insetdivider2 = new InsetDrawable(this.mListView.getDivider(), divider_inset_size, 0, 0, 0);
+                this.mListView.setDivider(insetdivider2);
+            }
+            this.adapter = new RadioAdapter(this, R.layout.list_item_with_radiobox, mModeItem);
+            this.mListView.setAdapter((ListAdapter) this.adapter);
+            this.mListView.setItemsCanFocus(false);
             this.mListView.setOnItemClickListener(this);
             this.mListView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
             updateImageResource();
         } else {
             setVisible(false);
             createDialogforTablet();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (!(requestCode == 1 && resultCode == RESULT_OK)) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("The permission was not granted.").setTitle("Force exit");
+            builder.setNeutralButton(android.R.string.ok, (dialogInterface, i) -> UnlockEffect.this.finishAffinity());
+            AlertDialog dialog = builder.create();
+            dialog.setOnCancelListener((dialogInterface) -> UnlockEffect.this.finishAffinity());
+            dialog.show();
         }
     }
 
@@ -107,51 +130,52 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         alertDialogBuilder.setView(this.mTabletView);
         alertDialogBuilder.setTitle(R.string.unlock_effect);
         // todo: was R.id.SAVE
-        alertDialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() { // from class: com.android.settings.UnlockEffect.1
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialog, int id) {
-                MainActivity.effect = mDefaultUnlock; // TODO Settings.System.putInt(UnlockEffect.this.getContentResolver(), "lockscreen_ripple_effect", UnlockEffect.this.mDefaultUnlock);
-                Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + UnlockEffect.this.mDefaultUnlock);
-                KeyguardEffectViewController.getInstance(UnlockEffect.this).handleWallpaperTypeChanged();
-                UnlockEffect.this.finish();
-            }
+        // from class: com.android.settings.UnlockEffect.1
+// android.content.DialogInterface.OnClickListener
+        alertDialogBuilder.setPositiveButton(android.R.string.ok, (DialogInterface.OnClickListener) (dialog, id) -> {
+            SettingsManager.putInt(UnlockEffect.this, UnlockEffect.this.getContentResolver(), "lockscreen_ripple_effect", mDefaultUnlock);
+            Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + mDefaultUnlock);
+            KeyguardEffectViewController.getInstance(UnlockEffect.this).handleWallpaperTypeChanged();
+            UnlockEffect.this.finish();
         });
-        alertDialogBuilder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() { // from class: com.android.settings.UnlockEffect.2
-            @Override // android.content.DialogInterface.OnClickListener
-            public void onClick(DialogInterface dialog, int id) {
-                UnlockEffect.this.finish();
-            }
-        });
+        // from class: com.android.settings.UnlockEffect.2
+// android.content.DialogInterface.OnClickListener
+        alertDialogBuilder.setNegativeButton(android.R.string.cancel, (DialogInterface.OnClickListener) (dialog, id) -> UnlockEffect.this.finish());
         final AlertDialog alertDialog = alertDialogBuilder.create();
-        alertDialog.setOnCancelListener(new DialogInterface.OnCancelListener() { // from class: com.android.settings.UnlockEffect.3
-            @Override // android.content.DialogInterface.OnCancelListener
-            public void onCancel(DialogInterface dialog) {
-                alertDialog.dismiss();
-                UnlockEffect.this.finish();
-            }
+        // from class: com.android.settings.UnlockEffect.3
+// android.content.DialogInterface.OnCancelListener
+        alertDialog.setOnCancelListener((DialogInterface.OnCancelListener) dialog -> {
+            alertDialog.dismiss();
+            UnlockEffect.this.finish();
         });
         alertDialog.show();
     }
 
+    private void permissionCheck() {
+        if (!Settings.System.canWrite(UnlockEffect.this)) {
+            Intent set = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS);
+            startActivityForResult(set, 1);
+        }
+    }
+
     private void initViewforTablet() {
-        this.mListView = (GridView) this.mTabletView.findViewById(android.R.id.list);
+        this.mListView = (ListView) this.mTabletView.findViewById(android.R.id.list);
         this.mImageView = (ImageView) this.mTabletView.findViewById(R.id.preview_image);
         populateUnlockEffectsOptions();
-        GridAdapter adapter = new GridAdapter(this, mModeItem);
-        this.mListView.setAdapter(adapter);
+        this.adapter = new RadioAdapter(this, R.layout.list_item_with_radiobox_for_dialog, mModeItem);
+        this.mListView.setAdapter((ListAdapter) this.adapter);
+        this.mListView.setItemsCanFocus(false);
         this.mListView.setOnItemClickListener(this);
         this.mListView.setOverScrollMode(1);
         updateImageResource();
     }
 
     private void updateImageResource() {
-        this.mDefaultUnlock = MainActivity.effect; // TODO Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 0);
-        for (int i = 0; i < mModeItem.size(); i++) {
-            if (mModeItem.get(i).assigned == this.mDefaultUnlock) {
-                ((GridAdapter)mListView.getAdapter()).setSelection(i);
+        mDefaultUnlock = SettingsManager.getInt(UnlockEffect.this, getContentResolver(), "lockscreen_ripple_effect", Utils.defaultUnlock);
+        for (int i = 0; i < order.length; i++) {
+            if (order[i].assigned == mDefaultUnlock) {
                 this.mListView.setItemChecked(i, true);
-                checked = i;
-                //this.mImageView.setImageResource(this.backgroundImage[i]);
+                this.mImageView.setImageResource(order[i].drawable);
             }
         }
     }
@@ -167,7 +191,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         super.onRestoreInstanceState(savedInstanceState);
         int idx = savedInstanceState.getInt("selected_idx");
         try {
-            //this.mImageView.setImageResource(this.backgroundImage[idx]);
+            this.mImageView.setImageResource(order[idx].drawable);
         } catch (ArrayIndexOutOfBoundsException e) {
             Log.d("UnlockEffect", "ArrayIndexOutOfBoundsException Occured.  set to Popping Colour.");
         }
@@ -175,71 +199,25 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     @Override // android.widget.AdapterView.OnItemClickListener
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //this.mImageView.setImageResource(this.backgroundImage[position]);
-        int effect = mModeItem.get(mListView.getCheckedItemPosition()).assigned;
-        ((GridAdapter)parent.getAdapter()).setSelection(position);
-
-        //((CheckedTextView) ((View) parent.getItemAtPosition(checked)).findViewById(android.R.id.text1)).setChecked(false);
-        checked = position;
+        this.mImageView.setImageResource(order[position].drawable);
+        int effect = order[this.mListView.getCheckedItemPosition()].assigned;
         if (this.mIsTablet) {
-            this.mDefaultUnlock = effect;
+            mDefaultUnlock = effect;
         } else {
-            MainActivity.effect = effect; //TODO Settings.System.putInt(getContentResolver(), "lockscreen_ripple_effect", Integer.parseInt(this.dbValues[this.mListView.getCheckedItemPosition()]));
+            SettingsManager.putInt(UnlockEffect.this, getContentResolver(), "lockscreen_ripple_effect", effect);
+            controller.handleWallpaperTypeChanged();
         }
-        controller.handleWallpaperTypeChanged();
-        Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + effect); //Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 0));
+        Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + effect);
     }
 
     // TODO: rework
     void populateUnlockEffectsOptions() {
-        List<EffectEnum> available = new LinkedList<>(Arrays.asList(effects));
-        List<EffectEnum> aChangedEffect = new ArrayList<>();
-        /*aChangedEffectEntry.add(getResources().getString(R.string.unlock_effect_none));
-        aChangedEffectEntryValue.add("0");
-        int ctr2 = 1;
-        this.backgroundImage[0] = R.drawable.setting_preview_unlock_none;*/
-        if (available.contains(INDIGODIFFUSION)) {//Utils.hasPackage(this, "com.sec.android.app.montblanc")) {
-            aChangedEffect.add(INDIGODIFFUSION);
-            available.remove(INDIGODIFFUSION);
+        List<String> aChangedEffectEntry = new ArrayList<>();
+        Resources res = this.getResources();
+        for (EffectEnum e : order) {
+            aChangedEffectEntry.add(res.getString(e.name));
         }
-        if (available.contains(COLOURDROPLET)) {
-            aChangedEffect.add(COLOURDROPLET);
-            available.remove(COLOURDROPLET);
-        }
-        if (available.contains(WATERDROPLET)) {
-            aChangedEffect.add(WATERDROPLET);
-            available.remove(WATERDROPLET);
-        }
-        if (available.contains(SPARKLINGBUBBLES)) {
-            aChangedEffect.add(SPARKLINGBUBBLES);
-            available.remove(SPARKLINGBUBBLES);
-        }
-        if (available.contains(ABSTRACTTILES)) {
-            aChangedEffect.add(ABSTRACTTILES);
-            available.remove(ABSTRACTTILES);
-        }
-        if (available.contains(GEOMETRICMOSAIC)) {
-            aChangedEffect.add(GEOMETRICMOSAIC);
-            available.remove(GEOMETRICMOSAIC);
-        }
-        if (available.contains(BRILLIANTRING)) {
-            aChangedEffect.add(BRILLIANTRING);
-            available.remove(BRILLIANTRING);
-        }
-        if (available.contains(POPPINGCOLOURS)) {
-            aChangedEffect.add(POPPINGCOLOURS);
-            available.remove(POPPINGCOLOURS);
-        }
-        if (available.contains(WATERCOLOUR)) {
-            aChangedEffect.add(WATERCOLOUR);
-            available.remove(WATERCOLOUR);
-        }
-        if (available.contains(RIPPLE)) {
-            aChangedEffect.add(RIPPLE);
-            available.remove(RIPPLE);
-        }
-        aChangedEffect.addAll(available);
-        mModeItem = aChangedEffect;
+        mModeItem = aChangedEffectEntry.toArray(new String[order.length]);
     }
 
     /* loaded from: classes.dex */

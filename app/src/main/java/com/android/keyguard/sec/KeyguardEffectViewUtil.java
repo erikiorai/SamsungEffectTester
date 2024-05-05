@@ -4,9 +4,10 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
-import com.aj.effect.MainActivity;
+import com.aj.effect.RedirectionClass;
 
 public class KeyguardEffectViewUtil {
     private static final String TAG = "KeyguardEffectViewUtil";
@@ -29,7 +30,7 @@ public class KeyguardEffectViewUtil {
         return srcBitmap;
     }
 
-    public static Bitmap getCurrentWallpaper(Context mContext) {
-        return MainActivity.bitm; // todo botmap
+    public static BitmapDrawable getCurrentWallpaper(Context mContext) {
+        return RedirectionClass.KeyguardEffectViewUtil.getCurrentWallpaper(mContext); // todo botmap
     }
 }

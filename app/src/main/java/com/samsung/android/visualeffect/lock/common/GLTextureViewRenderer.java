@@ -221,9 +221,9 @@ public class GLTextureViewRenderer implements GLTextureView.Renderer {
             options.inScaled = false;
             String packageName = mContext.getPackageName();
             Resources res = mContext.getResources();
-            for (int i = 0; i < aTexture.length; i++) {
+            for (String s : aTexture) {
                 try {
-                    int id = res.getIdentifier(aTexture[i], "drawable", packageName);
+                    int id = res.getIdentifier(s, "drawable", packageName);
                     Bitmap bitmap = BitmapFactory.decodeResource(res, id);
                     int width = bitmap.getWidth();
                     int height = bitmap.getHeight();
@@ -231,10 +231,10 @@ public class GLTextureViewRenderer implements GLTextureView.Renderer {
                     bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
                     Log.i("", "Adding texture Width'" + width + "'");
                     Log.i("", "Adding texture Height'" + height + "'");
-                    mNative.loadTexture(aTexture[i], pixels, width, height);
+                    mNative.loadTexture(s, pixels, width, height);
                     bitmap.recycle();
                 } catch (Exception e) {
-                    Log.e("", "There is no image '" + aTexture[i] + "'");
+                    Log.e("", "There is no image '" + s + "'");
                 }
             }
             mGlView.setRenderMode(GLTextureView.RENDERMODE_CONTINUOUSLY);

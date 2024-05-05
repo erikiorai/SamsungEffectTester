@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
@@ -17,7 +18,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
@@ -71,14 +71,14 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
     }
 
     private void init(Context context) {
-        Log.d("RippleInk_KeyguardEffect", "KeyguardEffectViewRippleInk Constructor");
+        Log.d(TAG, "KeyguardEffectViewRippleInk Constructor");
         this.mContext = context;
         DisplayMetrics displayMetrics = new DisplayMetrics();
         WindowManager mWindowManager = (WindowManager) this.mContext.getSystemService(Context.WINDOW_SERVICE);
         Rect rect = Utils.getViewRect(displayMetrics, mWindowManager);
         windowWidth = rect.width();
         windowHeight = rect.height();
-        Log.d("RippleInk_KeyguardEffect", "KeyguardEffectViewRippleInk windowWidth = " + this.windowWidth + ", windowHeight = " + this.windowHeight);
+        Log.d(TAG, "KeyguardEffectViewRippleInk windowWidth = " + this.windowWidth + ", windowHeight = " + this.windowHeight);
         setEffect(8);
         EffectDataObj data = new EffectDataObj();
         data.setEffect(8);
@@ -90,14 +90,13 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
         HashMap<String, Bitmap> map2 = new HashMap<>();
         map2.put("Bitmap", setBackground());
         handleCustomEvent(0, map2);
-        this.mListener = new IEffectListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewRippleInk.1
-            public void onReceive(int status, HashMap<?, ?> params) {
-                if (status == 1) {
-                    if (((String) params.get("sound")).contentEquals("down")) {
-                        KeyguardEffectViewRippleInk.this.playSound(0);
-                    } else if (((String) params.get("sound")).contentEquals("drag")) {
-                        KeyguardEffectViewRippleInk.this.playSound(1);
-                    }
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewRippleInk.1
+        this.mListener = (status, params) -> {
+            if (status == 1) {
+                if (((String) params.get("sound")).contentEquals("down")) {
+                    KeyguardEffectViewRippleInk.this.playSound(0);
+                } else if (((String) params.get("sound")).contentEquals("drag")) {
+                    KeyguardEffectViewRippleInk.this.playSound(1);
                 }
             }
         };
@@ -105,19 +104,20 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
     }
 
     private Bitmap setBackground() {
-        Log.d("RippleInk_KeyguardEffect", "setBackground");
-        Bitmap pBitmap = MainActivity.bitm; /* todo = null;
+        Log.d(TAG, "setBackground");
+        Bitmap pBitmap;
         BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable != null) {
             pBitmap = newBitmapDrawable.getBitmap();
             if (pBitmap != null) {
-                Log.d("RippleInk_KeyguardEffect", "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
+                Log.d(TAG, "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
             } else {
-                Log.d("RippleInk_KeyguardEffect", "pBitmap is null");
+                Log.d(TAG, "pBitmap is null");
             }
         } else {
-            Log.d("RippleInk_KeyguardEffect", "newBitmapDrawable is null");
-        }*/
+            Log.d(TAG, "newBitmapDrawable is null");
+            return null;
+        }
         return pBitmap;
     }
 
@@ -137,7 +137,7 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
     private void makeSound() {
         stopReleaseSound();
         if (this.mSoundPool == null) { // todo (KeyguardProperties.isEffectProcessSeparated() || KeyguardUpdateMonitor.getInstance(this.mContext).hasBootCompleted()) &&
-            Log.d("RippleInk_KeyguardEffect", "WaterColor sound : new SoundPool");
+            Log.d(TAG, "WaterColor sound : new SoundPool");
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
             this.sounds[0] = this.mSoundPool.load(mContext, DOWN_SOUND_PATH, 1);
@@ -146,22 +146,21 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
             sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mContext, R.raw.unlock_ripple, 1);
         }
         if (this.mHandler == null) {
-            Log.d("RippleInk_KeyguardEffect", "new SoundHandler()");
+            Log.d(TAG, "new SoundHandler()");
             this.mHandler = new SoundHandler();
         }
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewRippleInk.2
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewRippleInk.this.mSoundPool != null) {
-                    Log.d("RippleInk_KeyguardEffect", "WaterColor sound : release SoundPool");
-                    KeyguardEffectViewRippleInk.this.mSoundPool.release();
-                    KeyguardEffectViewRippleInk.this.mSoundPool = null;
-                }
-                KeyguardEffectViewRippleInk.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewRippleInk.2
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewRippleInk.this.mSoundPool != null) {
+                Log.d(TAG, "WaterColor sound : release SoundPool");
+                KeyguardEffectViewRippleInk.this.mSoundPool.release();
+                KeyguardEffectViewRippleInk.this.mSoundPool = null;
             }
+            KeyguardEffectViewRippleInk.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }
@@ -178,7 +177,7 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
         checkSound();
         stopReleaseSound();
         if (this.mSoundPool == null) {
-            Log.d("RippleInk_KeyguardEffect", "ACTION_DOWN, mSoundPool == null");
+            Log.d(TAG, "ACTION_DOWN, mSoundPool == null");
             makeSound();
         }
         if (this.isSystemSoundChecked && this.mSoundPool != null) {
@@ -221,7 +220,7 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void show() {
-        Log.d("RippleInk_KeyguardEffect", "show");
+        Log.d(TAG, "show");
         makeSound();
         reInit(null);
         clearScreen();
@@ -230,35 +229,34 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void reset() {
-        Log.d("RippleInk_KeyguardEffect", "reset");
+        Log.d(TAG, "reset");
         clearScreen();
         this.isUnlocked = false;
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void cleanUp() {
-        Log.d("RippleInk_KeyguardEffect", "cleanUp");
+        Log.d(TAG, "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewRippleInk.3
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewRippleInk.this.clearScreen();
-                KeyguardEffectViewRippleInk.this.isUnlocked = false;
-            }
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewRippleInk.3
+// java.lang.Runnable
+        postDelayed(() -> {
+            KeyguardEffectViewRippleInk.this.clearScreen();
+            KeyguardEffectViewRippleInk.this.isUnlocked = false;
         }, 400L);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
-        Log.d("RippleInk_KeyguardEffect", "update");
+        Log.d(TAG, "update");
         HashMap<String, Bitmap> map = new HashMap<>();
         map.put("Bitmap", setBackground());
         handleCustomEvent(0, map);
     }
 
     public void update(int updateType) {
-        Log.d("RippleInk_KeyguardEffect", "changeBackground()");
+        Log.d(TAG, "changeBackground()");
         HashMap<String, Bitmap> map = new HashMap<>();
         map.put("Bitmap", setBackground());
         handleCustomEvent(0, map);
@@ -266,19 +264,19 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOn() {
-        Log.d("RippleInk_KeyguardEffect", "screenTurnedOn");
+        Log.d(TAG, "screenTurnedOn");
         this.isUnlocked = false;
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOff() {
-        Log.d("RippleInk_KeyguardEffect", "screenTurnedOff");
+        Log.d(TAG, "screenTurnedOff");
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void showUnlockAffordance(long startDelay, Rect rect) {
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("StartDelay", Long.valueOf(startDelay));
+        map.put("StartDelay", startDelay);
         map.put("Rect", rect);
         handleCustomEvent(1, map);
         this.isUnlocked = false;
@@ -291,7 +289,7 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void handleUnlock(View view, MotionEvent event) {
-        Log.d("RippleInk_KeyguardEffect", "handleUnlock");
+        Log.d(TAG, "handleUnlock");
         this.isUnlocked = true;
         playSound(SOUND_ID_UNLOCK);
     }
@@ -321,7 +319,7 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
 
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.d("RippleInk_KeyguardEffect", "onDetachedFromWindow");
+        Log.d(TAG, "onDetachedFromWindow");
         if (this.mHandler != null) {
             this.mHandler.removeMessages(0);
             this.mHandler = null;
@@ -334,16 +332,16 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
 
     public void onWindowFocusChanged(boolean hasWindowFocus) {
         super.onWindowFocusChanged(hasWindowFocus);
-        Log.d("RippleInk_KeyguardEffect", "onWindowFocusChanged hasWindowFocus = " + hasWindowFocus);
+        Log.d(TAG, "onWindowFocusChanged hasWindowFocus = " + hasWindowFocus);
         if (hasWindowFocus || !this.isUnlocked) {
         }
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void setContextualWallpaper(Bitmap bmp) {
-        Log.d("RippleInk_KeyguardEffect", "setContextualWallpaper");
+        Log.d(TAG, "setContextualWallpaper");
         if (bmp == null) {
-            Log.d("RippleInk_KeyguardEffect", "bmp is null" + bmp);
+            Log.d(TAG, "bmp is null" + bmp);
             return;
         }
         Bitmap bmp2 = KeyguardEffectViewUtil.getPreferredConfigBitmap(bmp, Bitmap.Config.ARGB_8888);

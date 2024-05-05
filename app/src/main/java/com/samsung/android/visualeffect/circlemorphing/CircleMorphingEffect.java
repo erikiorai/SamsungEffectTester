@@ -34,12 +34,9 @@ public class CircleMorphingEffect extends View {
     private void setAnimator() {
         this.absorbAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.absorbAnimator.setDuration(1000L);
-        this.absorbAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.CircleMorphing.CircleMorphingEffect.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                CircleMorphingEffect.this.updateAbsorbAnimator();
-            }
-        });
+        // from class: com.samsung.android.visualeffect.CircleMorphing.CircleMorphingEffect.1
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.absorbAnimator.addUpdateListener(animation -> CircleMorphingEffect.this.updateAbsorbAnimator());
     }
 
     public void drawCircle(Paint circlePaint) {
@@ -50,12 +47,9 @@ public class CircleMorphingEffect extends View {
 
     public void addMorph(Morphing morph) {
         this.list.add(morph);
-        morph.setListener(new Morphing.StatusChangedListener() { // from class: com.samsung.android.visualeffect.CircleMorphing.CircleMorphingEffect.2
-            @Override // com.samsung.android.visualeffect.CircleMorphing.morphing.Morphing.StatusChangedListener
-            public void onSeparated() {
-                CircleMorphingEffect.this.startAbsorbAnimation();
-            }
-        });
+        // from class: com.samsung.android.visualeffect.CircleMorphing.CircleMorphingEffect.2
+// com.samsung.android.visualeffect.CircleMorphing.morphing.Morphing.StatusChangedListener
+        morph.setListener(() -> CircleMorphingEffect.this.startAbsorbAnimation());
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -84,9 +78,7 @@ public class CircleMorphingEffect extends View {
     public void clear() {
         Log.d("visualeffectCircleMorphingEffect", EffectCmdType.CLEAR);
         this.absorbAnimator.cancel();
-        Iterator<Morphing> it = this.list.iterator();
-        while (it.hasNext()) {
-            Morphing morph = it.next();
+        for (Morphing morph : this.list) {
             morph.clear();
         }
         draw();

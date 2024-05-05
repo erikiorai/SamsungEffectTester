@@ -98,7 +98,7 @@ public class KeyguardEffectViewLensFlare extends FrameLayout implements Keyguard
     public void showUnlockAffordance(long startDelay, Rect rect) {
         Log.d(TAG, "showUnlockAffordance");
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("startDelay", Long.valueOf(startDelay));
+        map.put("startDelay", startDelay);
         map.put("rect", rect);
         this.lensFlareEffect.handleCustomEvent(1, map);
     }

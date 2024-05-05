@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.samsung.android.visualeffect.EffectView;
 
@@ -111,12 +110,9 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
         Log.i(TAG, "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.1
-            @Override // java.lang.Runnable
-            public void run() {
-                clearScreen();
-            }
-        }, 400L);
+        // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.1
+// java.lang.Runnable
+        postDelayed(() -> clearScreen(), 400L);
         /*if (this.useGPUMaxClock) {
             VisualEffectDVFS.release(17);
         }
@@ -128,9 +124,7 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
     @Override // com.android.keyguard.sec.KeyguardEffectViewBase
     public void update() {
         Log.i(TAG, "update");
-
-        // TODO: Fix wallpaper (getCurrentWallpaper gets SCALED wallpaper)
-        BitmapDrawable newBitmapDrawable = new BitmapDrawable(getResources(), MainActivity.bitm);// = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i(TAG, "newBitmapDrawable  is null");
             return;
@@ -304,12 +298,9 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
             this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(this.mContext, R.raw.abstracttile_drag, 1);
             this.sounds[SOUND_ID_UNLOCK] = this.mSoundPool.load(this.mContext, R.raw.abstracttile_unlock, 1);
             sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, R.raw.abstracttile_lock, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.2
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d(KeyguardEffectViewAbstractTile.TAG, "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.2
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(KeyguardEffectViewAbstractTile.TAG, "sound : onLoadComplete"));
         }
     }
 
@@ -321,16 +312,15 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.3
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewAbstractTile.this.mSoundPool != null) {
-                    Log.d(KeyguardEffectViewAbstractTile.TAG, "BrilliantRing sound : release SoundPool");
-                    KeyguardEffectViewAbstractTile.this.mSoundPool.release();
-                    KeyguardEffectViewAbstractTile.this.mSoundPool = null;
-                }
-                KeyguardEffectViewAbstractTile.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.3
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewAbstractTile.this.mSoundPool != null) {
+                Log.d(KeyguardEffectViewAbstractTile.TAG, "BrilliantRing sound : release SoundPool");
+                KeyguardEffectViewAbstractTile.this.mSoundPool.release();
+                KeyguardEffectViewAbstractTile.this.mSoundPool = null;
             }
+            KeyguardEffectViewAbstractTile.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }
@@ -363,12 +353,9 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
             this.mSoundPool.setVolume(this.dragStreamID, this.dragSoudVolume, this.dragSoudVolume);
             if (this.dragSoudVolume > 0.0f) {
                 this.dragSoudVolume -= this.dragSoudMinusOffset;
-                postDelayed(new Runnable() { // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.4
-                    @Override // java.lang.Runnable
-                    public void run() {
-                        KeyguardEffectViewAbstractTile.this.fadeOutSound();
-                    }
-                }, 10L);
+                // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.4
+// java.lang.Runnable
+                postDelayed(() -> KeyguardEffectViewAbstractTile.this.fadeOutSound(), 10L);
                 return;
             }
             Log.d(TAG, "SOUND STOP because UP or Unlock");

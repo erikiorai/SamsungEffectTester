@@ -6,9 +6,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -17,7 +19,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
@@ -94,14 +95,13 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
         HashMap<String, Bitmap> map2 = new HashMap<>();
         map2.put("Bitmap", setBackground());
         handleCustomEvent(0, map2);
-        this.mListener = new IEffectListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewIndigoDiffusion.1
-            public void onReceive(int status, HashMap<?, ?> params) {
-                if (status == 1) {
-                    if (((String) params.get("sound")).contentEquals("down")) {
-                        KeyguardEffectViewIndigoDiffusion.this.playSound(0);
-                    } else if (((String) params.get("sound")).contentEquals("drag")) {
-                        KeyguardEffectViewIndigoDiffusion.this.playSound(1);
-                    }
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewIndigoDiffusion.1
+        this.mListener = (status, params) -> {
+            if (status == 1) {
+                if (((String) params.get("sound")).contentEquals("down")) {
+                    KeyguardEffectViewIndigoDiffusion.this.playSound(0);
+                } else if (((String) params.get("sound")).contentEquals("drag")) {
+                    KeyguardEffectViewIndigoDiffusion.this.playSound(1);
                 }
             }
         };
@@ -110,8 +110,8 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
 
     private Bitmap setBackground() {
         Log.d("KeyguardEffectViewIndigoDiffusion", "setBackground");
-        Bitmap pBitmap = MainActivity.bitm;/* todo = null;
         BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        Bitmap pBitmap;
         if (newBitmapDrawable != null) {
             pBitmap = newBitmapDrawable.getBitmap();
             if (pBitmap != null) {
@@ -121,7 +121,8 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
             }
         } else {
             Log.d("KeyguardEffectViewIndigoDiffusion", "newBitmapDrawable is null");
-        }*/
+            return null;
+        }
         return pBitmap;
     }
 
@@ -172,21 +173,20 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
         }
         if (this.mHandler == null) {
             Log.d("KeyguardEffectViewIndigoDiffusion", "new SoundHandler()");
-            this.mHandler = new SoundHandler();
+            this.mHandler = new SoundHandler(Looper.myLooper());
         }
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewIndigoDiffusion.2
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewIndigoDiffusion.this.mSoundPool != null) {
-                    Log.d("KeyguardEffectViewIndigoDiffusion", "IndigoDiffusion sound : release SoundPool");
-                    KeyguardEffectViewIndigoDiffusion.this.mSoundPool.release();
-                    KeyguardEffectViewIndigoDiffusion.this.mSoundPool = null;
-                }
-                KeyguardEffectViewIndigoDiffusion.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewIndigoDiffusion.2
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewIndigoDiffusion.this.mSoundPool != null) {
+                Log.d("KeyguardEffectViewIndigoDiffusion", "IndigoDiffusion sound : release SoundPool");
+                KeyguardEffectViewIndigoDiffusion.this.mSoundPool.release();
+                KeyguardEffectViewIndigoDiffusion.this.mSoundPool = null;
             }
+            KeyguardEffectViewIndigoDiffusion.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }
@@ -225,7 +225,8 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
 
     /* loaded from: classes.dex */
     public class SoundHandler extends Handler {
-        public SoundHandler() {
+        public SoundHandler(Looper looper) {
+            super(looper);
         }
 
         @Override // android.os.Handler
@@ -263,12 +264,9 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
         Log.d("KeyguardEffectViewIndigoDiffusion", "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewIndigoDiffusion.3
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewIndigoDiffusion.this.clearScreen();
-            }
-        }, 400L);
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewIndigoDiffusion.3
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewIndigoDiffusion.this.clearScreen(), 400L);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
@@ -301,7 +299,7 @@ public class KeyguardEffectViewIndigoDiffusion extends EffectView implements Key
     public void showUnlockAffordance(long startDelay, Rect rect) {
         Log.d("KeyguardEffectViewIndigoDiffusion", "showUnlockAffordance");
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("StartDelay", Long.valueOf(startDelay));
+        map.put("StartDelay", startDelay);
         map.put("Rect", rect);
         handleCustomEvent(1, map);
     }

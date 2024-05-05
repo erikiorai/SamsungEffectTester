@@ -125,18 +125,17 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
 
     private void setAnimator() {
         circleInAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
-        circleInAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                strokeAnimationValue = (((Float) animation.getAnimatedValue()).floatValue() * (1.0f - circleAnimationMin)) + circleAnimationMin;
-                setAlphaAndVisibility(circleGroup, strokeAnimationValue);
-                if (!hasNoOuterCircle || isForShortcut) {
-                    circle.strokeAnimationUpdate(strokeAnimationValue);
-                } else if (isForAffordance) {
-                    dragAnimationValue = fillAnimationValueMax = strokeAnimationValue;
-                    circle.strokeAnimationUpdate(strokeAnimationValue);
-                    circle.dragAnimationUpdate(dragAnimationValue);
-                }
+        // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.1
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        circleInAnimator.addUpdateListener(animation -> {
+            strokeAnimationValue = ((Float) animation.getAnimatedValue() * (1.0f - circleAnimationMin)) + circleAnimationMin;
+            setAlphaAndVisibility(circleGroup, strokeAnimationValue);
+            if (!hasNoOuterCircle || isForShortcut) {
+                circle.strokeAnimationUpdate(strokeAnimationValue);
+            } else if (isForAffordance) {
+                dragAnimationValue = fillAnimationValueMax = strokeAnimationValue;
+                circle.strokeAnimationUpdate(strokeAnimationValue);
+                circle.dragAnimationUpdate(dragAnimationValue);
             }
         });
         circleInAnimator.addListener(new Animator.AnimatorListener() { // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.2
@@ -159,28 +158,27 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
             }
         });
         circleOutAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
-        circleOutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.3
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float tvalue;
-                float value = ((Float) animation.getAnimatedValue()).floatValue();
-                strokeAnimationValue = circleAnimationMax * value;
-                dragAnimationValue = fillAnimationValueMax * value;
-                circle.strokeAnimationUpdate(strokeAnimationValue);
-                circle.dragAnimationUpdate(dragAnimationValue);
-                if (!isForAffordance) {
-                    setImageInLockImageView(dragAnimationValue);
-                }
-                setAlphaAndVisibility(circleGroup, strokeAnimationValue);
-                if (value > 0.4f) {
-                    tvalue = (arrowAlphaMax * (value - 0.4f)) / 0.6f;
-                } else {
-                    tvalue = 0.0f;
-                }
-                arrow.setAlpha(tvalue);
-                if (arrowForButton != null) {
-                    arrowForButton.setAlpha(tvalue);
-                }
+        // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.3
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        circleOutAnimator.addUpdateListener(animation -> {
+            float tvalue;
+            float value = (Float) animation.getAnimatedValue();
+            strokeAnimationValue = circleAnimationMax * value;
+            dragAnimationValue = fillAnimationValueMax * value;
+            circle.strokeAnimationUpdate(strokeAnimationValue);
+            circle.dragAnimationUpdate(dragAnimationValue);
+            if (!isForAffordance) {
+                setImageInLockImageView(dragAnimationValue);
+            }
+            setAlphaAndVisibility(circleGroup, strokeAnimationValue);
+            if (value > 0.4f) {
+                tvalue = (arrowAlphaMax * (value - 0.4f)) / 0.6f;
+            } else {
+                tvalue = 0.0f;
+            }
+            arrow.setAlpha(tvalue);
+            if (arrowForButton != null) {
+                arrowForButton.setAlpha(tvalue);
             }
         });
         circleOutAnimator.addListener(new Animator.AnimatorListener() { // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.4
@@ -207,18 +205,17 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
         arrowAnimator.setInterpolator(new LinearInterpolator());
         arrowAnimator.setDuration(ARROW_ANIMATION_DURATION);
         arrowAnimator.setRepeatCount(-1);
-        arrowAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.5
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                float value = ((Float) animation.getAnimatedValue()).floatValue();
-                if (arrowAnimationToggle) {
-                    value = 1.0f - value;
-                }
-                float value2 = dragAnimationValue > 0.4f ? 0.0f : ((0.4f - dragAnimationValue) * value) / 0.4f;
-                arrow.setAlpha(value2);
-                if (arrowForButton != null) {
-                    arrowForButton.setAlpha(value2);
-                }
+        // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.5
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        arrowAnimator.addUpdateListener(animation -> {
+            float value = (Float) animation.getAnimatedValue();
+            if (arrowAnimationToggle) {
+                value = 1.0f - value;
+            }
+            float value2 = dragAnimationValue > 0.4f ? 0.0f : ((0.4f - dragAnimationValue) * value) / 0.4f;
+            arrow.setAlpha(value2);
+            if (arrowForButton != null) {
+                arrowForButton.setAlpha(value2);
             }
         });
         arrowAnimator.addListener(new Animator.AnimatorListener() { // from class: com.samsung.android.visualeffect.lock.circleunlock.CircleUnlockEffect.6
@@ -513,14 +510,14 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleCustomEvent(int cmd, HashMap<?, ?> params) {
         if (cmd == 1) {
-            showAffordanceEffect(((Long) params.get("StartDelay")).longValue(), (Rect) params.get("Rect"));
+            showAffordanceEffect((Long) params.get("StartDelay"), (Rect) params.get("Rect"));
         } else if (cmd == 2) {
             unlock();
         } else if (cmd == 99) {
             if (params.get("setOuterCircleType") != null) {
-                setOuterCircleType(((Boolean) params.get("setOuterCircleType")).booleanValue());
+                setOuterCircleType((Boolean) params.get("setOuterCircleType"));
             } else if (params.get("showSwipeCircleEffect") != null) {
-                showSwipeCircleEffect(((Boolean) params.get("showSwipeCircleEffect")).booleanValue());
+                showSwipeCircleEffect((Boolean) params.get("showSwipeCircleEffect"));
             } else if (params.get("reloadResForOpenTheme") != null) {
                 reloadResForOpenTheme();
             }

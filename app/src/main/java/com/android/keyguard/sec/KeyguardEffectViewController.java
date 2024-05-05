@@ -8,6 +8,7 @@ import android.graphics.Rect;
 import android.hardware.SensorEvent;
 import android.os.FileObserver;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -15,7 +16,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.aj.effect.MainActivity;
+import com.aj.effect.SettingsManager;
+import com.aj.effect.Utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -23,8 +25,6 @@ import java.util.ArrayList;
 
 /* loaded from: classes.dex */
 public class KeyguardEffectViewController implements KeyguardEffectViewBase {
-    private static final String ACTION_IMAGES_CHANGED = "com.sec.android.slidingGallery.LOCKSCREEN_IMAGE_CHANGED";
-    public static final String ACTION_LOCKSCREEN_IMAGE_CHANGED = "com.sec.android.gallery3d.LOCKSCREEN_IMAGE_CHANGED";
 
     public static final int EFFECT_ABSTRACTTILE = 11;
     public static final int EFFECT_AUTUMN = 83;
@@ -53,43 +53,13 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     public static final int EFFECT_WINTER = 84;
     public static final int EFFECT_ZOOM_PANNING = 80;
 
-    private static final String EMPTY_WALLPAPER_IMAGE_PATH = "/system/wallpaper/keyguard_empty_image.jpg";
-    public static final int KEYGUARD_DEFAULT_WALLPAPER_TYPE_BRILLIANT = 1;
-    public static final String LOCK_SOUND_ABSTRACT_TILE = "/system/media/audio/ui/abstracttile_lock.ogg";
-    public static final String LOCK_SOUND_AUTUMN = "/system/media/audio/ui/autumn_lock.ogg";
-    public static final String LOCK_SOUND_BLIND = "/system/media/audio/ui/blind_lock.ogg";
-    public static final String LOCK_SOUND_BRILLIANT_CUT = "/system/media/audio/ui/brilliantcut_lock.ogg";
-    public static final String LOCK_SOUND_BRILLIANT_RING = "/system/media/audio/ui/brilliantring_lock.ogg";
-    public static final String LOCK_SOUND_GEOMETRIC_MOSAIC = "/system/media/audio/ui/GeometricMosaic_lock.ogg";
-    public static final String LOCK_SOUND_LENS = "/system/media/audio/ui/lens_flare_lock.ogg";
-    public static final String LOCK_SOUND_NONE = "/system/media/audio/ui/Lock_none_effect.ogg";
-    public static final String LOCK_SOUND_PARTICLE = "/system/media/audio/ui/Particle_Lock.ogg";
-    public static final String LOCK_SOUND_SPRING = "/system/media/audio/ui/spring_lock.ogg";
-    public static final String LOCK_SOUND_SUMMER = "/system/media/audio/ui/summer_lock.ogg";
-    public static final String LOCK_SOUND_WINTER = "/system/media/audio/ui/winter_lock.ogg";
-    private static final int MSG_CHARGE_STATE_CHANGED = 4852;
-    private static final int MSG_WALLPAPER_FILE_CHANGED = 4850;
-    private static final int MSG_WALLPAPER_PATH_CHANGED = 4849;
-    private static final int MSG_WALLPAPER_PRELOAD_CHANGED = 4851;
-    private static final int MSG_WALLPAPER_TYPE_CHANGED = 4848;
-    private static final String RICH_LOCK_CATEGORIES_WALLPAPER_ROOT_PATH = "/data/data/com.samsung.android.keyguardwallpaperupdator/files/wallpaper_images";
-    private static final String RICH_LOCK_WALLPAPER_ROOT_PATH = "/data/data/com.samsung.android.keyguardwallpaperupdator";
     public static final String SETTING_KEYGUARD_DEFAULT_WALLPAPER_TYPE_FOR_EFFECT = "keyguard_default_wallpaper_type_for_effect";
-    public static final String SETTING_KEYGUARD_SET_DEFAULT_WALLPAPER = "keyguard_set_default_wallpaper";
     public static final String SETTING_LOCKSCREEN_MONTBLANC_WALLPAPER = "lockscreen_montblanc_wallpaper";
     public static final int SLIDING_INTERNAL_EVERY_12HOUR = 2;
     public static final int SLIDING_INTERNAL_EVERY_1HOUR = 1;
     public static final int SLIDING_INTERNAL_EVERY_24HOUR = 3;
     public static final int SLIDING_INTERNAL_SCREENOFF = 0;
-    public static final String SlidingWallpaperPath = "com.sec.android.slidingGallery";
     private static final String TAG = "KeyguardEffectViewController";
-    public static final String UNLOCK_SOUND_AUTUMN = "/system/media/audio/ui/autumn_unlock.ogg";
-    public static final String UNLOCK_SOUND_LENS = "/system/media/audio/ui/lock_screen_silence.ogg";
-    public static final String UNLOCK_SOUND_NONE = "/system/media/audio/ui/Unlock_none_effect.ogg";
-    public static final String UNLOCK_SOUND_PARTICLE = "/system/media/audio/ui/lock_screen_silence.ogg";
-    public static final String UNLOCK_SOUND_SPRING = "/system/media/audio/ui/spring_unlock.ogg";
-    public static final String UNLOCK_SOUND_SUMMER = "/system/media/audio/ui/summer_unlock.ogg";
-    public static final String UNLOCK_SOUND_WINTER = "/system/media/audio/ui/winter_unlock.ogg";
     private static int displayHeight;
     private static int displayWidth;
     private static KeyguardEffectViewController sKeyguardEffectViewController;
@@ -383,7 +353,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     public void handleWallpaperTypeChanged() {
         if (this.mBackgroundRootLayout != null) {
             // TODO: get effect
-            this.mCurrentEffect = mContext.getSharedPreferences("settings", 0).getInt("lockscreen_ripple_effect", MainActivity.effect); //todo Settings.System.getInt(mContext.getContentResolver(), "lockscreen_ripple_effect", 0); // getIntForUser(this.mContext.getContentResolver(), "lockscreen_ripple_effect", 0, -2);
+            this.mCurrentEffect = SettingsManager.getInt(mContext, mContext.getContentResolver(), "lockscreen_ripple_effect", Utils.defaultUnlock); // getIntForUser(this.mContext.getContentResolver(), "lockscreen_ripple_effect", 0, -2);
             if (this.mForegroundCircleView == null) {
                 this.mForegroundCircleView = new KeyguardEffectViewNone(this.mContext);
             }
@@ -734,6 +704,25 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         }
     }
 
+    Handler handler = new Handler(Looper.getMainLooper());
+    public void showUnlockAffordance(ViewGroup view) {
+        Rect outRect = new Rect(0, 0, 0, 0);
+        boolean isValidRect = view.getGlobalVisibleRect(outRect);
+        Log.d(TAG, "outRect: " + outRect);
+        Log.d(TAG, "isValidRect: " + isValidRect);
+        if (isValidRect) {
+            showUnlockAffordance(500L, outRect);
+        } else {
+            handler.postDelayed(() -> {
+                boolean isValidRect2 = view.getGlobalVisibleRect(outRect);
+                Log.d(TAG, "Retry isValidRect: " + isValidRect2);
+                if (isValidRect2) {
+                    showUnlockAffordance(500L, outRect);
+                }
+            }, 30L);
+        }
+    }
+
     @Override // com.android.keyguard.sec.KeyguardEffectViewBase
     public void showUnlockAffordance(long startDelay, Rect rect) {
         if (this.mUnlockEffectView != null) {
@@ -745,14 +734,8 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     public void handleUnlock(View view, MotionEvent event) {
         if (view != null && this.mForegroundCircleView != null) {
             this.mForegroundCircleView.handleUnlock(view, event);
-            MainActivity.switchActivity(mContext);
         } else if (this.mUnlockEffectView != null) {
             this.mUnlockEffectView.handleUnlock(view, event);
-            // todo handle un;lock
-            Handler handler = new Handler();
-            handler.postDelayed(() -> {
-                MainActivity.switchActivity(mContext);
-            }, getUnlockDelay()+250L);
         }
     }
 
@@ -1341,7 +1324,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         try {
             Class<?> tempClass = Class.forName(nameOfClass);
             Method m = tempClass.getDeclaredMethod("isBackgroundEffect", null);
-            boolean retValue = ((Boolean) m.invoke(null, null)).booleanValue();
+            boolean retValue = (Boolean) m.invoke(null, null);
             return retValue;
         } catch (ClassNotFoundException e) {
             Log.w(TAG, nameOfClass + " ClassNotFoundException");
@@ -1448,7 +1431,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
             }
             if (isBackgroundEffect(nameOfClass)) {
                 this.mBackgroundView = primaryEffect;
-                this.mOldPrimaryEffect = this.mBackgroundView.getClass().getName().toString();
+                this.mOldPrimaryEffect = this.mBackgroundView.getClass().getName();
                 if (!isJustLockLiveEnabled()) {
                     this.mUnlockEffectView = this.mBackgroundView;
                 } else {

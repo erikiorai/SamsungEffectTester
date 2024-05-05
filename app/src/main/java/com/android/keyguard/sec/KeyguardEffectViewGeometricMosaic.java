@@ -4,9 +4,11 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.provider.Settings;
 import android.util.Log;
@@ -14,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.samsung.android.visualeffect.EffectView;
 import com.samsung.android.visualeffect.IEffectListener;
@@ -84,15 +85,14 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
         addView(this.mImageView, -1, -1);
         if (this.mHandler == null) {
             Log.d(TAG, "new SoundHandler()");
-            this.mHandler = new EffectHandler();
+            this.mHandler = new EffectHandler(Looper.myLooper());
         }
-        this.callBackListener = new IEffectListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.1
-            public void onReceive(int status, HashMap<?, ?> params) {
-                if (status == 0 && KeyguardEffectViewGeometricMosaic.this.mHandler != null) {
-                    KeyguardEffectViewGeometricMosaic.this.mMsg = KeyguardEffectViewGeometricMosaic.this.mHandler.obtainMessage();
-                    KeyguardEffectViewGeometricMosaic.this.mMsg.what = 0;
-                    KeyguardEffectViewGeometricMosaic.this.mHandler.sendMessage(KeyguardEffectViewGeometricMosaic.this.mMsg);
-                }
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.1
+        this.callBackListener = (status, params) -> {
+            if (status == 0 && KeyguardEffectViewGeometricMosaic.this.mHandler != null) {
+                KeyguardEffectViewGeometricMosaic.this.mMsg = KeyguardEffectViewGeometricMosaic.this.mHandler.obtainMessage();
+                KeyguardEffectViewGeometricMosaic.this.mMsg.what = 0;
+                KeyguardEffectViewGeometricMosaic.this.mHandler.sendMessage(KeyguardEffectViewGeometricMosaic.this.mMsg);
             }
         };
         setListener(this.callBackListener);
@@ -118,24 +118,20 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
         Log.i(TAG, "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.2
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewGeometricMosaic.this.clearScreen();
-            }
-        }, 400L);
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.2
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewGeometricMosaic.this.clearScreen(), 400L);
     }
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
         Log.i(TAG, "update");
-        /* todo BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i(TAG, "newBitmapDrawable  is null");
             return;
         }
-        Bitmap originBitmap = newBitmapDrawable.getBitmap();*/
-        Bitmap originBitmap = MainActivity.bitm;
+        Bitmap originBitmap = newBitmapDrawable.getBitmap();
         if (originBitmap == null) {
             Log.d(TAG, "originBitmap is null");
             return;
@@ -292,12 +288,9 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
             this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(mContext, DRAG_SOUND_PATH, 1);
             this.sounds[SOUND_ID_UNLOCK] = this.mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
             sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.3
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d(KeyguardEffectViewGeometricMosaic.TAG, "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.3
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(KeyguardEffectViewGeometricMosaic.TAG, "sound : onLoadComplete"));
         }
     }
 
@@ -309,16 +302,15 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.4
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewGeometricMosaic.this.mSoundPool != null) {
-                    Log.d(KeyguardEffectViewGeometricMosaic.TAG, "GeometricMosaic sound : release SoundPool");
-                    KeyguardEffectViewGeometricMosaic.this.mSoundPool.release();
-                    KeyguardEffectViewGeometricMosaic.this.mSoundPool = null;
-                }
-                KeyguardEffectViewGeometricMosaic.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.4
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewGeometricMosaic.this.mSoundPool != null) {
+                Log.d(KeyguardEffectViewGeometricMosaic.TAG, "GeometricMosaic sound : release SoundPool");
+                KeyguardEffectViewGeometricMosaic.this.mSoundPool.release();
+                KeyguardEffectViewGeometricMosaic.this.mSoundPool = null;
             }
+            KeyguardEffectViewGeometricMosaic.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }
@@ -351,12 +343,9 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
             this.mSoundPool.setVolume(this.dragStreamID, this.dragSoudVolume, this.dragSoudVolume);
             if (this.dragSoudVolume > 0.0f) {
                 this.dragSoudVolume -= this.dragSoudMinusOffset;
-                postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.5
-                    @Override // java.lang.Runnable
-                    public void run() {
-                        KeyguardEffectViewGeometricMosaic.this.fadeOutSound();
-                    }
-                }, 10L);
+                // from class: com.android.keyguard.sec.effect.KeyguardEffectViewGeometricMosaic.5
+// java.lang.Runnable
+                postDelayed(() -> KeyguardEffectViewGeometricMosaic.this.fadeOutSound(), 10L);
                 return;
             }
             Log.d(TAG, "SOUND STOP because UP or Unlock");
@@ -389,7 +378,8 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
 
     /* loaded from: classes.dex */
     public class EffectHandler extends Handler {
-        public EffectHandler() {
+        public EffectHandler(Looper looper) {
+            super(looper);
         }
 
         @Override // android.os.Handler
@@ -403,7 +393,6 @@ public class KeyguardEffectViewGeometricMosaic extends EffectView implements Key
                     KeyguardEffectViewGeometricMosaic.this.mImageView = null;
                     return;
                 default:
-                    return;
             }
         }
     }

@@ -13,8 +13,8 @@ public class RippleInkRenderer extends GLTextureViewRendererForRippleType {
         this.TAG = "RippleInkRenderer";
         Log.d(this.TAG, "RippleInkRenderer Constructor 2014-1031");
         this.mParent = view;
-        this.mBgChangeCheckQueue = new LinkedList();
-        this.mEffectChangeCheckQueue = new LinkedList();
+        this.mBgChangeCheckQueue = new LinkedList<>();
+        this.mEffectChangeCheckQueue = new LinkedList<>();
         Log.d(this.TAG, "spenUspLevel = " + this.spenUspLevel);
         if (this.spenUspLevel < 2) {
             this.isSPenSupport = false;

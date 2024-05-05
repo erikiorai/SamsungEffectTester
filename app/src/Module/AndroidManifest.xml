@@ -15,7 +15,7 @@
             android:name="xposedscope"
             android:value="com.android.systemui" />
 
-        <activity android:theme="@style/Theme.DialogWhenLarge" android:label="@string/unlock_effect" android:name="com.aj.effect.UnlockEffect" android:uiOptions="none"
+        <activity android:theme="@style/Theme.DialogWhenLarge" android:label="@string/unlock_effect" android:name="com.aj.effect.UnlockEffectGrid" android:uiOptions="none"
             android:exported="true"
             android:resizeableActivity="true">
             <intent-filter>

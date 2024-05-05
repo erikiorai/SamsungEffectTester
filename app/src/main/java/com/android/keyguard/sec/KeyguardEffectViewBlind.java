@@ -16,7 +16,6 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.EffectView;
@@ -116,7 +115,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
         Log.d(TAG, "setBackground");
         Bitmap pBitmap = null;
         try {
-            pBitmap = MainActivity.bitm; // todo bitmap
+            pBitmap = KeyguardEffectViewUtil.getCurrentWallpaper(mContext).getBitmap();
             if (pBitmap != null) {
                 Log.d(TAG, "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
                 for (int i = 1; i <= 2; i++) {
@@ -149,16 +148,15 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBlind.1
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewBlind.this.mSoundPool != null) {
-                    Log.d(TAG, "releaseSound");
-                    KeyguardEffectViewBlind.this.mSoundPool.release();
-                    KeyguardEffectViewBlind.this.mSoundPool = null;
-                }
-                KeyguardEffectViewBlind.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBlind.1
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewBlind.this.mSoundPool != null) {
+                Log.d(TAG, "releaseSound");
+                KeyguardEffectViewBlind.this.mSoundPool.release();
+                KeyguardEffectViewBlind.this.mSoundPool = null;
             }
+            KeyguardEffectViewBlind.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }

@@ -48,6 +48,9 @@ public class MainActivity extends Activity {
     FrameLayout mBackgroundRootLayout;
     FrameLayout mForegroundRootLayout;
 
+    int width;
+    int height;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,8 +61,7 @@ public class MainActivity extends Activity {
         int uiOptions = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
         decorView.setSystemUiVisibility(uiOptions);
 
-        int width;
-        int height;
+        setContentView(R.layout.activity_main);
 
         Rect viewRect = Utils.getViewRect(new DisplayMetrics(), getWindowManager());
         width = viewRect.width();
@@ -67,8 +69,6 @@ public class MainActivity extends Activity {
 
         bitm = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         canv = new Canvas(bitm);
-
-        setContentView(R.layout.activity_main);
 
         imgView = findViewById(R.id.imageView);
 
@@ -181,7 +181,12 @@ public class MainActivity extends Activity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        //imgView.draw(canv);
-        //controller.handleWallpaperTypeChanged();
+        Rect viewRect = Utils.getViewRect(new DisplayMetrics(), getWindowManager());
+        width = viewRect.width();
+        height = viewRect.height();
+        bitm.reconfigure(width, height, Bitmap.Config.ARGB_8888);
+        canv = new Canvas(bitm);
+        imgView.draw(canv);
+        controller.handleWallpaperTypeChanged();
     }
 }

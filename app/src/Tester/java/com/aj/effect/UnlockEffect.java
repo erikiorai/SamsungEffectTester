@@ -59,9 +59,8 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
     private ListView mListView;
     private View mTabletView;
     private boolean mIsTablet;
-    public static int mDefaultUnlock = MainActivity.effect; // todo 0
+    public static int mDefaultUnlock = Utils.defaultUnlock;
     private ImageView mImageView = null;
-    private SharedPreferences prefs;
 
     private final EffectEnum[] order = { NONE, SEASONAL, SPRING, SUMMER, AUTUMN, WINTER,
             COLOURDROPLET, LIQUID, WATERDROPLET, SPARKLINGBUBBLES, ABSTRACTTILES,
@@ -72,8 +71,6 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
-        prefs = getSharedPreferences("settings", MODE_PRIVATE);
-
         this.mIsTablet = Utils.isTablet(this);
         ImageView imageViewforkeyboard;
         super.onCreate(savedInstanceState);
@@ -136,7 +133,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         alertDialogBuilder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() { // from class: com.android.settings.UnlockEffect.1
             @Override // android.content.DialogInterface.OnClickListener
             public void onClick(DialogInterface dialog, int id) {
-                prefs.edit().putInt("lockscreen_ripple_effect", mDefaultUnlock).apply();// todo Settings.System.putInt(UnlockEffect.this.getContentResolver(), "lockscreen_ripple_effect", mDefaultUnlock);
+                SettingsManager.putInt(UnlockEffect.this, UnlockEffect.this.getContentResolver(), "lockscreen_ripple_effect", mDefaultUnlock);
                 Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + mDefaultUnlock);
                 KeyguardEffectViewController.getInstance(UnlockEffect.this).handleWallpaperTypeChanged();
                 UnlockEffect.this.finish();
@@ -179,7 +176,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
     }
 
     private void updateImageResource() {
-        mDefaultUnlock = prefs.getInt("lockscreen_ripple_effect", MainActivity.effect); // todo Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 0);
+        mDefaultUnlock = SettingsManager.getInt(UnlockEffect.this, getContentResolver(), "lockscreen_ripple_effect", Utils.defaultUnlock);
         for (int i = 0; i < order.length; i++) {
             if (order[i].assigned == mDefaultUnlock) {
                 this.mListView.setItemChecked(i, true);
@@ -212,10 +209,10 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         if (this.mIsTablet) {
             mDefaultUnlock = effect;
         } else {
-            prefs.edit().putInt("lockscreen_ripple_effect", effect).apply(); // todo Settings.System.putInt(getContentResolver(), "lockscreen_ripple_effect", effect);
+            SettingsManager.putInt(UnlockEffect.this, getContentResolver(), "lockscreen_ripple_effect", effect);
             controller.handleWallpaperTypeChanged();
         }
-        Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + effect); //Settings.System.getInt(getContentResolver(), "lockscreen_ripple_effect", 0));
+        Log.d("UnlockEffect", "lockscreen_ripple_effect DB Value : " + effect);
     }
 
     // TODO: rework

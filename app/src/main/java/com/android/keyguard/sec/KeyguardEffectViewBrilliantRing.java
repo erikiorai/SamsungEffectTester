@@ -12,7 +12,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.samsung.android.visualeffect.EffectType;
 import com.samsung.android.visualeffect.EffectView;
@@ -109,12 +108,9 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
         Log.i(TAG, "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.1
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewBrilliantRing.this.clearScreen();
-            }
-        }, 400L);
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.1
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewBrilliantRing.this.clearScreen(), 400L);
         /*if (this.useGPUMaxClock) {
             VisualEffectDVFS.release(17);
         }
@@ -126,15 +122,13 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
         Log.i(TAG, "update");
-        BitmapDrawable newBitmapDrawable = new BitmapDrawable(getResources(), MainActivity.bitm); // TODO: KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i(TAG, "newBitmapDrawable  is null");
             return;
         }
         Bitmap originBitmap = newBitmapDrawable.getBitmap();
-        if (originBitmap == null) {
-            Log.d(TAG, "originBitmap is null");
-        } else {
+        if (originBitmap != null) {
             setBitmap(originBitmap);
         }
     }
@@ -176,7 +170,7 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
         Log.i(TAG, "showUnlockAffordance");
         this.isUnlocked = false;
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("StartDelay", Long.valueOf(startDelay));
+        map.put("StartDelay", startDelay);
         map.put("Rect", rect);
         handleCustomEvent(1, map);
     }
@@ -296,12 +290,9 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
             this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(mContext, DRAG_SOUND_PATH, 1);
             this.sounds[SOUND_ID_UNLOCK] = this.mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
             sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.2
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d(KeyguardEffectViewBrilliantRing.TAG, "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.2
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(KeyguardEffectViewBrilliantRing.TAG, "sound : onLoadComplete"));
         }
     }
 
@@ -313,16 +304,15 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.3
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewBrilliantRing.this.mSoundPool != null) {
-                    Log.d(KeyguardEffectViewBrilliantRing.TAG, "BrilliantRing sound : release SoundPool");
-                    KeyguardEffectViewBrilliantRing.this.mSoundPool.release();
-                    KeyguardEffectViewBrilliantRing.this.mSoundPool = null;
-                }
-                KeyguardEffectViewBrilliantRing.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.3
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewBrilliantRing.this.mSoundPool != null) {
+                Log.d(KeyguardEffectViewBrilliantRing.TAG, "BrilliantRing sound : release SoundPool");
+                KeyguardEffectViewBrilliantRing.this.mSoundPool.release();
+                KeyguardEffectViewBrilliantRing.this.mSoundPool = null;
             }
+            KeyguardEffectViewBrilliantRing.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }
@@ -360,12 +350,9 @@ public class KeyguardEffectViewBrilliantRing extends EffectView implements Keygu
             this.mSoundPool.setVolume(this.dragStreamID, this.dragSoudVolume, this.dragSoudVolume);
             if (this.dragSoudVolume > 0.0f) {
                 this.dragSoudVolume -= this.dragSoudMinusOffset;
-                postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.4
-                    @Override // java.lang.Runnable
-                    public void run() {
-                        KeyguardEffectViewBrilliantRing.this.fadeOutSound();
-                    }
-                }, 10L);
+                // from class: com.android.keyguard.sec.effect.KeyguardEffectViewBrilliantRing.4
+// java.lang.Runnable
+                postDelayed(() -> KeyguardEffectViewBrilliantRing.this.fadeOutSound(), 10L);
                 return;
             }
             Log.d(TAG, "SOUND STOP because UP or Unlock");

@@ -23,12 +23,11 @@ public class WaterColorEffect extends LockBGEffect {
         }
         final int normalizedX = rect.centerX();
         final int normalizedY = rect.centerY();
-        postDelayed(new Runnable() { // from class: com.samsung.android.visualeffect.lock.watercolor.WaterColorEffect.1
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.i(WaterColorEffect.this.TAG, "showAffordanceEffect Renderer.handleTouchEvent(0, " + normalizedX + ", " + normalizedY);
-                WaterColorEffect.this.mRenderer.handleTouchEvent(0, normalizedX, normalizedY);
-            }
+        // from class: com.samsung.android.visualeffect.lock.watercolor.WaterColorEffect.1
+// java.lang.Runnable
+        postDelayed(() -> {
+            Log.i(WaterColorEffect.this.TAG, "showAffordanceEffect Renderer.handleTouchEvent(0, " + normalizedX + ", " + normalizedY);
+            WaterColorEffect.this.mRenderer.handleTouchEvent(0, normalizedX, normalizedY);
         }, startDelay);
     }
 }

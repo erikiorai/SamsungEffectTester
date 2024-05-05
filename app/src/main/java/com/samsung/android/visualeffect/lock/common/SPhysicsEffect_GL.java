@@ -83,7 +83,7 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
     public void handleCustomEvent(int cmd, HashMap<?, ?> params) {
         switch (cmd) {
             case 0:
-                changeBackground((Bitmap) params.get("Bitmap"), ((Integer) params.get("Mode")).intValue());
+                changeBackground((Bitmap) params.get("Bitmap"), (Integer) params.get("Mode"));
                 return;
             case 1:
                 Rect rect = (Rect) params.get("Rect");
@@ -110,7 +110,6 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
                     return;
                 }
             default:
-                return;
         }
     }
 
@@ -130,28 +129,26 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleTouchEvent(MotionEvent event, View view) {
         final MotionEvent mEvent = MotionEvent.obtain(event);
-        queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.1
-            @Override // java.lang.Runnable
-            public void run() {
-                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                    SPhysicsEffect_GL.this.setRenderMode(1);
-                }
-                SPhysicsEffect_GL.this.mIRenderer.onTouchEvent(mEvent);
-                mEvent.recycle();
+        // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.1
+// java.lang.Runnable
+        queueEvent(() -> {
+            if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                SPhysicsEffect_GL.this.setRenderMode(1);
             }
+            SPhysicsEffect_GL.this.mIRenderer.onTouchEvent(mEvent);
+            mEvent.recycle();
         });
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView
     public void clearScreen() {
-        queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.2
-            @Override // java.lang.Runnable
-            public void run() {
-                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                    SPhysicsEffect_GL.this.setRenderMode(1);
-                }
-                SPhysicsEffect_GL.this.mIRenderer.clearEffect();
+        // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.2
+// java.lang.Runnable
+        queueEvent(() -> {
+            if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                SPhysicsEffect_GL.this.setRenderMode(1);
             }
+            SPhysicsEffect_GL.this.mIRenderer.clearEffect();
         });
     }
 
@@ -165,51 +162,47 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
         } else if (this.mIRenderer.getDrawCount() == 0) {
             this.mIRenderer.changeBackground(mBG, mMode);
         } else {
-            queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.3
-                @Override // java.lang.Runnable
-                public void run() {
-                    SPhysicsEffect_GL.this.mIRenderer.changeBackground(mBG, mMode);
-                    if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                        SPhysicsEffect_GL.this.setRenderMode(1);
-                    }
+            // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.3
+// java.lang.Runnable
+            queueEvent(() -> {
+                SPhysicsEffect_GL.this.mIRenderer.changeBackground(mBG, mMode);
+                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                    SPhysicsEffect_GL.this.setRenderMode(1);
                 }
             });
         }
     }
 
     private void screenTurnedOn() {
-        queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.4
-            @Override // java.lang.Runnable
-            public void run() {
-                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                    SPhysicsEffect_GL.this.setRenderMode(1);
-                }
-                SPhysicsEffect_GL.this.mIRenderer.screenTurnedOn();
+        // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.4
+// java.lang.Runnable
+        queueEvent(() -> {
+            if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                SPhysicsEffect_GL.this.setRenderMode(1);
             }
+            SPhysicsEffect_GL.this.mIRenderer.screenTurnedOn();
         });
     }
 
     private void screenTurnedOff() {
-        queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.5
-            @Override // java.lang.Runnable
-            public void run() {
-                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                    SPhysicsEffect_GL.this.setRenderMode(1);
-                }
-                SPhysicsEffect_GL.this.mIRenderer.screenTurnedOff();
+        // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.5
+// java.lang.Runnable
+        queueEvent(() -> {
+            if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                SPhysicsEffect_GL.this.setRenderMode(1);
             }
+            SPhysicsEffect_GL.this.mIRenderer.screenTurnedOff();
         });
     }
 
     private void unlockEffect() {
-        queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.6
-            @Override // java.lang.Runnable
-            public void run() {
-                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                    SPhysicsEffect_GL.this.setRenderMode(1);
-                }
-                SPhysicsEffect_GL.this.mIRenderer.unlockEffect();
+        // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.6
+// java.lang.Runnable
+        queueEvent(() -> {
+            if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                SPhysicsEffect_GL.this.setRenderMode(1);
             }
+            SPhysicsEffect_GL.this.mIRenderer.unlockEffect();
         });
     }
 
@@ -218,24 +211,22 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
         Log.d(this.TAG, "showUnlockAffordance");
         if (this.mIRenderer.getDrawCount() > 2) {
             Log.d(this.TAG, "no delay call queueEventForAffordance()");
-            queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.7
-                @Override // java.lang.Runnable
-                public void run() {
-                    if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
-                        SPhysicsEffect_GL.this.setRenderMode(1);
-                    }
-                    SPhysicsEffect_GL.this.mIRenderer.affordanceEffect(x, y);
+            // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.7
+// java.lang.Runnable
+            queueEvent(() -> {
+                if (SPhysicsEffect_GL.this.getRenderMode() == 0) {
+                    SPhysicsEffect_GL.this.setRenderMode(1);
                 }
+                SPhysicsEffect_GL.this.mIRenderer.affordanceEffect(x, y);
             });
             return;
         }
         Log.d(this.TAG, "postDelayed call showUnlockAffordance(100)");
-        postDelayed(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.8
-            @Override // java.lang.Runnable
-            public void run() {
-                Log.d(SPhysicsEffect_GL.this.TAG, "postDelayed call showUnlockAffordance()");
-                SPhysicsEffect_GL.this.showUnlockAffordance(x, y);
-            }
+        // from class: com.samsung.android.visualeffect.lock.common.SPhysicsEffect_GL.8
+// java.lang.Runnable
+        postDelayed(() -> {
+            Log.d(SPhysicsEffect_GL.this.TAG, "postDelayed call showUnlockAffordance()");
+            SPhysicsEffect_GL.this.showUnlockAffordance(x, y);
         }, 100L);
     }
 

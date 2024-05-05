@@ -13,6 +13,8 @@ import android.view.WindowMetrics;
 import java.util.Random;
 
 public class Utils {
+    public static int defaultUnlock = 0;
+
     public static boolean isTablet(Context context) {
         return context.getResources().getBoolean(R.bool.large);
     }
@@ -87,8 +89,16 @@ public class Utils {
             WindowMetrics metrics = mWindowManager.getCurrentWindowMetrics();
             return metrics.getBounds();
         } else {
-            mWindowManager.getDefaultDisplay().getRealMetrics(dm);
-            return new Rect(0, 0, dm.widthPixels, dm.heightPixels);
+            Rect rect = new Rect();
+            mWindowManager.getDefaultDisplay().getRectSize(rect);
+            if (rect.width() == 0 || rect.height() == 0) {
+                mWindowManager.getDefaultDisplay().getRealMetrics(dm);
+                rect.right = dm.widthPixels;
+                rect.bottom = dm.heightPixels;
+                rect.top = 0;
+                rect.left = 0;
+            }
+            return rect;
         }
     }
 

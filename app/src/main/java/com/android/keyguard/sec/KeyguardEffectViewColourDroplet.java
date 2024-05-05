@@ -20,7 +20,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
@@ -81,24 +80,23 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
         this.mContext = context;
         this.mEffectHandler = new Handler();
         //this.mKeyguardWindowCallback = callback;
-        this.mIEffectListener = new IEffectListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.1
-            public void onReceive(int status, HashMap<?, ?> params) {
-                switch (status) {
-                    case 0:
-                        /*if (KeyguardEffectViewColourDroplet.this.mKeyguardWindowCallback != null) {
-                            Log.d("KeyguardEffectViewColourDroplet", "KeyguardEffectViewColourDroplet : mKeyguardWindowCallback is called!!!");
-                            KeyguardEffectViewColourDroplet.this.mKeyguardWindowCallback.onShown();
-                            return;
-                        }*/
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.1
+        this.mIEffectListener = (status, params) -> {
+            switch (status) {
+                case 0:
+                    /*if (KeyguardEffectViewColourDroplet.this.mKeyguardWindowCallback != null) {
+                        Log.d("KeyguardEffectViewColourDroplet", "KeyguardEffectViewColourDroplet : mKeyguardWindowCallback is called!!!");
+                        KeyguardEffectViewColourDroplet.this.mKeyguardWindowCallback.onShown();
                         return;
-                    case 1:
-                        KeyguardEffectViewColourDroplet.this.update(KeyguardEffectViewUtil.getCurrentWallpaper(context), 1);
-                        KeyguardEffectViewColourDroplet.this.mTouchFlagForMobileKeyboard = false;
-                        Log.d("KeyguardEffectViewColourDroplet", "mIEffectListener callback, update(1) mTouchFlagForMobileKeyboard = " + KeyguardEffectViewColourDroplet.this.mTouchFlagForMobileKeyboard);
-                        return;
-                    default:
-                        return;
-                }
+                    }*/
+                    return;
+                case 1:
+                    KeyguardEffectViewColourDroplet.this.update(KeyguardEffectViewUtil.getCurrentWallpaper(context).getBitmap(), 1);
+                    KeyguardEffectViewColourDroplet.this.mTouchFlagForMobileKeyboard = false;
+                    Log.d("KeyguardEffectViewColourDroplet", "mIEffectListener callback, update(1) mTouchFlagForMobileKeyboard = " + KeyguardEffectViewColourDroplet.this.mTouchFlagForMobileKeyboard);
+                    return;
+                default:
+                    return;
             }
         };
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -149,12 +147,9 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
         Log.d("KeyguardEffectViewColourDroplet", "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.2
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewColourDroplet.this.clearScreen();
-            }
-        }, 0L);
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.2
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewColourDroplet.this.clearScreen(), 0L);
         this.isUnlocked = false;
         unregisterAccelrometer();
     }
@@ -162,7 +157,7 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
         Log.d("KeyguardEffectViewColourDroplet", "update(0)");
-        update(KeyguardEffectViewUtil.getCurrentWallpaper(mContext), 0);
+        update(KeyguardEffectViewUtil.getCurrentWallpaper(mContext).getBitmap(), 0);
     }
 
     /* JADX INFO: Access modifiers changed from: private */
@@ -207,7 +202,7 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
     public void showUnlockAffordance(long startDelay, Rect rect) {
         Log.i("KeyguardEffectViewColourDroplet", "showUnlockAffordance");
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("StartDelay", Long.valueOf(startDelay));
+        map.put("StartDelay", startDelay);
         map.put("Rect", rect);
         handleCustomEvent(1, map);
     }
@@ -295,12 +290,9 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
             this.sounds[SOUND_ID_TAB] = this.mSoundPool.load(mContext, TAP_SOUND_PATH, 1);
             sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
             sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.3
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d("KeyguardEffectViewColourDroplet", "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.3
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d("KeyguardEffectViewColourDroplet", "sound : onLoadComplete"));
         }
     }
 
@@ -312,16 +304,15 @@ public class KeyguardEffectViewColourDroplet extends EffectView implements Keygu
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.4
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewColourDroplet.this.mSoundPool != null) {
-                    Log.d("KeyguardEffectViewColourDroplet", "WaterDroplet sound : release SoundPool");
-                    KeyguardEffectViewColourDroplet.this.mSoundPool.release();
-                    KeyguardEffectViewColourDroplet.this.mSoundPool = null;
-                }
-                KeyguardEffectViewColourDroplet.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewColourDroplet.4
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewColourDroplet.this.mSoundPool != null) {
+                Log.d("KeyguardEffectViewColourDroplet", "WaterDroplet sound : release SoundPool");
+                KeyguardEffectViewColourDroplet.this.mSoundPool.release();
+                KeyguardEffectViewColourDroplet.this.mSoundPool = null;
             }
+            KeyguardEffectViewColourDroplet.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }

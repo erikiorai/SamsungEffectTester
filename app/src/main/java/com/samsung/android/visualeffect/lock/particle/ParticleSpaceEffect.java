@@ -246,12 +246,11 @@ public class ParticleSpaceEffect extends FrameLayout implements IEffectView {
         this.affordanceX = rect.left + ((rect.right - rect.left) / 2.0f);
         this.affordanceY = rect.top + ((rect.bottom - rect.top) / 2.0f);
         this.affordanceColor = getColor(this.affordanceX, this.affordanceY);
-        this.affordanceRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.particle.ParticleSpaceEffect.2
-            @Override // java.lang.Runnable
-            public void run() {
-                ParticleSpaceEffect.this.particleEffect.addDots(ParticleSpaceEffect.this.CREATED_DOTS_AMOUNT_AFFORDANCE, ParticleSpaceEffect.this.affordanceX, ParticleSpaceEffect.this.affordanceY, ParticleSpaceEffect.this.affordanceColor);
-                ParticleSpaceEffect.this.affordanceRunnable = null;
-            }
+        // from class: com.samsung.android.visualeffect.lock.particle.ParticleSpaceEffect.2
+// java.lang.Runnable
+        this.affordanceRunnable = () -> {
+            ParticleSpaceEffect.this.particleEffect.addDots(ParticleSpaceEffect.this.CREATED_DOTS_AMOUNT_AFFORDANCE, ParticleSpaceEffect.this.affordanceX, ParticleSpaceEffect.this.affordanceY, ParticleSpaceEffect.this.affordanceColor);
+            ParticleSpaceEffect.this.affordanceRunnable = null;
         };
         postDelayed(this.affordanceRunnable, startDelay);
     }
@@ -273,7 +272,7 @@ public class ParticleSpaceEffect extends FrameLayout implements IEffectView {
         if (cmd == 0) {
             setBGBitmap((Bitmap) params.get("BGBitmap"));
         } else if (cmd == 1) {
-            showAffordanceEffect(((Long) params.get("StartDelay")).longValue(), (Rect) params.get("Rect"));
+            showAffordanceEffect((Long) params.get("StartDelay"), (Rect) params.get("Rect"));
         } else if (cmd == 2) {
             unlock();
         }

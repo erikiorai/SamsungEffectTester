@@ -97,7 +97,7 @@ public class IndigoDiffusionEffect extends GLTextureView implements IEffectView 
         if (cmd == 0) {
             this.mRenderer.changeBackground((Bitmap) params.get("Bitmap"));
         } else if (cmd == 1) {
-            this.mRenderer.showUnlockAffordance(((Long) params.get("StartDelay")).longValue(), (Rect) params.get("Rect"));
+            this.mRenderer.showUnlockAffordance((Long) params.get("StartDelay"), (Rect) params.get("Rect"));
         }
     }
 

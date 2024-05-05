@@ -1,10 +1,7 @@
 package com.android.keyguard.sec;
 
 import android.content.Context;
-import android.graphics.Rect;
-import android.os.Handler;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -13,14 +10,13 @@ import android.widget.FrameLayout;
 /* loaded from: classes.dex */
 public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandler.UnlockCallback {
     private static final String TAG = "KeyguardUnlockView";
-    private final int FADE_IN_OUT_ANIMATION_DURATION = 300;
+    private final long FADE_IN_OUT_ANIMATION_DURATION = 300L;
     private Context mContext;
     private AlphaAnimation mFadeInAnimation = new AlphaAnimation(0.0f, 1.0f);
     private AlphaAnimation mFadeOutAnimation = new AlphaAnimation(1.0f, 0.0f);
     private KeyguardUnlockEventHandler mKeyguardUnlockEventHandler;
     private long mResumedTimeMillis;
-    private KeyguardEffectViewBase mUnlockView;
-    private Handler mHandler = new Handler();
+    private KeyguardEffectViewController mUnlockView;
 
     public KeyguardUnlockView(Context context) {
         this(context, null);
@@ -33,7 +29,7 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
         setFocusableInTouchMode(true);
         requestFocus();
         this.mFadeInAnimation.setFillAfter(true);
-        this.mFadeInAnimation.setDuration(300L);
+        this.mFadeInAnimation.setDuration(FADE_IN_OUT_ANIMATION_DURATION);
         this.mFadeOutAnimation.setFillAfter(true);
         this.mFadeOutAnimation.setDuration(100L);
         this.mKeyguardUnlockEventHandler = new KeyguardUnlockEventHandler(KeyguardEffectViewController.getInstance(context), context);
@@ -104,25 +100,7 @@ public class KeyguardUnlockView extends FrameLayout { //KeyguardUnlockEventHandl
     }
 
     public void showUnlockAffordance() {
-        Rect outRect = new Rect(0, 0, 0, 0);
-        boolean isValidRect = getGlobalVisibleRect(outRect);
-        Log.d(TAG, "outRect: " + outRect);
-        Log.d(TAG, "isValidRect: " + isValidRect);
-        if (isValidRect) {
-            this.mUnlockView.showUnlockAffordance(500L, outRect);
-        } else {
-            this.mHandler.postDelayed(new Runnable() { // from class: com.android.keyguard.sec.KeyguardUnlockView.7
-                @Override // java.lang.Runnable
-                public void run() {
-                    Rect outRect2 = new Rect(0, 0, 0, 0);
-                    boolean isValidRect2 = KeyguardUnlockView.this.getGlobalVisibleRect(outRect2);
-                    Log.d(KeyguardUnlockView.TAG, "Retry isValidRect: " + isValidRect2);
-                    if (isValidRect2) {
-                        KeyguardUnlockView.this.mUnlockView.showUnlockAffordance(500L, outRect2);
-                    }
-                }
-            }, 30L);
-        }
+        mUnlockView.showUnlockAffordance(this);
     }
 
 

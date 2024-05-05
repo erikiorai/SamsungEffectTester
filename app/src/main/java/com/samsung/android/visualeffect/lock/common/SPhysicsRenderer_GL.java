@@ -9,9 +9,9 @@ import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.WindowManager;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.IEffectListener;
+import com.samsung.android.visualeffect.utils.BitmapTools;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -74,7 +74,7 @@ public class SPhysicsRenderer_GL implements GLSurfaceView.Renderer, ISPhysicsRen
     /* JADX INFO: Access modifiers changed from: protected */
     public void initRender() {
         this.isFirstSurfaceChanged = true;
-        this.mBgChangeCheckQueue = new LinkedList();
+        this.mBgChangeCheckQueue = new LinkedList<>();
     }
 
     @Override // com.samsung.android.visualeffect.lock.common.ISPhysicsRenderer
@@ -230,14 +230,14 @@ public class SPhysicsRenderer_GL implements GLSurfaceView.Renderer, ISPhysicsRen
     // TODO: make bitmap funcs
     protected void setBackground(Bitmap bg, int mode) {
         if (mode == 0) {
-            this.mPortraitBG = MainActivity.bitm; //BitmapTools.getCenterCropBitmap(bg, Math.min(this.windowWidth, this.windowHeight), Math.max(this.windowWidth, this.windowHeight));
+            this.mPortraitBG = BitmapTools.getCenterCropBitmap(bg, Math.min(this.windowWidth, this.windowHeight), Math.max(this.windowWidth, this.windowHeight));
             this.mBgChangeCheckQueue.offer(true);
-            this.mLandscapeBG = MainActivity.bitm; //BitmapTools.getCenterCropBitmap(bg, Math.max(this.windowWidth, this.windowHeight), Math.min(this.windowWidth, this.windowHeight));
+            this.mLandscapeBG = BitmapTools.getCenterCropBitmap(bg, Math.max(this.windowWidth, this.windowHeight), Math.min(this.windowWidth, this.windowHeight));
             this.mBgChangeCheckQueue.offer(true);
             return;
         }
         Log.d(this.TAG, "renderWidth = " + this.renderWidth + ", renderHeight = " + this.renderHeight);
-        this.mPortraitBG = MainActivity.bitm; //BitmapTools.getCenterCropBitmap(bg, this.renderWidth, this.renderHeight);
+        this.mPortraitBG = BitmapTools.getCenterCropBitmap(bg, this.renderWidth, this.renderHeight);
         this.mBgChangeCheckQueue.offer(true);
     }
 
@@ -412,7 +412,6 @@ public class SPhysicsRenderer_GL implements GLSurfaceView.Renderer, ISPhysicsRen
                 onSensorEvent(event.sensor.getType(), event.values[1], event.values[0] * (-1.0f), event.values[2]);
                 return;
             default:
-                return;
         }
     }
 

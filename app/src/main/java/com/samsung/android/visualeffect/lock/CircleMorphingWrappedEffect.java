@@ -74,7 +74,7 @@ public class CircleMorphingWrappedEffect extends CircleMorphingEffect implements
         if (cmd == 0) {
             setBGBitmap((Bitmap) params.get("BGBitmap"));
         } else if (cmd == 1) {
-            showAffordanceEffect(((Long) params.get("StartDelay")).longValue(), (Rect) params.get("Rect"));
+            showAffordanceEffect((Long) params.get("StartDelay"), (Rect) params.get("Rect"));
         } else if (cmd == 2) {
             unlock();
         }
@@ -91,11 +91,10 @@ public class CircleMorphingWrappedEffect extends CircleMorphingEffect implements
         float x = rect.left + ((rect.right - rect.left) / 2.0f);
         float y = rect.top + ((rect.bottom - rect.top) / 2.0f);
         int color = getColor(x, y);
-        Runnable affordanceRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.particle.ParticleSpaceEffect.2
-            @Override // java.lang.Runnable
-            public void run() {
-                // todo add affordance
-            }
+        // from class: com.samsung.android.visualeffect.lock.particle.ParticleSpaceEffect.2
+// java.lang.Runnable
+        Runnable affordanceRunnable = () -> {
+            // todo add affordance
         };
         postDelayed(affordanceRunnable, startDelay);
     }

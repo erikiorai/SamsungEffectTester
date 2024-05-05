@@ -188,8 +188,8 @@ public class ParticleEffect extends View implements IEffectView {
     public void clearEffect() {
         stopDrawing();
         invalidate();
-        for (int i = this.particleAliveList.size() - 1; i >= 0; i--) {
-            this.particleAliveList.remove(i);
+        if (!this.particleAliveList.isEmpty()) {
+            this.particleAliveList.subList(0, this.particleAliveList.size()).clear();
         }
     }
 
@@ -224,7 +224,7 @@ public class ParticleEffect extends View implements IEffectView {
 
     @Override // com.samsung.android.visualeffect.IEffectView
     public void handleCustomEvent(int cmd, HashMap<?, ?> params) {
-        addDots(((Integer) params.get("Amount")).intValue(), ((Float) params.get("X")).floatValue(), ((Float) params.get("Y")).floatValue(), ((Integer) params.get("Color")).intValue());
+        addDots((Integer) params.get("Amount"), (Float) params.get("X"), (Float) params.get("Y"), (Integer) params.get("Color"));
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView

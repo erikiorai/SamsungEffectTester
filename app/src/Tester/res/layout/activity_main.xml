@@ -45,13 +45,14 @@
             android:id="@+id/buttons"
             android:layout_width="220dp"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/button_margins"
             android:alpha="@integer/button_alpha"
             android:gravity="center"
             android:orientation="vertical"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.8">
 
             <Button
                 android:id="@+id/multiact"
@@ -70,10 +71,10 @@
 
             <Switch
                 android:id="@+id/unlock"
+                style="@style/Theme.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/button_top_margin"
-                style="@style/Theme.Button"
                 android:checked="true"
                 android:text="@string/unlock_ability" />
 
@@ -86,20 +87,20 @@
 
             <Switch
                 android:id="@+id/palette"
+                style="@style/Theme.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/button_top_margin"
                 android:checked="true"
-                style="@style/Theme.Button"
                 android:text="original color palette"
                 android:visibility="gone" />
 
             <Switch
                 android:id="@+id/customact"
+                style="@style/Theme.Button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/button_top_margin"
-                style="@style/Theme.Button"
                 android:text="custom actions"
                 android:visibility="gone" />
 

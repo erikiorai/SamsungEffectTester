@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -20,7 +21,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
@@ -91,24 +91,23 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
     private void init(Context context) {
         Log.d("WaterDroplet_Keyguard", "KeyguardEffectViewWaterDroplet Constructor mWallpaperProcessSeparated = " + true);
         this.mContext = context;
-        this.mIEffectListener = new IEffectListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.1
-            public void onReceive(int status, HashMap<?, ?> params) {
-                switch (status) {
-                    case 0:
-                        /* todo if (KeyguardEffectViewWaterDroplet.this.mKeyguardWindowCallback != null) {
-                            Log.d("WaterDroplet_Keyguard", "KeyguardEffectViewWaterDroplet : mKeyguardWindowCallback is called!!!");
-                            KeyguardEffectViewWaterDroplet.this.mKeyguardWindowCallback.onShown();
-                            return;
-                        }*/
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.1
+        this.mIEffectListener = (status, params) -> {
+            switch (status) {
+                case 0:
+                    /* todo if (KeyguardEffectViewWaterDroplet.this.mKeyguardWindowCallback != null) {
+                        Log.d("WaterDroplet_Keyguard", "KeyguardEffectViewWaterDroplet : mKeyguardWindowCallback is called!!!");
+                        KeyguardEffectViewWaterDroplet.this.mKeyguardWindowCallback.onShown();
                         return;
-                    case 1:
-                        KeyguardEffectViewWaterDroplet.this.update(KeyguardEffectViewWaterDroplet.this.setBackground(), 1);
-                        KeyguardEffectViewWaterDroplet.this.mTouchFlagForMobileKeyboard = false;
-                        Log.d("WaterDroplet_Keyguard", "mIEffectListener callback, update(1) mTouchFlagForMobileKeyboard = " + KeyguardEffectViewWaterDroplet.this.mTouchFlagForMobileKeyboard);
-                        return;
-                    default:
-                        return;
-                }
+                    }*/
+                    return;
+                case 1:
+                    KeyguardEffectViewWaterDroplet.this.update(KeyguardEffectViewWaterDroplet.this.setBackground(), 1);
+                    KeyguardEffectViewWaterDroplet.this.mTouchFlagForMobileKeyboard = false;
+                    Log.d("WaterDroplet_Keyguard", "mIEffectListener callback, update(1) mTouchFlagForMobileKeyboard = " + KeyguardEffectViewWaterDroplet.this.mTouchFlagForMobileKeyboard);
+                    return;
+                default:
+                    return;
             }
         };
         DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -159,12 +158,9 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
         Log.d("WaterDroplet_Keyguard", "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.2
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewWaterDroplet.this.clearScreen();
-            }
-        }, 0L);
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.2
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewWaterDroplet.this.clearScreen(), 0L);
         this.isUnlocked = false;
         unregisterAccelrometer();
     }
@@ -217,7 +213,7 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
     public void showUnlockAffordance(long startDelay, Rect rect) {
         Log.i("WaterDroplet_Keyguard", "showUnlockAffordance");
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("StartDelay", Long.valueOf(startDelay));
+        map.put("StartDelay", startDelay);
         map.put("Rect", rect);
         handleCustomEvent(1, map);
     }
@@ -284,16 +280,14 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
         }
     }
 
-    /* JADX INFO: Access modifiers changed from: private */
     public Bitmap setBackground() {
         Log.d("WaterDroplet_Keyguard", "setBackground");
-        /* todo BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i("WaterDroplet_Keyguard", "newBitmapDrawable  is null");
             return null;
         }
-        Bitmap pBitmap = newBitmapDrawable.getBitmap(); */
-        Bitmap pBitmap = MainActivity.bitm;
+        Bitmap pBitmap = newBitmapDrawable.getBitmap();
         if (pBitmap == null) {
             Log.i("WaterDroplet_Keyguard", "pBitmap  is null");
             return pBitmap;
@@ -324,12 +318,9 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
             this.sounds[0] = this.mSoundPool.load(mContext, TAP_SOUND_PATH, 1);
             sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
             sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.4
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d("WaterDroplet_Keyguard", "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.4
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d("WaterDroplet_Keyguard", "sound : onLoadComplete"));
         }
     }
 
@@ -341,16 +332,15 @@ public class KeyguardEffectViewWaterDroplet extends EffectView implements Keygua
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.5
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewWaterDroplet.this.mSoundPool != null) {
-                    Log.d("WaterDroplet_Keyguard", "WaterDroplet sound : release SoundPool");
-                    KeyguardEffectViewWaterDroplet.this.mSoundPool.release();
-                    KeyguardEffectViewWaterDroplet.this.mSoundPool = null;
-                }
-                KeyguardEffectViewWaterDroplet.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterDroplet.5
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewWaterDroplet.this.mSoundPool != null) {
+                Log.d("WaterDroplet_Keyguard", "WaterDroplet sound : release SoundPool");
+                KeyguardEffectViewWaterDroplet.this.mSoundPool.release();
+                KeyguardEffectViewWaterDroplet.this.mSoundPool = null;
             }
+            KeyguardEffectViewWaterDroplet.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }

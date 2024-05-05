@@ -3,11 +3,12 @@ package com.android.keyguard.sec;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.aj.effect.MainActivity;
 import com.samsung.android.visualeffect.EffectView;
 
 import java.util.HashMap;
@@ -16,6 +17,7 @@ public class KeyguardEffectViewMorphing extends FrameLayout implements KeyguardE
 
     private Context context;
     private EffectView morphingEffect;
+    private final String TAG = KeyguardEffectViewMorphing.class.getName();
 
     public KeyguardEffectViewMorphing(Context context) {
         super(context);
@@ -100,7 +102,13 @@ public class KeyguardEffectViewMorphing extends FrameLayout implements KeyguardE
 
     @Override
     public void update() {
-        Bitmap originBitmap = MainActivity.bitm; //newBitmapDrawable.getBitmap();
+        Log.i(TAG, "update");
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(context);
+        if (newBitmapDrawable == null) {
+            Log.i(TAG, "newBitmapDrawable  is null");
+            return;
+        }
+        Bitmap originBitmap = newBitmapDrawable.getBitmap();
         if (originBitmap != null) {
             HashMap<String, Bitmap> map = new HashMap<>();
             map.put("BGBitmap", originBitmap);

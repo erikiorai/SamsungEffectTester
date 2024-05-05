@@ -45,12 +45,9 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
         if (this.mRenderer == null) {
             Log.i(this.TAG, "clearEffect renderer is null");
         } else {
-            queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.1
-                @Override // java.lang.Runnable
-                public void run() {
-                    LockBGEffect.this.mRenderer.clearEffect();
-                }
-            });
+            // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.1
+// java.lang.Runnable
+            queueEvent(() -> LockBGEffect.this.mRenderer.clearEffect());
         }
     }
 
@@ -75,12 +72,9 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
         }
         final int affordanceX = rect.left + ((rect.right - rect.left) / 2);
         final int affordanceY = rect.top + ((rect.bottom - rect.top) / 2);
-        postDelayed(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.2
-            @Override // java.lang.Runnable
-            public void run() {
-                LockBGEffect.this.mRenderer.showUnlockAffordance(affordanceX, affordanceY);
-            }
-        }, startDelay);
+        // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.2
+// java.lang.Runnable
+        postDelayed(() -> LockBGEffect.this.mRenderer.showUnlockAffordance(affordanceX, affordanceY), startDelay);
     }
 
     protected void showUnlockEffect() {
@@ -111,36 +105,31 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
     public void handleCustomEvent(final int cmd, final HashMap<?, ?> params) {
         Log.d(this.TAG, "handleCustomEvent() cmd = " + cmd);
         if (cmd != 1) {
-            queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.5
-                @Override // java.lang.Runnable
-                public void run() {
-                    Log.d(LockBGEffect.this.TAG, "run!!!");
-                    if (cmd == 0) {
-                        LockBGEffect.this.setBGBitmap((Bitmap) params.get("Bitmap"));
-                    } else if (cmd == 2) {
-                        Log.i("unlock", "lockBGEffect unlock");
-                        LockBGEffect.this.showUnlockEffect();
-                    } else if (cmd == 99) {
-                        LockBGEffect.this.setParameters((int[]) params.get("Nums"), (float[]) params.get("Values"));
-                    }
+            // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.5
+// java.lang.Runnable
+            queueEvent(() -> {
+                Log.d(LockBGEffect.this.TAG, "run!!!");
+                if (cmd == 0) {
+                    LockBGEffect.this.setBGBitmap((Bitmap) params.get("Bitmap"));
+                } else if (cmd == 2) {
+                    Log.i("unlock", "lockBGEffect unlock");
+                    LockBGEffect.this.showUnlockEffect();
+                } else if (cmd == 99) {
+                    LockBGEffect.this.setParameters((int[]) params.get("Nums"), (float[]) params.get("Values"));
                 }
             });
         } else if (this.mRenderer != null && this.mRenderer.isReadyRendering()) {
-            queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.3
-                @Override // java.lang.Runnable
-                public void run() {
-                    Log.d(LockBGEffect.this.TAG, "run!!!");
-                    LockBGEffect.this.showAffordanceEffect(((Long) params.get("StartDelay")).longValue(), (Rect) params.get("Rect"));
-                }
+            // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.3
+// java.lang.Runnable
+            queueEvent(() -> {
+                Log.d(LockBGEffect.this.TAG, "run!!!");
+                LockBGEffect.this.showAffordanceEffect((Long) params.get("StartDelay"), (Rect) params.get("Rect"));
             });
         } else {
             Log.d(this.TAG, "mRenderer isn't ReadyRendering, so call handleCustomEvent after 100 ms");
-            postDelayed(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.4
-                @Override // java.lang.Runnable
-                public void run() {
-                    LockBGEffect.this.handleCustomEvent(cmd, params);
-                }
-            }, 100L);
+            // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.4
+// java.lang.Runnable
+            postDelayed(() -> LockBGEffect.this.handleCustomEvent(cmd, params), 100L);
         }
     }
 
@@ -170,12 +159,9 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
         final int action = event.getActionMasked();
         final int normalizedX = (int) event.getX();
         final int normalizedY = (int) event.getY();
-        queueEvent(new Runnable() { // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.6
-            @Override // java.lang.Runnable
-            public void run() {
-                LockBGEffect.this.mRenderer.handleTouchEvent(action, normalizedX, normalizedY);
-            }
-        });
+        // from class: com.samsung.android.visualeffect.lock.common.LockBGEffect.6
+// java.lang.Runnable
+        queueEvent(() -> LockBGEffect.this.mRenderer.handleTouchEvent(action, normalizedX, normalizedY));
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView

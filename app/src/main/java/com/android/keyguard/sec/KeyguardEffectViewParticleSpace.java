@@ -3,19 +3,17 @@ package com.android.keyguard.sec;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.provider.Settings;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.samsung.android.visualeffect.EffectView;
 
@@ -127,12 +125,12 @@ public class KeyguardEffectViewParticleSpace extends FrameLayout implements Keyg
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
         Log.i(TAG, "update");
-        /*BitmapDrawable newBitmapDrawable = // todo KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i(TAG, "newBitmapDrawable  is null");
             return;
-        }*/
-        Bitmap originBitmap = MainActivity.bitm; //newBitmapDrawable.getBitmap();
+        }
+        Bitmap originBitmap = newBitmapDrawable.getBitmap();
         if (originBitmap != null) {
             setBitmap(originBitmap);
         }
@@ -224,10 +222,10 @@ public class KeyguardEffectViewParticleSpace extends FrameLayout implements Keyg
         return false;
     }
 
-    @Override // android.view.ViewGroup, android.view.View
+    /*@Override // android.view.ViewGroup, android.view.View
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        /*if (this.mKeyguardWindowCallback != null) {
+        if (this.mKeyguardWindowCallback != null) {
             postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewParticleSpace.1
                 @Override // java.lang.Runnable
                 public void run() {
@@ -237,8 +235,8 @@ public class KeyguardEffectViewParticleSpace extends FrameLayout implements Keyg
                     }
                 }
             }, 100L);
-        }*/
-    }
+        }
+    }*/
 
     /*public static LockSoundInfo getLockSoundInfo() {
         return mLockSoundInfo;

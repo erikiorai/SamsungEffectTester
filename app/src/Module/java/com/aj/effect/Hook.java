@@ -1,24 +1,10 @@
 package com.aj.effect;
 
-import static com.aj.effect.BuildConfig.DEBUG;
 import static de.robv.android.xposed.XposedBridge.log;
-import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
-
-import android.graphics.Bitmap;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
-
-import com.android.keyguard.sec.KeyguardEffectViewController;
-import com.android.keyguard.sec.KeyguardUnlockView;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.XC_MethodHook;
-import de.robv.android.xposed.XposedHelpers;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
-import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
 public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
@@ -28,6 +14,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
         if (!resparam.packageName.equals("com.android.systemui"))
             return;
 
+        /* leave for future
         resparam.res.hookLayout("com.android.systemui", "layout", "super_notification_shade", new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
@@ -46,7 +33,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                 unlockView.onFinishInflate();
                 KeyguardEffectViewController.getInstance(backdrop.getContext()).setEffectLayout(behind, front, null);
             }
-        });
+        });*/
     }
 
     @Override
@@ -54,6 +41,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
         if (loadPackageParam.packageName.equals("com.android.systemui")) {
             log("handleLoadPackage: in there");
 
+            /* leave it too
             findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager",
                     loadPackageParam.classLoader, "finishUpdateMediaMetaData",
                     boolean.class, boolean.class, Bitmap.class, new XC_MethodHook() {
@@ -88,7 +76,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                                 backDrop.animate().alpha(1f);
                             }
                         }
-                    });
+                    });*/
         }
     }
 }

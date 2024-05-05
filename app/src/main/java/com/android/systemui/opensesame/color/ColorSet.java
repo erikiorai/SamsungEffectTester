@@ -46,6 +46,6 @@ public class ColorSet {
     }
 
     public String toString() {
-        return String.format("id = %d, baseColor = %x, backgroundColor = %x, foregroundColor = %x, primaryColor = %x, pointColor = %x", Integer.valueOf(this.mId), Integer.valueOf(this.mBaseColor), Integer.valueOf(this.mBackgroundColor), Integer.valueOf(this.mForegroundColor), Integer.valueOf(this.mPrimaryColor), Integer.valueOf(this.mPointColor));
+        return String.format("id = %d, baseColor = %x, backgroundColor = %x, foregroundColor = %x, primaryColor = %x, pointColor = %x", this.mId, this.mBaseColor, this.mBackgroundColor, this.mForegroundColor, this.mPrimaryColor, this.mPointColor);
     }
 }

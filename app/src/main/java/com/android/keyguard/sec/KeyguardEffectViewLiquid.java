@@ -8,6 +8,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.SoundPool;
 import android.provider.Settings;
 import android.util.DisplayMetrics;
@@ -94,12 +95,9 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
     public void cleanUp() {
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.1
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewLiquid.this.mView.cleanUp();
-            }
-        }, 400L);
+        // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.1
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewLiquid.this.mView.cleanUp(), 400L);
         this.isUnlocked = false;
     }
 
@@ -199,13 +197,18 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
 
     private Bitmap setBackground() {
         Log.d("Liquid_KeyguardEffectView", "setBackground");
-        Bitmap newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i("Liquid_KeyguardEffectView", "newBitmapDrawable  is null");
             return null;
         }
-        Log.d("Liquid_KeyguardEffectView", "pBitmap.width = " + newBitmapDrawable.getWidth() + ", pBitmap.height = " + newBitmapDrawable.getHeight());
-        return newBitmapDrawable;
+        Bitmap pBitmap = newBitmapDrawable.getBitmap();
+        if (pBitmap == null) {
+            Log.i("Liquid_KeyguardEffectView", "pBitmap  is null");
+            return pBitmap;
+        }
+        Log.d("Liquid_KeyguardEffectView", "pBitmap.width = " + pBitmap.getWidth() + ", pBitmap.height = " + pBitmap.getHeight());
+        return pBitmap;
     }
 
     private Bitmap makeResBitmap(int res) {
@@ -228,12 +231,9 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
             this.sounds[0] = this.mSoundPool.load(this.mContext, R.raw.liquid_tap, 1);
             this.sounds[1] = this.mSoundPool.load(this.mContext, R.raw.liquid_unlock, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.2
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d("Liquid_KeyguardEffectView", "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.2
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d("Liquid_KeyguardEffectView", "sound : onLoadComplete"));
         }
     }
 
@@ -245,16 +245,15 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.3
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewLiquid.this.mSoundPool != null) {
-                    Log.d("Liquid_KeyguardEffectView", "BrilliantRing sound : release SoundPool");
-                    KeyguardEffectViewLiquid.this.mSoundPool.release();
-                    KeyguardEffectViewLiquid.this.mSoundPool = null;
-                }
-                KeyguardEffectViewLiquid.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.3
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewLiquid.this.mSoundPool != null) {
+                Log.d("Liquid_KeyguardEffectView", "BrilliantRing sound : release SoundPool");
+                KeyguardEffectViewLiquid.this.mSoundPool.release();
+                KeyguardEffectViewLiquid.this.mSoundPool = null;
             }
+            KeyguardEffectViewLiquid.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }

@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.Utils;
 import com.android.keyguard.sec.KeyguardEffectViewBase;
+import com.android.keyguard.sec.KeyguardEffectViewUtil;
 
 import java.util.ArrayList;
 
@@ -103,8 +103,11 @@ public class EffectViewParticle extends FrameLayout implements KeyguardEffectVie
 
     @Override // com.android.systemui.opensesame.lockscreen.effect.EffectViewBase
     public void update() {
-        // todo get wall
-        Bitmap originBitmap = MainActivity.bitm; //newBitmapDrawable.getBitmap();
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(getContext());
+        if (newBitmapDrawable == null) {
+            return;
+        }
+        Bitmap originBitmap = newBitmapDrawable.getBitmap();
         if (originBitmap != null) {
             this.mRatioX = originBitmap.getWidth() / this.SCREEN_WIDTH;
             this.mRatioY = originBitmap.getHeight() / this.SCREEN_HEIGHT;

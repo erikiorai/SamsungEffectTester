@@ -346,17 +346,17 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             this.hexagonDistance.clear();
             for (int j = 0; j < this.HEXAGON_TOTAL; j++) {
                 float random = (((float) Math.random()) - 0.5f) * 0.4f;
-                this.hexagonDistance.add(Float.valueOf((j * 0.24f) + 0.2f + random));
+                this.hexagonDistance.add((j * 0.24f) + 0.2f + random);
             }
             Collections.shuffle(this.hexagonDistance);
             for (int i2 = 0; i2 < this.HEXAGON_TOTAL; i2++) {
                 ImageViewBlended hex = this.hexagon[i2];
                 if (i2 < this.HEXAGON_TOTAL) {
                     this.hexagonRotation[i2] = 0;
-                    this.hexagonScale[i2] = this.hexagonDistance.get(i2).floatValue() + 0.1f;
+                    this.hexagonScale[i2] = this.hexagonDistance.get(i2) + 0.1f;
                 } else {
                     this.hexagonRotation[i2] = (int) (Math.random() * 360.0d);
-                    this.hexagonScale[i2] = 0.6f + ((float) (Math.random() * 1.0d));
+                    this.hexagonScale[i2] = 0.6f + ((float) (Math.random()));
                 }
                 hex.setScaleX(this.hexagonScale[i2] * this.defaultInSampleSize);
                 hex.setScaleY(this.hexagonScale[i2] * this.defaultInSampleSize);
@@ -389,106 +389,94 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         this.objAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.objAnimator.setInterpolator(new QuintEaseOut());
         this.objAnimator.setDuration(SHOW_ANIMATION_DURATION);
-        this.objAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.1
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.objAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedDragPos();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.1
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.objAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.objAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedDragPos();
         });
         this.fogOnAnimator = ValueAnimator.ofFloat(0.0f, FOG_MAX_ALPHA);
         this.fogOnAnimator.setInterpolator(new QuintEaseOut());
         this.fogOnAnimator.setDuration(FOG_ON_DURATION);
-        this.fogOnAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.2
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.fogAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedDragAlpha();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.2
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.fogOnAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.fogAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedDragAlpha();
         });
         this.tapAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.tapAnimator.setInterpolator(new QuintEaseOut());
         this.tapAnimator.setDuration(TAP_ANIMATION_DURATION);
-        this.tapAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.3
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.tapAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedTap();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.3
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.tapAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.tapAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedTap();
         });
         this.fadeOutAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
         this.fadeOutAnimator.setInterpolator(new LinearInterpolator());
         this.fadeOutAnimator.setDuration(FADEOUT_ANIMATION_DURATION);
-        this.fadeOutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.4
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.fadeoutAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedFadeOut();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.4
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.fadeOutAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.fadeoutAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedFadeOut();
         });
         this.unlockAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.unlockAnimator.setInterpolator(new QuintEaseOut());
         this.unlockAnimator.setDuration(UNLOCK_ANIMATION_DURATION);
-        this.unlockAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.5
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.unlockAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedUnlock();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.5
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.unlockAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.unlockAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedUnlock();
         });
         this.hoverAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.hoverAnimator.setInterpolator(new LinearInterpolator());
         this.hoverAnimator.setRepeatCount(10000);
         this.hoverAnimator.setDuration(HOVER_DURATION);
-        this.hoverAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.6
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.animatedHover();
-            }
-        });
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.6
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.hoverAnimator.addUpdateListener(animation -> LensFlareEffect.this.animatedHover());
         this.hoverLightInAnimator = ValueAnimator.ofFloat(0.0f, 1.0f);
         this.hoverLightInAnimator.setInterpolator(new BackEaseOut(8.0f));
         this.hoverLightInAnimator.setDuration(HOVER_LIGHT_IN_DURATION);
-        this.hoverLightInAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.7
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.hoverLightAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedHoverLight();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.7
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.hoverLightInAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.hoverLightAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedHoverLight();
         });
         this.hoverLightOutAnimator = ValueAnimator.ofFloat(1.0f, 0.0f);
         this.hoverLightOutAnimator.setInterpolator(new QuintEaseOut());
         this.hoverLightOutAnimator.setDuration(HOVER_LIGHT_OUT_DURATION);
-        this.hoverLightOutAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.8
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.hoverLightAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedHoverLight();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.8
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.hoverLightOutAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.hoverLightAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedHoverLight();
         });
         this.affordanceOnAnimator = ValueAnimator.ofFloat(0.0f, 0.6f);
         this.affordanceOnAnimator.setInterpolator(new LinearInterpolator());
         this.affordanceOnAnimator.setDuration(AFFORDANCE_ON_DURATION);
-        this.affordanceOnAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.9
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.affordanceAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedAffordance();
-                if (Float.compare(LensFlareEffect.this.affordanceAnimationValue, 0.6f) == 0) {
-                    LensFlareEffect.this.cancelAnimator(LensFlareEffect.this.affordanceOnAnimator);
-                    LensFlareEffect.this.affordanceOffAnimator.start();
-                }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.9
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.affordanceOnAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.affordanceAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedAffordance();
+            if (Float.compare(LensFlareEffect.this.affordanceAnimationValue, 0.6f) == 0) {
+                LensFlareEffect.this.cancelAnimator(LensFlareEffect.this.affordanceOnAnimator);
+                LensFlareEffect.this.affordanceOffAnimator.start();
             }
         });
         this.affordanceOffAnimator = ValueAnimator.ofFloat(0.6f, 0.0f);
         this.affordanceOffAnimator.setInterpolator(new LinearInterpolator());
         this.affordanceOffAnimator.setDuration(AFFORDANCE_OFF_DURATION);
-        this.affordanceOffAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.10
-            @Override // android.animation.ValueAnimator.AnimatorUpdateListener
-            public void onAnimationUpdate(ValueAnimator animation) {
-                LensFlareEffect.this.affordanceAnimationValue = ((Float) animation.getAnimatedValue()).floatValue();
-                LensFlareEffect.this.animatedAffordance();
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.10
+// android.animation.ValueAnimator.AnimatorUpdateListener
+        this.affordanceOffAnimator.addUpdateListener(animation -> {
+            LensFlareEffect.this.affordanceAnimationValue = (Float) animation.getAnimatedValue();
+            LensFlareEffect.this.animatedAffordance();
         });
     }
 
@@ -629,7 +617,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
 
     /* JADX INFO: Access modifiers changed from: private */
     public void animatedDragPos() {
-        float scale = 1.0f + (this.distancePerMaxAlpha * 1.0f);
+        float scale = 1.0f + (this.distancePerMaxAlpha);
         this.lightFog.setScaleX(this.defaultInSampleSize * scale);
         this.lightFog.setScaleY(this.defaultInSampleSize * scale);
         float rotation = ((-this.objAnimationValue) * 30.0f) - (this.distancePerMaxAlpha * 160.0f);
@@ -637,7 +625,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         setCenterPos(this.lightFog, this.showStartX, this.showStartY, this.currentX, this.currentY, 1.0f);
         for (int i = 0; i < this.HEXAGON_TOTAL; i++) {
             ImageView hex = this.hexagon[i];
-            setCenterPos(hex, this.showStartX, this.showStartY, this.currentX, this.currentY, this.hexagonDistance.get(i).floatValue(), this.hexagonScale[i], this.hexagonRotation[i]);
+            setCenterPos(hex, this.showStartX, this.showStartY, this.currentX, this.currentY, this.hexagonDistance.get(i), this.hexagonScale[i], this.hexagonRotation[i]);
         }
     }
 
@@ -721,7 +709,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         if (rotation != 0) {
             float dist = scale * 300.0f;
             float rotationByDistance = (((float) this.distance) / 1000.0f) * scale * scale;
-            float rotationByAnimation = this.objAnimationValue * 1.0f;
+            float rotationByAnimation = this.objAnimationValue;
             double rad = ((rotation * 3.141592653589793d) / 180.0d) + rotationByDistance + rotationByAnimation;
             tx = ((float) ((dist * Math.cos(rad)) + (dist * Math.sin(rad)))) + x;
             ty = ((float) ((dist * (-Math.sin(rad))) + (dist * Math.cos(rad)))) + y;
@@ -781,13 +769,12 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         stopUnlockAffordance();
         this.affordancePoint.x = rect.left + ((rect.right - rect.left) / 2);
         this.affordancePoint.y = rect.top + ((rect.bottom - rect.top) / 2);
-        this.affordanceRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.11
-            @Override // java.lang.Runnable
-            public void run() {
-                LensFlareEffect.this.playUnlockAffordance();
-                LensFlareEffect.this.isPlayAffordance = false;
-                LensFlareEffect.this.affordanceRunnable = null;
-            }
+        // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.11
+// java.lang.Runnable
+        this.affordanceRunnable = () -> {
+            LensFlareEffect.this.playUnlockAffordance();
+            LensFlareEffect.this.isPlayAffordance = false;
+            LensFlareEffect.this.affordanceRunnable = null;
         };
         postDelayed(this.affordanceRunnable, startDelay);
     }
@@ -828,12 +815,11 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         if (this.isBeforeInit) {
             Log.d(TAG, "isBeforeInit is true");
             if (this.mFirstCreatedRunnable == null) {
-                this.mFirstCreatedRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.12
-                    @Override // java.lang.Runnable
-                    public void run() {
-                        Log.d(TAG, "mFirstCreatedRunnable,  isBeforeInit is True and called lensFlareinit()");
-                        LensFlareEffect.this.lensFlareinit();
-                    }
+                // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.12
+// java.lang.Runnable
+                this.mFirstCreatedRunnable = () -> {
+                    Log.d(TAG, "mFirstCreatedRunnable,  isBeforeInit is True and called lensFlareinit()");
+                    LensFlareEffect.this.lensFlareinit();
                 };
                 Log.d(TAG, "this.postDelayed, createdDelaytime = " + this.createdDelaytime);
                 postDelayed(this.mFirstCreatedRunnable, this.createdDelaytime);
@@ -848,16 +834,15 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             cleanUpAllViews();
             this.isPlayAffordance = false;
             stopReleaseSound();
-            this.releaseSoundRunnable = new Runnable() { // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.13
-                @Override // java.lang.Runnable
-                public void run() {
-                    if (LensFlareEffect.this.soundpool != null) {
-                        Log.d(TAG, "LensFlare sound : release");
-                        LensFlareEffect.this.soundpool.release();
-                        LensFlareEffect.this.soundpool = null;
-                    }
-                    LensFlareEffect.this.releaseSoundRunnable = null;
+            // from class: com.samsung.android.visualeffect.lock.lensflare.LensFlareEffect.13
+// java.lang.Runnable
+            this.releaseSoundRunnable = () -> {
+                if (LensFlareEffect.this.soundpool != null) {
+                    Log.d(TAG, "LensFlare sound : release");
+                    LensFlareEffect.this.soundpool.release();
+                    LensFlareEffect.this.soundpool = null;
                 }
+                LensFlareEffect.this.releaseSoundRunnable = null;
             };
             postDelayed(this.releaseSoundRunnable, UNLOCK_SOUND_PLAY_TIME);
         }
@@ -929,7 +914,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         if (cmd == 2) {
             unlock();
         } else if (cmd == 1) {
-            showUnlockAffordance(((Long) params.get("startDelay")).longValue(), (Rect) params.get("rect"));
+            showUnlockAffordance((Long) params.get("startDelay"), (Rect) params.get("rect"));
         } else if (cmd == 99) {
             if (params.containsKey("manualInit")) {
                 lensFlareinit();
@@ -940,7 +925,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             } else if (params.containsKey("screenTurnedOn")) {
                 screenTurnedOn();
             } else if (params.containsKey("showUnlockAffordance")) {
-                showUnlockAffordance(((Long) params.get("startDelay")).longValue(), (Rect) params.get("rect"));
+                showUnlockAffordance((Long) params.get("startDelay"), (Rect) params.get("rect"));
             } else if (params.containsKey("playLockSound")) {
                 playLockSound();
             }

@@ -5,17 +5,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
-import android.widget.GridView;
 import android.widget.ImageView;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Arrays;
 import java.util.List;
 
 public class GridAdapter extends BaseAdapter {
 
     private final Context context;
-    private final List<EffectEnum> list = EffectEnum.effectList;
+    private final List<EffectEnum> list = Arrays.asList(UnlockEffectGrid.effects);
     private final List<EffectEnum> entries;
     private int selection = -1;
     private final List<View> views = new ArrayList<>();

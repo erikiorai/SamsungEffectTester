@@ -15,7 +15,7 @@ public class IndigoDiffusionRenderer extends GLTextureViewRendererForRippleType 
         this.isIndigoDiffusion = true;
         this.isSPenSupport = true;
         this.mParent = view;
-        this.mBgChangeCheckQueue = new LinkedList();
+        this.mBgChangeCheckQueue = new LinkedList<>();
     }
 
     @Override // com.samsung.android.visualeffect.lock.common.GLTextureViewRendererForRippleType

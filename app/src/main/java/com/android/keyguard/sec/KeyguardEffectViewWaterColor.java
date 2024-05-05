@@ -4,6 +4,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
+import android.graphics.drawable.BitmapDrawable;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
@@ -14,7 +15,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 
-import com.aj.effect.MainActivity;
 import com.aj.effect.R;
 import com.samsung.android.visualeffect.EffectView;
 import com.samsung.android.visualeffect.IEffectListener;
@@ -82,13 +82,12 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
             Log.d(TAG, "new SoundHandler()");
             this.mHandler = new EffectHandler();
         }
-        this.callBackListener = new IEffectListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.1
-            public void onReceive(int status, HashMap<?, ?> params) {
-                if (status == 0 && KeyguardEffectViewWaterColor.this.mHandler != null) {
-                    KeyguardEffectViewWaterColor.this.mMsg = KeyguardEffectViewWaterColor.this.mHandler.obtainMessage();
-                    KeyguardEffectViewWaterColor.this.mMsg.what = 1;
-                    KeyguardEffectViewWaterColor.this.mHandler.sendMessage(KeyguardEffectViewWaterColor.this.mMsg);
-                }
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.1
+        this.callBackListener = (status, params) -> {
+            if (status == 0 && KeyguardEffectViewWaterColor.this.mHandler != null) {
+                KeyguardEffectViewWaterColor.this.mMsg = KeyguardEffectViewWaterColor.this.mHandler.obtainMessage();
+                KeyguardEffectViewWaterColor.this.mMsg.what = 1;
+                KeyguardEffectViewWaterColor.this.mHandler.sendMessage(KeyguardEffectViewWaterColor.this.mMsg);
             }
         };
         setListener(this.callBackListener);
@@ -120,12 +119,9 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
         Log.i(TAG, "cleanUp");
         stopReleaseSound();
         releaseSound();
-        postDelayed(new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.2
-            @Override // java.lang.Runnable
-            public void run() {
-                KeyguardEffectViewWaterColor.this.clearScreen();
-            }
-        }, 400L);
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.2
+// java.lang.Runnable
+        postDelayed(() -> KeyguardEffectViewWaterColor.this.clearScreen(), 400L);
         /*if (this.useGPUMaxClock) {
             VisualEffectDVFS.release(17);
         }
@@ -137,12 +133,12 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void update() {
         Log.i(TAG, "update");
-        /*BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
+        BitmapDrawable newBitmapDrawable = KeyguardEffectViewUtil.getCurrentWallpaper(this.mContext);
         if (newBitmapDrawable == null) {
             Log.i(TAG, "newBitmapDrawable  is null");
             return;
-        }*/
-        Bitmap originBitmap = MainActivity.bitm; //newBitmapDrawable.getBitmap();
+        }
+        Bitmap originBitmap = newBitmapDrawable.getBitmap();
         if (originBitmap == null) {
             Log.d(TAG, "originBitmap is null");
             return;
@@ -190,7 +186,7 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
         Log.i(TAG, "showUnlockAffordance");
         this.isUnlocked = false;
         HashMap<Object, Object> map = new HashMap<>();
-        map.put("StartDelay", Long.valueOf(startDelay));
+        map.put("StartDelay", startDelay);
         map.put("Rect", rect);
         handleCustomEvent(1, map);
     }
@@ -300,12 +296,9 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
             this.sounds[0] = this.mSoundPool.load(mContext, TAP_SOUND_PATH, 1);
             this.sounds[1] = this.mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
-            this.mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.3
-                @Override // android.media.SoundPool.OnLoadCompleteListener
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    Log.d(KeyguardEffectViewWaterColor.TAG, "sound : onLoadComplete");
-                }
-            });
+            // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.3
+// android.media.SoundPool.OnLoadCompleteListener
+            this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(KeyguardEffectViewWaterColor.TAG, "sound : onLoadComplete"));
         }
     }
 
@@ -317,16 +310,15 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
     }
 
     private void releaseSound() {
-        this.releaseSoundRunnable = new Runnable() { // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.4
-            @Override // java.lang.Runnable
-            public void run() {
-                if (KeyguardEffectViewWaterColor.this.mSoundPool != null) {
-                    Log.d(KeyguardEffectViewWaterColor.TAG, "WaterColor sound : release SoundPool");
-                    KeyguardEffectViewWaterColor.this.mSoundPool.release();
-                    KeyguardEffectViewWaterColor.this.mSoundPool = null;
-                }
-                KeyguardEffectViewWaterColor.this.releaseSoundRunnable = null;
+        // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.4
+// java.lang.Runnable
+        this.releaseSoundRunnable = () -> {
+            if (KeyguardEffectViewWaterColor.this.mSoundPool != null) {
+                Log.d(KeyguardEffectViewWaterColor.TAG, "WaterColor sound : release SoundPool");
+                KeyguardEffectViewWaterColor.this.mSoundPool.release();
+                KeyguardEffectViewWaterColor.this.mSoundPool = null;
             }
+            KeyguardEffectViewWaterColor.this.releaseSoundRunnable = null;
         };
         postDelayed(this.releaseSoundRunnable, 2000L);
     }
@@ -367,7 +359,6 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
                     KeyguardEffectViewWaterColor.this.mImageView = null;
                     return;
                 default:
-                    return;
             }
         }
     }
