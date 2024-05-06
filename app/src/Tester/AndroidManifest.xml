@@ -6,7 +6,7 @@
             android:name=".MainActivity"
             android:exported="true"
             android:resizeableActivity="true"
-            android:configChanges="orientation|screenLayout|screenSize">
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize">
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
