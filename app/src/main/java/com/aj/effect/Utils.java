@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 
+import java.lang.reflect.Field;
 import java.util.Random;
 
 public class Utils {
@@ -100,6 +101,34 @@ public class Utils {
             }
             return rect;
         }
+    }
+
+    public static String getSecUiVersion() {
+        Field semPlatformIntField;
+        int version;
+        try {
+            semPlatformIntField = Build.VERSION.class.getDeclaredField("SEM_PLATFORM_INT");
+            version = semPlatformIntField.getInt(null);
+        } catch (Exception e) {
+            if (e instanceof NoSuchFieldException) {
+                return "Device is not using Samsung ROM";
+            } else if (e instanceof IllegalAccessException) {
+                return "No access to UI Version field";
+            } else {
+                return "Exception when getting UI Version field: " + e.getMessage();
+            }
+        }
+        StringBuilder ui = new StringBuilder("Running on ");
+        if (version < 90000) {
+            if (version < 80000)
+                ui.append("TouchWiz");
+            else
+                ui.append("Samsung Experience");
+        } else {
+            ui.append("One UI");
+            version =- 90000;
+        }
+        return ui.append(" ").append((version / 10000)).append(".").append((version % 10000) / 100).toString();
     }
 
     /*public static long handleUnlockAndGetDelay (boolean mIsUnlockStarted, KeyguardEffectViewBase mUnlockView) {

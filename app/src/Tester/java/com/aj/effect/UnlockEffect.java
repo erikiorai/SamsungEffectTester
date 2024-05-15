@@ -1,5 +1,7 @@
 package com.aj.effect;
 
+import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
+import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static com.aj.effect.EffectEnum.ABSTRACTTILES;
 import static com.aj.effect.EffectEnum.AUTUMN;
 import static com.aj.effect.EffectEnum.BLIND;
@@ -7,21 +9,21 @@ import static com.aj.effect.EffectEnum.BOUNCINGCOLOR;
 import static com.aj.effect.EffectEnum.BRILLIANTCUT;
 import static com.aj.effect.EffectEnum.BRILLIANTRING;
 import static com.aj.effect.EffectEnum.COLOURDROPLET;
-import static com.aj.effect.EffectEnum.LIQUID;
-import static com.aj.effect.EffectEnum.SEASONAL;
-import static com.aj.effect.EffectEnum.SPRING;
-import static com.aj.effect.EffectEnum.SUMMER;
-import static com.aj.effect.EffectEnum.TENSION;
 import static com.aj.effect.EffectEnum.GEOMETRICMOSAIC;
 import static com.aj.effect.EffectEnum.INDIGODIFFUSION;
 import static com.aj.effect.EffectEnum.LIGHTING;
+import static com.aj.effect.EffectEnum.LIQUID;
 import static com.aj.effect.EffectEnum.NONE;
 import static com.aj.effect.EffectEnum.POPPINGCOLOURS;
 import static com.aj.effect.EffectEnum.POPPINGGOODLOCK;
 import static com.aj.effect.EffectEnum.RECTANGLETRAVELLER;
 import static com.aj.effect.EffectEnum.RIPPLE;
+import static com.aj.effect.EffectEnum.SEASONAL;
 import static com.aj.effect.EffectEnum.SPARKLINGBUBBLES;
+import static com.aj.effect.EffectEnum.SPRING;
 import static com.aj.effect.EffectEnum.STONESKIPPING;
+import static com.aj.effect.EffectEnum.SUMMER;
+import static com.aj.effect.EffectEnum.TENSION;
 import static com.aj.effect.EffectEnum.WATERCOLOUR;
 import static com.aj.effect.EffectEnum.WATERDROPLET;
 import static com.aj.effect.EffectEnum.WINTER;
@@ -31,13 +33,14 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.drawable.InsetDrawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -45,6 +48,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+
+import androidx.annotation.NonNull;
 
 import com.android.keyguard.sec.KeyguardEffectViewController;
 
@@ -108,6 +113,24 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
             setVisible(false);
             createDialogforTablet();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if (BuildConfig.DEBUG)
+            getMenuInflater().inflate(R.menu.setting_menu, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.about) {
+            Intent intent = new Intent(this, DebugActivity.class);
+            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+        }
+        return super.onMenuItemSelected(featureId, item);
     }
 
     @Override
