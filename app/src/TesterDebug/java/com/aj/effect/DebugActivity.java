@@ -16,7 +16,7 @@ public class DebugActivity extends Activity {
         version.setText(BuildConfig.VERSION_NAME);
 
         TextView debug = findViewById(R.id.debug_lines);
-        StringBuilder lines = new StringBuilder(Utils.getSecUiVersion() + "\n");
+        StringBuilder lines = new StringBuilder(Utils.getSecUiVersionStg() + "\n");
         lines.append("Android version ").append(Build.VERSION.RELEASE).append(", API level ").append(Build.VERSION.SDK_INT).append("\n");
         debug.setText(lines);
     }

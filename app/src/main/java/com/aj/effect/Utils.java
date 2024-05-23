@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
@@ -14,7 +15,7 @@ import java.lang.reflect.Field;
 import java.util.Random;
 
 public class Utils {
-    public static int defaultUnlock = 0;
+    public static Integer defaultUnlock = 0;
 
     public static boolean isTablet(Context context) {
         return context.getResources().getBoolean(R.bool.large);
@@ -103,7 +104,7 @@ public class Utils {
         }
     }
 
-    public static String getSecUiVersion() {
+    public static String getSecUiVersionStg() {
         Field semPlatformIntField;
         int version;
         try {
@@ -129,6 +130,22 @@ public class Utils {
             version =- 90000;
         }
         return ui.append(" ").append((version / 10000)).append(".").append((version % 10000) / 100).toString();
+    }
+
+    public static long getSecUiVersion() {
+        Field semPlatformIntField;
+        int version;
+        try {
+            semPlatformIntField = Build.VERSION.class.getDeclaredField("SEM_PLATFORM_INT");
+            version = semPlatformIntField.getInt(null);
+        } catch (Exception e) {
+            Log.d("EffectsUtils", "getSecUiVersion: " + e.getMessage());
+            return 0;
+        }
+        if (version > 90000) {
+            version =- 90000;
+        }
+        return (version / 10000) + ((version % 10000) / 100);
     }
 
     /*public static long handleUnlockAndGetDelay (boolean mIsUnlockStarted, KeyguardEffectViewBase mUnlockView) {

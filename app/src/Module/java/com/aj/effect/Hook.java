@@ -1,23 +1,26 @@
 package com.aj.effect;
 
+import static de.robv.android.xposed.XposedBridge.hookMethod;
 import static de.robv.android.xposed.XposedBridge.log;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
 import static de.robv.android.xposed.XposedHelpers.callStaticMethod;
-import static de.robv.android.xposed.XposedHelpers.findAndHookConstructor;
 import static de.robv.android.xposed.XposedHelpers.findAndHookMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.newInstance;
 
 import android.content.Context;
-import android.net.Uri;
+import android.graphics.Bitmap;
 import android.provider.Settings;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
 import com.android.keyguard.sec.KeyguardEffectViewController;
 import com.android.keyguard.util.SettingsHelper;
+
+import java.lang.reflect.Constructor;
 
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
@@ -33,14 +36,12 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
     final FrameLayout[] front = new FrameLayout[1];
     @Override
     public void handleInitPackageResources(XC_InitPackageResources.InitPackageResourcesParam resparam) throws Throwable {
-        long version;
-        try {
-            version = Long.parseLong(Utils.getSecUiVersion());
-        } catch (NumberFormatException e) {
-            log("Sorry, this pre-alpha works only on Samsung Experience 8.0");
+        long version = Utils.getSecUiVersion();
+        if (version != 8.0) {
+            log("Sorry, Samsung Experience 8.0 only");
             return;
         }
-        if (version != 8.0 && !resparam.packageName.equals(packageName))
+        else if (!resparam.packageName.equals(packageName))
             return;
 
         XC_LayoutInflated handleStatusBar = new XC_LayoutInflated() {
@@ -71,18 +72,14 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
             }
         };
 
-        resparam.res.hookLayout("com.android.systemui", "layout", "status_bar_window", handleStatusBar);
+        resparam.res.hookLayout("com.android.systemui", "layout", "super_status_bar", handleStatusBar);
     }
+
+    static Bitmap wallpaper;
 
     @Override
     public void handleLoadPackage(XC_LoadPackage.LoadPackageParam loadPackageParam) throws Throwable {
-        long version;
-        try {
-            version = Long.parseLong(Utils.getSecUiVersion());
-        } catch (NumberFormatException e) {
-            log("Sorry, this pre-alpha works only on Samsung Experience 8.0");
-            return;
-        }
+        long version = Utils.getSecUiVersion();
         if (version == 8.0 && loadPackageParam.packageName.equals("com.android.systemui")) {
             log("handleLoadPackage: in there, hooking SettingsHelper");
 
@@ -92,45 +89,64 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
             Class<?> helperClass = findClass(helper, loadPackageParam.classLoader);
 
             // Add listener to effect setting
+            //Class<?>[] itemHook = {String.class, String.class, String.class, Integer.class, boolean.class};
             findAndHookMethod(helperClass,
                     "setUpSettingsItem", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
-                    callMethod(getObjectField(param.thisObject, "mItemLists"), "add", newInstance(findClass(helper + ".Item", loadPackageParam.classLoader),
-                            "System", "lockscreen_ripple_effect", "Int", Utils.defaultUnlock, true));
+                    callMethod(getObjectField(param.thisObject, "mItemLists"), "add",
+                            newInstance(
+                                    findClass(helper + ".Item", loadPackageParam.classLoader), //itemHook,
+                                    helperClass,
+                                    "System",
+                                    "lockscreen_ripple_effect",
+                                    "Int",
+                                    Utils.defaultUnlock,
+                                    true)
+                    );
                 }
             });
 
-            Class<?> KeyguardImageWallpaper = findClass(keyguard + ".wallpaper.KeyguardImageWallpaper", loadPackageParam.classLoader);
+            final String[] wallType = new String[1];
+
+            findAndHookMethod(keyguard + ".wallpaper.KeyguardWallpaperController", loadPackageParam.classLoader,
+                    "handleWallpaperTypeChanged", new XC_MethodHook() {
+                        @Override
+                        protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                            super.afterHookedMethod(param);
+                            wallType[0] = getObjectField(param.thisObject, "mWallpaperView").getClass().getName();
+                        }
+                    });
+
+            String KIWname = "KeyguardImageWallpaper";
+            Class<?> KeyguardImageWallpaper = findClass(keyguard + ".wallpaper." + KIWname, loadPackageParam.classLoader);
             final Object[] context = new Object[1];
 
-            SettingsHelper.OnChangedCallback effectCallback = new SettingsHelper.OnChangedCallback() {
-                @Override
-                public void onChanged(Uri uri) {
-                    if (!uri.equals(Settings.System.getUriFor("lockscreen_ripple_effect"))) {
-                        return;
-                    }
-                    Log.d("KeyguardImageView", "hooked: changing effect");
-                    KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) context[0]);
-                    controller.handleWallpaperTypeChanged();
+            SettingsHelper.OnChangedCallback effectCallback = uri -> {
+                if (!uri.equals(Settings.System.getUriFor("lockscreen_ripple_effect"))) {
+                    return;
                 }
+                Log.d("KeyguardImageView", "hooked: changing effect");
+                KeyguardEffectViewController.getInstance((Context) context[0]).handleWallpaperTypeChanged();
             };
 
 
-            findAndHookConstructor(KeyguardImageWallpaper, new XC_MethodHook() {
+            Constructor<?>[] constructors = KeyguardImageWallpaper.getConstructors();
+            hookMethod(constructors[0], new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     context[0] = getObjectField(param.thisObject, "mContext");
                 }
             });
+            Class<?>[] setHelp = { findClass(helper + ".OnChangedCallback", loadPackageParam.classLoader), android.net.Uri[].class};
             findAndHookMethod(KeyguardImageWallpaper, "onAttachedToWindow", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     Object settingCtx = callStaticMethod(helperClass, "getInstance", context[0]);
-                    callMethod(settingCtx, "registerCallback", effectCallback, Settings.System.getUriFor("lockscreen_ripple_effect"));
+                    callMethod(settingCtx, "registerCallback", setHelp, effectCallback, Settings.System.getUriFor("lockscreen_ripple_effect"));
                 }
             });
             findAndHookMethod(KeyguardImageWallpaper, "onDetachedFromWindow", new XC_MethodHook() {
@@ -138,13 +154,77 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     Object settingCtx = callStaticMethod(helperClass, "getInstance", context[0]);
-                    callMethod(settingCtx, "unregisterCallback", effectCallback);
+                    callMethod(settingCtx, "unregisterCallback", new Class<?>[]{android.net.Uri.class}, effectCallback);
                 }
             });
-            // findAndHookMethod(KeyguardImageWallpaper, )
-            // todo basic functions hook to systemuiwallpaper
 
+            log("handleLoadPackage: hooking SystemUIWallpaper and " + KIWname);
+            Class<?> SystemUIWallpaper = findClass(keyguard + ".wallpaper.SystemUIWallpaper", loadPackageParam.classLoader);
+            findAndHookMethod(KeyguardImageWallpaper, "init", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    wallpaper = (Bitmap) getObjectField(param.thisObject, "mCache");
+                    KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext")).update();
+                }
+            });
+            findAndHookMethod(SystemUIWallpaper, "onPause", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    if (wallType[0].contains(KIWname))
+                        KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext")).screenTurnedOff();
+                }
+            });
+            findAndHookMethod(SystemUIWallpaper, "onResume", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.screenTurnedOn();
+                        controller.show();
+                    }
+                }
+            });
+            findAndHookMethod(SystemUIWallpaper, "reset", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.reset();
+                    }
+                }
+            });
+            findAndHookMethod(KeyguardImageWallpaper, "cleanUp", new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                    controller.cleanUp();
+                }
+            });
+            findAndHookMethod(SystemUIWallpaper, "handleTouchEvent", MotionEvent.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.handleHoverEvent(null, (MotionEvent) param.args[0]);
+                    }
+                }
+            });
+            findAndHookMethod(SystemUIWallpaper, "onUnlock", MotionEvent.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    // todo unlock if (wallType[0].contains(KIWname));
+                }
+            });
+            // todo basic functions hook to systemuiwallpaper if not working
 
+            log("handleLoadPackage: hooking entry function into PhoneStatusBar");
             findAndHookMethod(packageName + ".statusbar.phone.PhoneStatusBar", loadPackageParam.classLoader, "makeStatusBarView", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
