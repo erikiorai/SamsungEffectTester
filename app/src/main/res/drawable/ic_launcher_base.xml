@@ -1,40 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:height="108dp" android:width="108dp"
+    <item android:height="35dp" android:width="35dp"
         android:gravity="center" android:drawable="@android:color/transparent" />
-
-
-    <item android:width="8.86dp" android:height="8.86dp" android:left="8.333dp" android:bottom="28.333dp"
+    <item android:width="5.316dp" android:height="5.316dp" android:left="7dp" android:bottom="17dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="#adffffff" />
         </shape>
     </item>
-    <item android:width="14.2583dp" android:height="12.221dp" android:right="39.16dp" android:bottom="4.583dp"
+    <item android:width="8.555dp" android:height="7.333dp" android:right="21.5dp" android:bottom="2.75dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="#83ffffff" />
         </shape>
     </item>
-    <item android:width="6.1dp" android:height="6.1dp" android:right="19.628dp" android:bottom="26.48dp"
+    <item android:width="3.66dp" android:height="3.66dp" android:right="9.777dp" android:bottom="15.888dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="#d2ffffff" />
         </shape>
     </item>
-    <item android:width="17dp" android:height="17dp" android:left="7.666dp" android:bottom="3.97dp"
+    <item android:width="10.205dp" android:height="10.205dp" android:left="6.6dp" android:bottom="2.383dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="#fff" />
         </shape>
     </item>
-    <item android:width="6.1dp" android:height="6.1dp" android:right="16.666dp" android:top="21.666dp"
+    <item android:width="3.66dp" android:height="3.66dp" android:right="8dp" android:top="13dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="#fff" />
         </shape>
     </item>
-    <item android:width="22.4dp" android:height="22.4dp" android:left="30.83dp" android:top="25dp"
+    <item android:width="13.44dp" android:height="13.44dp" android:left="21dp" android:top="15dp"
         android:gravity="center">
         <shape android:shape="oval">
             <solid android:color="#adffffff" />

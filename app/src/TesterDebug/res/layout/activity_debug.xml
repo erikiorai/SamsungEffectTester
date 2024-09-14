@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/app_icon_back"
-            android:layout_width="108dp"
-            android:layout_height="108dp"
+            android:layout_width="88dp"
+            android:layout_height="88dp"
             android:background="@drawable/ic_launcher_bg_legacy"
             android:foreground="@drawable/ic_launcher_foreground" />
 
