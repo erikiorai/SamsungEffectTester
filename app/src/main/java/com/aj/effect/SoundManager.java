@@ -6,8 +6,9 @@ import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.provider.Settings;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RawRes;
+
+import com.android.keyguard.sec.KeyguardEffectViewController;
 
 public class SoundManager {
     public static final int TAP = 0;
@@ -24,14 +25,14 @@ public class SoundManager {
      * Load sounds into SoundPool.
      * Order is TAP, DRAG, LOCK, UNLOCK
      */
-    public static void loadSound(Context context, @RawRes Integer... sounds) {
+    public static void loadSound(@RawRes Integer... sounds) {
         for (int i = 0; i < SoundManager.sounds.length; i++) {
             if (soundPool.unload(SoundManager.sounds[i])) {
                 SoundManager.sounds[i] = 0;
             }
             if (sounds.length == SoundManager.sounds.length) {
                 if (sounds[i] != 0) {
-                    int sound = soundPool.load(context, sounds[i], 1);
+                    int sound = soundPool.load(KeyguardEffectViewController.mRes.openRawResourceFd(sounds[i]), 1);
                     SoundManager.sounds[i] = sound;
                 }
             }

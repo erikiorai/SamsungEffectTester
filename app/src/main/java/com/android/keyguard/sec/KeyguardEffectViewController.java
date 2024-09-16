@@ -2,6 +2,7 @@ package com.android.keyguard.sec;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.ContentObserver;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
@@ -99,6 +100,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     private boolean mBootCompleted = false;
     private boolean mEmergencyModeStateChanged = false;
     private KeyguardFestivalEffect mFestivalEffect;
+    public static Resources mRes;
     private String mOldPrimaryEffect = null;
     /* private final Handler mHandler = new Handler() { // from class: com.android.keyguard.sec.KeyguardEffectViewController.1
         @Override // android.os.Handler
@@ -196,9 +198,15 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     }
 
     @SuppressLint("LongLogTag")
-    public static KeyguardEffectViewController getInstanceIfExists(Context context) {
+    public static KeyguardEffectViewController getInstanceIfExists() {
         Log.i(TAG, "*** KeyguardEffectView getInstanceIfExists ***");
         return sKeyguardEffectViewController;
+    }
+
+    @SuppressLint("LongLogTag")
+    public static void setResources(Resources res) {
+        Log.i(TAG, "Setting context");
+        mRes = res;
     }
 
     /* public static boolean isLockScreenEffect(int effectType) {
@@ -401,7 +409,8 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
             }*/
             makeEffectViews(mCurrentEffect);
             setLayerAndBitmapForParticleEffect();
-        }
+        } else
+            Log.e(TAG, "Background view is null!");
     }
 
     // TODO: isLockLive?

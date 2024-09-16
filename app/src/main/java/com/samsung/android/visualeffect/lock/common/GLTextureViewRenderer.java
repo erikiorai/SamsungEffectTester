@@ -2,6 +2,7 @@ package com.samsung.android.visualeffect.lock.common;
 
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +12,9 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.WindowManager;
 
+import com.aj.effect.BuildConfig;
 import com.aj.effect.Utils;
+import com.android.keyguard.sec.KeyguardEffectViewController;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.common.GLTextureView;
 
@@ -53,7 +56,12 @@ public class GLTextureViewRenderer implements GLTextureView.Renderer {
         mHeight = rect.height();
         mIsNeedToReinit = true;
         drawCount = 0;
-        ApplicationInfo m1 = mContext.getApplicationInfo();
+        ApplicationInfo m1;
+        try {
+            m1 = mContext.getPackageManager().getApplicationInfo(BuildConfig.APPLICATION_ID, 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            throw new RuntimeException(e);
+        }
         mLibDir = m1.nativeLibraryDir;
         /*if (mLibDir.contains("64")) {
             mLibDir = "/system/lib64";
@@ -219,8 +227,8 @@ public class GLTextureViewRenderer implements GLTextureView.Renderer {
         if (aTexture != null) {
             BitmapFactory.Options options = new BitmapFactory.Options();
             options.inScaled = false;
-            String packageName = mContext.getPackageName();
-            Resources res = mContext.getResources();
+            String packageName = BuildConfig.APPLICATION_ID;
+            Resources res = KeyguardEffectViewController.mRes;
             for (String s : aTexture) {
                 try {
                     int id = res.getIdentifier(s, "drawable", packageName);

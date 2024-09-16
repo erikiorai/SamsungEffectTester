@@ -73,6 +73,7 @@ public class MainActivity extends Activity {
         imgView = findViewById(R.id.imageView);
 
         controller = KeyguardEffectViewController.getInstance(this);
+        KeyguardEffectViewController.setResources(this.getResources());
         mUnlockView = findViewById(R.id.keyguard_unlock_view);
         mBackgroundRootLayout = findViewById(R.id.keyguard_effect_behind);
         mForegroundRootLayout = findViewById(R.id.keyguard_effect_front);

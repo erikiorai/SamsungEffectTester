@@ -49,7 +49,7 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
         touchHashmap = new HashMap<>();
         int circleUnlockMaxWidth = /*0;
         if (type == TYPE_UNLOCK) {
-            circleUnlockMaxWidth = */((int) mContext.getResources().getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2;
+            circleUnlockMaxWidth = */((int) KeyguardEffectViewController.mRes.getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2;
         /*} else if (type == TYPE_SHORTCUT) {
             circleUnlockMaxWidth = ((int) mContext.getResources().getDimension(R.dimen.keyguard_lockscreen_first_border)) * 2; // shortcut usage, but both the same
         }*/
@@ -112,7 +112,7 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
 
     private void loadSound() {
         if (!soundLoaded) {
-            SoundManager.loadSound(mContext, 0, 0, LOCK_SOUND_PATH, UNLOCK_SOUND_PATH);
+            SoundManager.loadSound(0, 0, LOCK_SOUND_PATH, UNLOCK_SOUND_PATH);
             soundLoaded = true;
         }
     }
@@ -170,7 +170,7 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void cleanUp() {
-        SoundManager.loadSound(mContext, 0);
+        SoundManager.loadSound(0);
         soundLoaded = false;
         Log.d(TAG, "KeyguardEffectViewNone : cleanUp");
     }

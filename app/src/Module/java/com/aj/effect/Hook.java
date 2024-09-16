@@ -10,7 +10,9 @@ import static de.robv.android.xposed.XposedHelpers.getObjectField;
 import static de.robv.android.xposed.XposedHelpers.newInstance;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -25,6 +27,7 @@ import java.lang.reflect.Constructor;
 import de.robv.android.xposed.IXposedHookInitPackageResources;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
@@ -47,6 +50,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
         XC_LayoutInflated handleStatusBar = new XC_LayoutInflated() {
             @Override
             public void handleLayoutInflated(LayoutInflatedParam liparam) throws Throwable {
+                XposedBridge.log("Adding layouts to lockscreen");
                 FrameLayout hideGroup1 = liparam.view.findViewById(liparam.res.getIdentifier("hided_by_cover_group1", "id", packageName));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
                 behind[0] = new FrameLayout(hideGroup1.getContext());
@@ -90,6 +94,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
 
             // Add listener to effect setting
             //Class<?>[] itemHook = {String.class, String.class, String.class, Integer.class, boolean.class};
+            Class<?> itemClass = findClass(helper + ".Item", loadPackageParam.classLoader);
             findAndHookMethod(helperClass,
                     "setUpSettingsItem", new XC_MethodHook() {
                 @Override
@@ -97,13 +102,13 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     super.afterHookedMethod(param);
                     callMethod(getObjectField(param.thisObject, "mItemLists"), "add",
                             newInstance(
-                                    findClass(helper + ".Item", loadPackageParam.classLoader), //itemHook,
-                                    helperClass,
+                                    itemClass, //itemHook,
+                                    param.thisObject,
                                     "System",
                                     "lockscreen_ripple_effect",
                                     "Int",
                                     Utils.defaultUnlock,
-                                    true)
+                                    (boolean) true)
                     );
                 }
             });
@@ -123,14 +128,19 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
             Class<?> KeyguardImageWallpaper = findClass(keyguard + ".wallpaper." + KIWname, loadPackageParam.classLoader);
             final Object[] context = new Object[1];
 
-            SettingsHelper.OnChangedCallback effectCallback = uri -> {
-                if (!uri.equals(Settings.System.getUriFor("lockscreen_ripple_effect"))) {
-                    return;
-                }
-                Log.d("KeyguardImageView", "hooked: changing effect");
-                KeyguardEffectViewController.getInstance((Context) context[0]).handleWallpaperTypeChanged();
-            };
+            SettingsHelper.OnChangedCallback effectCallback = new SettingsHelper.OnChangedCallback() {
+                @Override
+                public void onChanged(Uri uri) {
+                    if (!uri.equals(Settings.System.getUriFor("lockscreen_ripple_effect"))) {
+                        return;
+                    }
+                    Log.d("KeyguardImageView", "hooked: changing effect");
+                    KeyguardEffectViewController.getInstance((Context) context[0]).handleWallpaperTypeChanged();
 
+                }
+            };
+            //Object call = (findClass(keyguard + ".util.SettingsHelper.OnChangedCallback", loadPackageParam.classLoader).cast(effectCallback));
+            //XposedBridge.log(call.toString());
 
             Constructor<?>[] constructors = KeyguardImageWallpaper.getConstructors();
             hookMethod(constructors[0], new XC_MethodHook() {
@@ -146,7 +156,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     Object settingCtx = callStaticMethod(helperClass, "getInstance", context[0]);
-                    callMethod(settingCtx, "registerCallback", setHelp, effectCallback, Settings.System.getUriFor("lockscreen_ripple_effect"));
+                    //TODO callMethod(settingCtx, "registerCallback", setHelp, effectCallback, Settings.System.getUriFor("lockscreen_ripple_effect"));
                 }
             });
             findAndHookMethod(KeyguardImageWallpaper, "onDetachedFromWindow", new XC_MethodHook() {
@@ -154,7 +164,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
                     Object settingCtx = callStaticMethod(helperClass, "getInstance", context[0]);
-                    callMethod(settingCtx, "unregisterCallback", new Class<?>[]{android.net.Uri.class}, effectCallback);
+                    //TODO callMethod(settingCtx, "unregisterCallback", new Class<?>[]{android.net.Uri.class}, effectCallback);
                 }
             });
 
@@ -211,11 +221,11 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     super.afterHookedMethod(param);
                     if (wallType[0].contains(KIWname)) {
                         KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
-                        controller.handleHoverEvent(null, (MotionEvent) param.args[0]);
+                        controller.handleTouchEvent(null, (MotionEvent) param.args[0]);
                     }
                 }
             });
-            findAndHookMethod(SystemUIWallpaper, "onUnlock", MotionEvent.class, new XC_MethodHook() {
+            findAndHookMethod(SystemUIWallpaper, "onUnlock", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
@@ -225,12 +235,15 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
             // todo basic functions hook to systemuiwallpaper if not working
 
             log("handleLoadPackage: hooking entry function into PhoneStatusBar");
-            findAndHookMethod(packageName + ".statusbar.phone.PhoneStatusBar", loadPackageParam.classLoader, "makeStatusBarView", new XC_MethodHook() {
+            findAndHookMethod(packageName + ".statusbar.phone.PhoneStatusBar", loadPackageParam.classLoader, "inflateStatusBarWindow", Context.class, new XC_MethodHook() {
                 @Override
-                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
-                    KeyguardEffectViewController.getInstance((Context) param.thisObject).
-                            setEffectLayout(behind[0], front[0], null);
-                    super.beforeHookedMethod(param);
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    Resources resources = ((Context) param.args[0]).getPackageManager().getResourcesForApplication(BuildConfig.APPLICATION_ID);
+                    KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) param.args[0]);
+                    KeyguardEffectViewController.setResources(resources);
+                    controller.setEffectLayout(behind[0], front[0], null);
+                    XposedBridge.log("Starting effects");
+                    super.afterHookedMethod(param);
                 }
             });
 
