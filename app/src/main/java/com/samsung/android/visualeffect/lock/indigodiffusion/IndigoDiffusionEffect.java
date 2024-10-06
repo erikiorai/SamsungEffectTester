@@ -62,6 +62,16 @@ public class IndigoDiffusionEffect extends GLTextureView implements IEffectView 
         return true;
     }
 
+    @Override
+    public void drawPause() {
+        stopAnimation();
+    }
+
+    @Override
+    public void drawResume() {
+        startAnimation();
+    }
+
     /* JADX INFO: Access modifiers changed from: protected */
     @Override // com.samsung.android.visualeffect.common.GLTextureView, android.view.View
     public void onDetachedFromWindow() {

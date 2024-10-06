@@ -561,6 +561,22 @@ public class BlindEffect extends FrameLayout implements IEffectView {
         return false;
     }
 
+    @Override
+    public void drawPause() {
+        upAnimator.pause();
+        downAnimator.pause();
+        moveAnimator.pause();
+        unlockAlphaAnimator.pause();
+    }
+
+    @Override
+    public void drawResume() {
+        upAnimator.resume();
+        downAnimator.resume();
+        moveAnimator.resume();
+        unlockAlphaAnimator.resume();
+    }
+
     @Override // com.samsung.android.visualeffect.IEffectView
     public void removeListener() {
     }

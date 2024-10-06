@@ -1,12 +1,12 @@
 package com.android.keyguard.sec;
 
 import static com.aj.effect.SoundManager.attr;
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
 
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
-import android.media.AudioAttributes;
 import android.media.SoundPool;
 import android.os.Handler;
 import android.os.Looper;
@@ -131,6 +131,8 @@ public class KeyguardEffectViewMassRipple extends FrameLayout implements Keyguar
         this.mCircleMain = (FrameLayout) findViewById(R.id.keyguard_circle_effect_circle_main);
         this.mCircleMain.removeAllViews();
     }
+
+    // TODO: Animation loader
 
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public boolean handleTouchEvent(View view, MotionEvent event) {
@@ -374,10 +376,10 @@ public class KeyguardEffectViewMassRipple extends FrameLayout implements Keyguar
 
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
             this.sounds = new int[4];
-            this.sounds[0] = this.mSoundPool.load(this.mContext, this.mRDownId, 1);
-            this.sounds[1] = this.mSoundPool.load(this.mContext, this.mRUpId, 1);
-            sounds[2] = mSoundPool.load(mContext, R.raw.lock_ripple, 1);
-            sounds[3] = mSoundPool.load(mContext, R.raw.unlock_ripple, 1);
+            this.sounds[0] = this.mSoundPool.load(mRes.openRawResourceFd(mRDownId), 1);
+            this.sounds[1] = this.mSoundPool.load(mRes.openRawResourceFd(mRUpId), 1);
+            sounds[2] = mSoundPool.load(mRes.openRawResourceFd(R.raw.lock_ripple), 1);
+            sounds[3] = mSoundPool.load(mRes.openRawResourceFd(R.raw.unlock_ripple), 1);
         }
     }
 

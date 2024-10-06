@@ -106,6 +106,18 @@ public class EffectView extends FrameLayout implements IEffectView {
         return false;
     }
 
+    @Override
+    public void drawPause() {
+        if (mView != null)
+            mView.drawPause();
+    }
+
+    @Override
+    public void drawResume() {
+        if (mView != null)
+            mView.drawResume();
+    }
+
     public void onCommand(String cmd, HashMap<?, ?> params) {
         if (cmd.contentEquals(EffectCmdType.CLEAR)) {
             this.mView.clearScreen();

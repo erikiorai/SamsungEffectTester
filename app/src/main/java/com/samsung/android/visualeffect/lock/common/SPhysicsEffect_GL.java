@@ -122,6 +122,16 @@ public class SPhysicsEffect_GL extends GLSurfaceView implements IEffectView {
         return false;
     }
 
+    @Override
+    public void drawPause() {
+        setRenderMode(0);
+    }
+
+    @Override
+    public void drawResume() {
+        setRenderMode(1);
+    }
+
     @Override // com.samsung.android.visualeffect.IEffectView
     public void removeListener() {
     }

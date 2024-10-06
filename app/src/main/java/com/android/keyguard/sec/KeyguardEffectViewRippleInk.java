@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.app.KeyguardManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -124,7 +126,7 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
     private Bitmap makeResBitmap(int res) {
         Bitmap result = null;
         try {
-            InputStream is = this.mContext.getResources().openRawResource(res);
+            InputStream is = mRes.openRawResource(res);
             result = BitmapFactory.decodeStream(is);
             is.close();
             return result;
@@ -140,10 +142,10 @@ public class KeyguardEffectViewRippleInk extends EffectView implements KeyguardE
             Log.d(TAG, "WaterColor sound : new SoundPool");
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds[0] = this.mSoundPool.load(mContext, DOWN_SOUND_PATH, 1);
-            this.sounds[1] = this.mSoundPool.load(mContext, UP_SOUND_PATH, 1);
-            sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, R.raw.lock_ripple, 1);
-            sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mContext, R.raw.unlock_ripple, 1);
+            this.sounds[0] = this.mSoundPool.load(mRes.openRawResourceFd(DOWN_SOUND_PATH), 1);
+            this.sounds[1] = this.mSoundPool.load(mRes.openRawResourceFd(UP_SOUND_PATH), 1);
+            sounds[SOUND_ID_LOCK] = mSoundPool.load(mRes.openRawResourceFd(R.raw.lock_ripple), 1);
+            sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mRes.openRawResourceFd(R.raw.unlock_ripple), 1);
         }
         if (this.mHandler == null) {
             Log.d(TAG, "new SoundHandler()");

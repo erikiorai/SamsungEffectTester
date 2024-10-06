@@ -1,5 +1,7 @@
 package com.samsung.android.visualeffect.lock.circleunlock;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.Context;
@@ -111,15 +113,15 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
         circle = new CircleUnlockCircle(mContext, circleUnlockMaxWidth, circleUnlockMinWidth, outerStrokeWidth, innerStrokeWidth);
         circleGroup.addView(circle);
         arrow = new ImageView(mContext);
-        Drawable d = mContext.getDrawable(arrowImageId);
+        Drawable d = mRes.getDrawable(arrowImageId, mContext.getTheme());
         arrow.setBackground(d);
         circleGroup.addView(arrow, -2, -2);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeResource(getResources(), arrowImageId, options);
+        BitmapFactory.decodeResource(mRes, arrowImageId, options);
         arrowWidth = options.outWidth;
         lockImageView = new ImageView(mContext);
-        lockImageView.setImageResource(lockSequenceImageId[0]);
+        lockImageView.setImageDrawable(mRes.getDrawable(lockSequenceImageId[0], mContext.getTheme()));
         circleGroup.addView(lockImageView, -2, -2);
     }
 
@@ -437,7 +439,7 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
     public void setImageInLockImageView(float value) {
         int sequenceNumber = (int) ((lockSequenceTotal - 1) * value);
         if (currentLockSequenceNumber != sequenceNumber) {
-            lockImageView.setImageResource(lockSequenceImageId[sequenceNumber]);
+            lockImageView.setImageDrawable(mRes.getDrawable(lockSequenceImageId[sequenceNumber], mContext.getTheme()));
             currentLockSequenceNumber = sequenceNumber;
         }
     }
@@ -503,7 +505,7 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
 
     private void setArrowForButton(int resId) {
         arrowForButton = new ImageView(mContext);
-        arrowForButton.setImageResource(resId);
+        arrowForButton.setImageDrawable(mRes.getDrawable(resId, mContext.getTheme()));
         circleGroup.addView(arrowForButton, -2, -2);
     }
 
@@ -526,7 +528,7 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
 
     private void reloadResForOpenTheme() {
         Log.d(TAG, "reloadResForOpenTheme");
-        Drawable d = mContext.getDrawable(arrowImageId);
+        Drawable d = mRes.getDrawable(arrowImageId, mContext.getTheme());
         arrow.setBackground(d);
     }
 
@@ -537,6 +539,20 @@ public class CircleUnlockEffect extends FrameLayout implements IEffectView {
     @Override
     public boolean handleHoverEvent(MotionEvent event) {
         return false;
+    }
+
+    @Override
+    public void drawPause() {
+        circleInAnimator.pause();
+        circleOutAnimator.pause();
+        arrowAnimator.pause();
+    }
+
+    @Override
+    public void drawResume() {
+        circleInAnimator.resume();
+        circleOutAnimator.resume();
+        arrowAnimator.resume();
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView

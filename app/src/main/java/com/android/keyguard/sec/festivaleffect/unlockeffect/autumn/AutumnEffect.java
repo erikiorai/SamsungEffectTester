@@ -1,5 +1,7 @@
 package com.android.keyguard.sec.festivaleffect.unlockeffect.autumn;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
@@ -62,9 +64,9 @@ public class AutumnEffect extends FestivalEffect {
     public void add(float f, float f2) {
         AnimatorSet animatorSet = new AnimatorSet();
         this.mImageTouch = new ImageView(this.mContext);
-        this.mImageTouch.setImageResource(this.resIdTouch[1]);
+        this.mImageTouch.setImageDrawable(mRes.getDrawable(this.resIdTouch[1], mContext.getTheme()));
         this.mImageTouch2 = new ImageView(this.mContext);
-        this.mImageTouch2.setImageResource(this.resIdTouch[0]);
+        this.mImageTouch2.setImageDrawable(mRes.getDrawable(this.resIdTouch[0], mContext.getTheme()));
         addView(this.mImageTouch, -2, -2);
         addView(this.mImageTouch2, -2, -2);
         this.mImageTouch.setX(f - (72.0f * this.mScreenAdjust));
@@ -126,7 +128,7 @@ public class AutumnEffect extends FestivalEffect {
         this.rotateAngel = new Random().nextInt(DensityUtil.DEFAULT_DEVICE_WIDTH);
         if (this.m < 5) {
             this.mImageEffect = new ImageView(this.mContext);
-            this.mImageEffect.setImageResource(this.resId[this.m]);
+            this.mImageEffect.setImageDrawable(mRes.getDrawable(this.resId[this.m], mContext.getTheme()));
             addView(this.mImageEffect, -2, -2);
             this.mImageEffect.setX(f - this.dx);
             this.mImageEffect.setY(this.dx + f2);
@@ -154,5 +156,17 @@ public class AutumnEffect extends FestivalEffect {
             animatorSet.play(this.alphaBack).after(this.alpha);
             animatorSet.start();
         }
+    }
+
+    @Override
+    public void drawPause() {
+        alpha;
+        alphaBack;
+        rotation;
+    }
+
+    @Override
+    public void drawResume() {
+
     }
 }

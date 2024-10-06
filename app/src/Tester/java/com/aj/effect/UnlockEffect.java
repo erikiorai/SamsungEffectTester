@@ -76,7 +76,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
 
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
-        this.mIsTablet = Utils.isTablet(this);
+        this.mIsTablet = Utils.isTablet();
         ImageView imageViewforkeyboard;
         super.onCreate(savedInstanceState);
         //permissionCheck();
@@ -96,7 +96,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
             populateUnlockEffectsOptions();
             Resources resources = getResources();
             int divider_inset_size = resources.getDimensionPixelSize(R.dimen.list_item_padding) + resources.getDimensionPixelSize(R.dimen.list_divider_additional_inset) + resources.getDimensionPixelSize(R.dimen.list_radiobox_width_for_divider_inset);
-            if (Utils.isRTL(this)) {
+            if (Utils.isRTL()) {
                 InsetDrawable insetdivider = new InsetDrawable(this.mListView.getDivider(), 0, 0, divider_inset_size, 0);
                 this.mListView.setDivider(insetdivider);
             } else {
@@ -261,7 +261,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 LayoutInflater li = LayoutInflater.from(this.mContext);
-                if (Utils.isTablet(this.getContext())) {
+                if (Utils.isTablet()) {
                     convertView = li.inflate(R.layout.list_item_with_radiobox_for_dialog, parent, false);
                 } else {
                     convertView = li.inflate(R.layout.list_item_with_radiobox, parent, false);

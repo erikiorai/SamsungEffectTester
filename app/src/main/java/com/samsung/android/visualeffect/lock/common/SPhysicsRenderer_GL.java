@@ -426,7 +426,7 @@ public class SPhysicsRenderer_GL implements GLSurfaceView.Renderer, ISPhysicsRen
         Log.d(this.TAG, "isTablet() - false");
         int projectKind2 = this.PHONE_PROJECT;
         return projectKind2;*/
-        if (Utils.isTablet(veContext)) {
+        if (Utils.isTablet()) {
             return TABLET_PROJECT;
         }
         return PHONE_PROJECT;

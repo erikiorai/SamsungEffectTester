@@ -1,5 +1,7 @@
 package com.aj.effect;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.content.Context;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -17,8 +19,8 @@ import java.util.Random;
 public class Utils {
     public static Integer defaultUnlock = 0;
 
-    public static boolean isTablet(Context context) {
-        return context.getResources().getBoolean(R.bool.large);
+    public static boolean isTablet() {
+        return mRes.getBoolean(R.bool.large);
     }
 
     public static boolean ConnectedMobileKeypad(Context context) {
@@ -30,8 +32,8 @@ public class Utils {
         return false; // TODO: well, maybe later. montblanc
     }
 
-    public static boolean isRTL(Context context) {
-        int layout_dir = context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_LAYOUTDIR_MASK;
+    public static boolean isRTL() {
+        int layout_dir = mRes.getConfiguration().screenLayout & Configuration.SCREENLAYOUT_LAYOUTDIR_MASK;
         return layout_dir == Configuration.SCREENLAYOUT_LAYOUTDIR_RTL;
     }
 

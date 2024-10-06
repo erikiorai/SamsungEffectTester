@@ -151,6 +151,16 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                 }
             });
             Class<?>[] setHelp = { findClass(helper + ".OnChangedCallback", loadPackageParam.classLoader), android.net.Uri[].class};
+
+            XC_MethodHook update = new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    wallpaper = (Bitmap) getObjectField(param.thisObject, "mCache");
+                    KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext")).update();
+                }
+            };
+
             findAndHookMethod(KeyguardImageWallpaper, "onAttachedToWindow", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -170,14 +180,8 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
 
             log("handleLoadPackage: hooking SystemUIWallpaper and " + KIWname);
             Class<?> SystemUIWallpaper = findClass(keyguard + ".wallpaper.SystemUIWallpaper", loadPackageParam.classLoader);
-            findAndHookMethod(KeyguardImageWallpaper, "init", new XC_MethodHook() {
-                @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
-                    wallpaper = (Bitmap) getObjectField(param.thisObject, "mCache");
-                    KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext")).update();
-                }
-            });
+            findAndHookMethod(KeyguardImageWallpaper, "init", update);
+            findAndHookMethod(KeyguardImageWallpaper, "update", update);
             findAndHookMethod(SystemUIWallpaper, "onPause", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
@@ -194,6 +198,7 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                         KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
                         controller.screenTurnedOn();
                         controller.show();
+                        controller.showUnlockAffordance(behind[0]);
                     }
                 }
             });
@@ -225,13 +230,16 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     }
                 }
             });
-            findAndHookMethod(SystemUIWallpaper, "onUnlock", new XC_MethodHook() {
+            /*findAndHookMethod(SystemUIWallpaper, "onUnlock", new XC_MethodHook() {
                 @Override
                 protected void afterHookedMethod(MethodHookParam param) throws Throwable {
                     super.afterHookedMethod(param);
-                    // todo unlock if (wallType[0].contains(KIWname));
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.handleUnlock(null, null);
+                    }
                 }
-            });
+            });*/
             // todo basic functions hook to systemuiwallpaper if not working
 
             log("handleLoadPackage: hooking entry function into PhoneStatusBar");
@@ -246,6 +254,38 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     super.afterHookedMethod(param);
                 }
             });
+
+            Class<?> hostView = findClass(keyguard + ".KeyguardHostView", loadPackageParam.classLoader);
+
+            findAndHookMethod(hostView, "startAppearAnimation", new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    Thread.dumpStack();
+                }
+            });
+
+            Class<?> bouncer = findClass(packageName + "statusbar.phone.KeyguardBouncer", loadPackageParam.classLoader);
+            findAndHookMethod(bouncer, "notifyKeyguardAuthenticated", boolean.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.handleUnlock(null, null);
+                    }
+                }
+            });
+
+            findAndHookMethod(keyguard + ".KeyguardUpdateMonitor", loadPackageParam.classLoader, "handleFingerprintAuthenticated", int.class, new XC_MethodHook() {
+                @Override
+                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
+                    super.afterHookedMethod(param);
+                    Thread.dumpStack();
+                }
+            });
+
+
 
             /* leave it too
             findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager",

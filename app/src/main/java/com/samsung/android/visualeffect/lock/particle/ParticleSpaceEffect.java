@@ -287,6 +287,16 @@ public class ParticleSpaceEffect extends FrameLayout implements IEffectView {
         return false;
     }
 
+    @Override
+    public void drawPause() {
+        particleEffect.pauseEffect();
+    }
+
+    @Override
+    public void drawResume() {
+        particleEffect.resumeEffect();
+    }
+
     @Override // com.samsung.android.visualeffect.IEffectView
     public void removeListener() {
     }

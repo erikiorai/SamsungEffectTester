@@ -22,4 +22,8 @@ public interface IEffectView {
     void setListener(IEffectListener iEffectListener);
 
     boolean handleHoverEvent(MotionEvent event);
+
+    void drawPause();
+
+    void drawResume();
 }

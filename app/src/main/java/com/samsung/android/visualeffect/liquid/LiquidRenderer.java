@@ -74,7 +74,7 @@ public class LiquidRenderer implements GLTextureView.Renderer {
         if (this.isSurfaceCreated) {
             preSetTexture();
             Log.d(TAG, "First onSurfaceChanged");
-            mJniLiquidLock.Init_PhysicsEngine(Utils.isTablet(mContext) ? 1 : 0, this.mQualityLevel, width, height); //todo tablet mode always
+            mJniLiquidLock.Init_PhysicsEngine(Utils.isTablet() ? 1 : 0, this.mQualityLevel, width, height); //todo tablet mode always
             this.isSurfaceCreated = false;
             return;
         }

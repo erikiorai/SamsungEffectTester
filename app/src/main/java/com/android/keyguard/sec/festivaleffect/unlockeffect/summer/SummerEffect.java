@@ -7,6 +7,7 @@ import android.content.Context;
 import android.widget.ImageView;
 
 import com.aj.effect.R;
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
 import com.android.keyguard.sec.festivaleffect.unlockeffect.FestivalEffect;
 
 import java.util.Random;
@@ -62,11 +63,11 @@ public class SummerEffect extends FestivalEffect {
     public void add(float f, float f2) {
         AnimatorSet animatorSet = new AnimatorSet();
         this.mImageTouch = new ImageView(this.mContext);
-        this.mImageTouch.setImageResource(this.resIdTouch[0]);
+        this.mImageTouch.setImageDrawable(mRes.getDrawable(this.resIdTouch[0], mContext.getTheme()));
         this.mImageTouch2 = new ImageView(this.mContext);
-        this.mImageTouch2.setImageResource(this.resIdTouch[1]);
+        this.mImageTouch2.setImageDrawable(mRes.getDrawable(this.resIdTouch[1], mContext.getTheme()));
         this.mImageTouch3 = new ImageView(this.mContext);
-        this.mImageTouch3.setImageResource(this.resIdTouch[2]);
+        this.mImageTouch3.setImageDrawable(mRes.getDrawable(this.resIdTouch[2], mContext.getTheme()));
         addView(this.mImageTouch, -2, -2);
         addView(this.mImageTouch2, -2, -2);
         addView(this.mImageTouch3, -2, -2);
@@ -132,7 +133,7 @@ public class SummerEffect extends FestivalEffect {
         this.m = new Random().nextInt(11);
         if (this.m < 6) {
             this.mImageEffect = new ImageView(this.mContext);
-            this.mImageEffect.setImageResource(this.resId[this.m]);
+            this.mImageEffect.setImageDrawable(mRes.getDrawable(this.resId[this.m], mContext.getTheme()));
             addView(this.mImageEffect, -2, -2);
             if (this.m == 0 || this.m == 1) {
                 this.dk = (float) (0.6000000238418579d + (0.1d * new Random().nextInt(5)));

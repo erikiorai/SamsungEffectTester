@@ -1,5 +1,7 @@
 package com.samsung.android.visualeffect.lock.lensflare;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.content.ContentResolver;
@@ -269,7 +271,7 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         } else {
             options.inPreferredConfig = config;
         }
-        imageView.setImageBitmap(BitmapFactory.decodeResource(getResources(), resId, options));
+        imageView.setImageBitmap(BitmapFactory.decodeResource(mRes, resId, options));
         imageView.setScaleX(this.defaultInSampleSize);
         imageView.setScaleY(this.defaultInSampleSize);
     }
@@ -378,9 +380,9 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
         if (this.soundpool == null) {
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.soundpool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sound_tap = this.soundpool.load(mContext, tap_sound_path, 1);
-            this.sound_unlock = this.soundpool.load(mContext, unlock_sound_path, 1);
-            sound_lock = soundpool.load(mContext, lock_sound_path, 1);
+            this.sound_tap = this.soundpool.load(mRes.openRawResourceFd(tap_sound_path), 1);
+            this.sound_unlock = this.soundpool.load(mRes.openRawResourceFd(unlock_sound_path), 1);
+            sound_lock = soundpool.load(mRes.openRawResourceFd(lock_sound_path), 1);
             Log.d(TAG, "LensFlare sound : load");
         }
     }
@@ -897,6 +899,34 @@ public class LensFlareEffect extends FrameLayout implements IEffectView {
             }
         }
         return false;
+    }
+
+    @Override
+    public void drawPause() {
+        affordanceOffAnimator.pause();
+        affordanceOnAnimator.pause();
+        fadeOutAnimator.pause();
+        hoverAnimator.pause();
+        hoverLightInAnimator.pause();
+        hoverLightOutAnimator.pause();
+        fogOnAnimator.pause();
+        objAnimator.pause();
+        tapAnimator.pause();
+        unlockAnimator.pause();
+    }
+
+    @Override
+    public void drawResume() {
+        affordanceOffAnimator.resume();
+        affordanceOnAnimator.resume();
+        fadeOutAnimator.resume();
+        hoverAnimator.resume();
+        hoverLightInAnimator.resume();
+        hoverLightOutAnimator.resume();
+        fogOnAnimator.resume();
+        objAnimator.resume();
+        tapAnimator.resume();
+        unlockAnimator.resume();
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView

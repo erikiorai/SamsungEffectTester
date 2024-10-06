@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.res.Configuration;
@@ -94,7 +96,7 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
         this.mWindowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Log.d(TAG, "KeyguardEffectViewBlind : onPreExecute");
         Log.d(TAG, "KeyguardEffectViewBlind : isAsyncPostExecuted = " + KeyguardEffectViewBlind.this.isInit);
-        this.light = BitmapFactory.decodeResource(KeyguardEffectViewBlind.this.getContext().getResources(), R.drawable.keyguard_blind_light);
+        this.light = BitmapFactory.decodeResource(mRes, R.drawable.keyguard_blind_light);
         KeyguardEffectViewBlind.this.blindEffect = new EffectView(KeyguardEffectViewBlind.this.mContext);
         KeyguardEffectViewBlind.this.blindEffect.setEffect(10);
         KeyguardEffectViewBlind.this.data = new EffectDataObj();
@@ -141,9 +143,9 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
             this.sounds = new int[3];
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds[0] = this.mSoundPool.load(mContext, TOUCH_SOUND_PATH, 1);
-            this.sounds[1] = this.mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
-            this.sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
+            this.sounds[0] = this.mSoundPool.load(mRes.openRawResourceFd(TOUCH_SOUND_PATH), 1);
+            this.sounds[1] = this.mSoundPool.load(mRes.openRawResourceFd(UNLOCK_SOUND_PATH), 1);
+            this.sounds[SOUND_ID_LOCK] = mSoundPool.load(mRes.openRawResourceFd(LOCK_SOUND_PATH), 1);
         }
     }
 

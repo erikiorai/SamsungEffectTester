@@ -214,7 +214,7 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
     private Bitmap makeResBitmap(int res) {
         Bitmap result = null;
         try {
-            InputStream is = this.mContext.getResources().openRawResource(res);
+            InputStream is = KeyguardEffectViewController.mRes.openRawResource(res);
             result = BitmapFactory.decodeStream(is);
             is.close();
             return result;
@@ -229,8 +229,8 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
         if (this.mSoundPool == null) {
             Log.d("Liquid_KeyguardEffectView", "sound : new SoundPool");
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds[0] = this.mSoundPool.load(this.mContext, R.raw.liquid_tap, 1);
-            this.sounds[1] = this.mSoundPool.load(this.mContext, R.raw.liquid_unlock, 1);
+            this.sounds[0] = this.mSoundPool.load(KeyguardEffectViewController.mRes.openRawResourceFd(R.raw.liquid_tap), 1);
+            this.sounds[1] = this.mSoundPool.load(KeyguardEffectViewController.mRes.openRawResourceFd(R.raw.liquid_unlock), 1);
             // from class: com.android.keyguard.sec.KeyguardEffectViewLiquid.2
 // android.media.SoundPool.OnLoadCompleteListener
             this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d("Liquid_KeyguardEffectView", "sound : onLoadComplete"));

@@ -14,4 +14,10 @@ public class FestivalEffect extends FrameLayout {
 
     public void add(float x, float y) {};
     public void move(float x, float y) {};
+
+    public void drawPause() {
+    }
+
+    public void drawResume() {
+    }
 }

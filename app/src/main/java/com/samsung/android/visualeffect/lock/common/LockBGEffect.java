@@ -145,6 +145,16 @@ public class LockBGEffect extends GLTextureView implements IEffectView {
         return true;
     }
 
+    @Override
+    public void drawPause() {
+        GLTextureViewRenderer.pauseAnimation();
+    }
+
+    @Override
+    public void drawResume() {
+        GLTextureViewRenderer.resumeAnimation();
+    }
+
     @Override // com.samsung.android.visualeffect.IEffectView
     public void removeListener() {
         this.callBackListener = null;

@@ -8,16 +8,14 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.aj.effect.Utils;
 import com.samsung.android.visualeffect.EffectDataObj;
 import com.samsung.android.visualeffect.IEffectListener;
 import com.samsung.android.visualeffect.IEffectView;
-
-import com.aj.effect.Utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -239,6 +237,16 @@ public class ParticleEffect extends View implements IEffectView {
     @Override
     public boolean handleHoverEvent(MotionEvent event) {
         return false;
+    }
+
+    @Override
+    public void drawPause() {
+        pauseEffect();
+    }
+
+    @Override
+    public void drawResume() {
+        resumeEffect();
     }
 
     @Override // com.samsung.android.visualeffect.IEffectView

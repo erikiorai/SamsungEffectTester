@@ -74,7 +74,7 @@ public class UnlockEffectGrid extends Activity implements AdapterView.OnItemClic
 
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
-        this.mIsTablet = Utils.isTablet(this);
+        this.mIsTablet = Utils.isTablet();
         super.onCreate(savedInstanceState);
         if (!this.mIsTablet) {
             setContentView(R.layout.new_lockscreen_preview);
@@ -245,7 +245,7 @@ public class UnlockEffectGrid extends Activity implements AdapterView.OnItemClic
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
                 LayoutInflater li = LayoutInflater.from(this.mContext);
-                if (Utils.isTablet(this.getContext())) {
+                if (Utils.isTablet()) {
                     convertView = li.inflate(R.layout.list_item_with_radiobox_for_dialog, parent, false);
                 } else {
                     convertView = li.inflate(R.layout.list_item_with_radiobox, parent, false);

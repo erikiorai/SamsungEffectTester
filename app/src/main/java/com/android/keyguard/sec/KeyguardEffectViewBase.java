@@ -36,4 +36,8 @@ public interface KeyguardEffectViewBase {
     void update();
 
     void setContextualWallpaper(Bitmap bmp);
+
+    void drawPause();
+
+    void drawResume();
 }

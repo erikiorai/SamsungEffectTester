@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.app.KeyguardManager;
 import android.content.ContentResolver;
 import android.content.Context;
@@ -342,7 +344,7 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
     private Bitmap makeResBitmap(int res) {
         Bitmap result = null;
         try {
-            InputStream is = this.mContext.getResources().openRawResource(res);
+            InputStream is = mRes.openRawResource(res);
             result = BitmapFactory.decodeStream(is);
             is.close();
             return result;
@@ -388,10 +390,10 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
             Log.d(TAG, "sound : new SoundPool");
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds[SOUND_ID_TAB] = this.mSoundPool.load(mContext, TAP_SOUND_PATH, 1);
-            this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(mContext, DRAG_SOUND_PATH, 1);
-            sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
-            sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
+            this.sounds[SOUND_ID_TAB] = this.mSoundPool.load(mRes.openRawResourceFd(TAP_SOUND_PATH), 1);
+            this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(mRes.openRawResourceFd(DRAG_SOUND_PATH), 1);
+            sounds[SOUND_ID_LOCK] = mSoundPool.load(mRes.openRawResourceFd(LOCK_SOUND_PATH), 1);
+            sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mRes.openRawResourceFd(UNLOCK_SOUND_PATH), 1);
             // from class: com.android.keyguard.sec.effect.KeyguardEffectViewSparklingBubbles.3
 // android.media.SoundPool.OnLoadCompleteListener
             this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(TAG, "sound : onLoadComplete"));

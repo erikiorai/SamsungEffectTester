@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -294,10 +296,10 @@ public class KeyguardEffectViewAbstractTile extends EffectView implements Keygua
             Log.d(TAG, "sound : new SoundPool");
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds[SOUND_ID_TAB] = this.mSoundPool.load(this.mContext, R.raw.abstracttile_tap, 1);
-            this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(this.mContext, R.raw.abstracttile_drag, 1);
-            this.sounds[SOUND_ID_UNLOCK] = this.mSoundPool.load(this.mContext, R.raw.abstracttile_unlock, 1);
-            sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, R.raw.abstracttile_lock, 1);
+            this.sounds[SOUND_ID_TAB] = this.mSoundPool.load(mRes.openRawResourceFd(R.raw.abstracttile_tap), 1);
+            this.sounds[SOUND_ID_DRAG] = this.mSoundPool.load(mRes.openRawResourceFd(R.raw.abstracttile_drag), 1);
+            this.sounds[SOUND_ID_UNLOCK] = this.mSoundPool.load(mRes.openRawResourceFd(R.raw.abstracttile_unlock), 1);
+            sounds[SOUND_ID_LOCK] = mSoundPool.load(mRes.openRawResourceFd(R.raw.abstracttile_lock), 1);
             // from class: com.android.keyguard.sec.KeyguardEffectViewAbstractTile.2
 // android.media.SoundPool.OnLoadCompleteListener
             this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(KeyguardEffectViewAbstractTile.TAG, "sound : onLoadComplete"));

@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -70,10 +72,10 @@ public class KeyguardEffectViewParticleSpace extends FrameLayout implements Keyg
             sounds = new int[4];
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            sounds[SOUND_ID_TAB] = mSoundPool.load(mContext, TAP_SOUND_PATH, 1);
-            sounds[SOUND_ID_DRAG] = mSoundPool.load(mContext, DRAG_SOUND_PATH, 1);
-            sounds[SOUND_ID_LOCK] = mSoundPool.load(mContext, LOCK_SOUND_PATH, 1);
-            sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
+            sounds[SOUND_ID_TAB] = mSoundPool.load(mRes.openRawResourceFd(TAP_SOUND_PATH), 1);
+            sounds[SOUND_ID_DRAG] = mSoundPool.load(mRes.openRawResourceFd(DRAG_SOUND_PATH), 1);
+            sounds[SOUND_ID_LOCK] = mSoundPool.load(mRes.openRawResourceFd(LOCK_SOUND_PATH), 1);
+            sounds[SOUND_ID_UNLOCK] = mSoundPool.load(mRes.openRawResourceFd(UNLOCK_SOUND_PATH), 1);
         }
     }
 
@@ -250,6 +252,16 @@ public class KeyguardEffectViewParticleSpace extends FrameLayout implements Keyg
         } else {
             setBitmap(KeyguardEffectViewUtil.getPreferredConfigBitmap(bmp, Bitmap.Config.ARGB_8888));
         }
+    }
+
+    @Override
+    public void drawPause() {
+
+    }
+
+    @Override
+    public void drawResume() {
+
     }
 
     public static boolean isBackgroundEffect() {

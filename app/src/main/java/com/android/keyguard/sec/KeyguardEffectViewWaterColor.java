@@ -1,5 +1,7 @@
 package com.android.keyguard.sec;
 
+import static com.android.keyguard.sec.KeyguardEffectViewController.mRes;
+
 import android.content.ContentResolver;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -294,8 +296,8 @@ public class KeyguardEffectViewWaterColor extends EffectView implements Keyguard
             Log.d(TAG, "sound : new SoundPool");
             AudioAttributes attr = new AudioAttributes.Builder().setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION).build();
             this.mSoundPool = new SoundPool.Builder().setMaxStreams(10).setAudioAttributes(attr).build();
-            this.sounds[0] = this.mSoundPool.load(mContext, TAP_SOUND_PATH, 1);
-            this.sounds[1] = this.mSoundPool.load(mContext, UNLOCK_SOUND_PATH, 1);
+            this.sounds[0] = this.mSoundPool.load(mRes.openRawResourceFd(TAP_SOUND_PATH), 1);
+            this.sounds[1] = this.mSoundPool.load(mRes.openRawResourceFd(UNLOCK_SOUND_PATH), 1);
             // from class: com.android.keyguard.sec.effect.KeyguardEffectViewWaterColor.3
 // android.media.SoundPool.OnLoadCompleteListener
             this.mSoundPool.setOnLoadCompleteListener((soundPool, sampleId, status) -> Log.d(KeyguardEffectViewWaterColor.TAG, "sound : onLoadComplete"));

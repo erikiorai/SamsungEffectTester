@@ -194,6 +194,16 @@ public class KeyguardEffectViewFestival extends FrameLayout implements KeyguardE
 
     }
 
+    @Override
+    public void drawPause() {
+        festivalEffect.drawPause();
+    }
+
+    @Override
+    public void drawResume() {
+        festivalEffect.drawResume();
+    }
+
     public static boolean isBackgroundEffect() {
         return false;
     }
