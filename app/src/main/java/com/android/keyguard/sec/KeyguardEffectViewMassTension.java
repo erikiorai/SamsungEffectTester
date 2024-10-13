@@ -482,6 +482,16 @@ public class KeyguardEffectViewMassTension extends FrameLayout implements Keygua
     public void setContextualWallpaper(Bitmap bmp) {
     }
 
+    @Override
+    public void drawPause() {
+        Log.d(TAG, "drawPause: stub!");
+    }
+
+    @Override
+    public void drawResume() {
+        Log.d(TAG, "drawResume: stub!");
+    }
+
     public static boolean isBackgroundEffect() {
         return false;
     }

@@ -36,7 +36,7 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
     final int SOUND_ID_TAB;
     final int SOUND_ID_LOCK = 2;
     final int SOUND_ID_UNLOCK = 3;
-    private final String TAG;
+    private final String TAG = "SparklingBubbles_Keyguard";;
     private final long UNLOCK_SOUND_PLAY_TIME;
     private float dragSoudMinusOffset;
     private float dragSoudVolume;
@@ -70,7 +70,6 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
 
     public KeyguardEffectViewSparklingBubbles(Context context) {
         super(context);
-        this.TAG = "SparklingBubbles_Keyguard";
         this.mWallpaperPath = null;
         this.mSoundPool = null;
         this.sounds = null;
@@ -237,7 +236,7 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public boolean handleTouchEvent(View view, MotionEvent event) {
         if (this.isUnlocked || this.mTouchFlagForMobileKeyboard) {
-            Log.i(TAG, "handleTouchEvent return : isUnlocked = " + this.isUnlocked + ", mTouchFlag" + this.mTouchFlagForMobileKeyboard);
+            Log.i(TAG, "handleTouchEvent return : isUnlocked = " + this.isUnlocked + ", mTouchFlag " + this.mTouchFlagForMobileKeyboard);
         } else {
             int action = event.getActionMasked();
             handleTouchEvent(event, view);
@@ -492,6 +491,7 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
 
     protected void onSizeChanged(int width, int height, int oldw, int oldh) {
         super.onSizeChanged(width, height, oldw, oldh);
+        Thread.dumpStack();
         Log.i(TAG, "onSizeChanged, width = " + width + ", height = " + height + ", oldw = " + oldw + ", oldh =" + oldh);
         int miniMumLenth = Math.max(this.windowWidth, this.windowHeight) / 5;
         if (width < miniMumLenth || height < miniMumLenth || oldw == 0 || oldh == 0 || Math.min(this.windowWidth, this.windowHeight) != width) {
@@ -502,7 +502,7 @@ public class KeyguardEffectViewSparklingBubbles extends EffectView implements Ke
             map.put("CustomEvent", "ForceDirty");
             map.put("EventObject", new Object());
             handleCustomEvent(99, map);
-            this.mTouchFlagForMobileKeyboard = true;
+            //TODO this.mTouchFlagForMobileKeyboard = true;
             Log.d(TAG, "onSizeChanged called!!! mTouchFlagForMobileKeyboard = " + this.mTouchFlagForMobileKeyboard);
         }
     }

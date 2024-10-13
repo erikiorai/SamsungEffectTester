@@ -256,12 +256,12 @@ public class KeyguardEffectViewParticleSpace extends FrameLayout implements Keyg
 
     @Override
     public void drawPause() {
-
+        particleSpaceEffect.drawPause();
     }
 
     @Override
     public void drawResume() {
-
+        particleSpaceEffect.drawResume();
     }
 
     public static boolean isBackgroundEffect() {

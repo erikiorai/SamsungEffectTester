@@ -20,6 +20,7 @@ import android.widget.FrameLayout;
 
 import com.aj.effect.R;
 import com.aj.effect.Utils;
+import com.samsung.android.visualeffect.common.GLTextureView;
 import com.samsung.android.visualeffect.liquid.LiquidEffect;
 import java.io.InputStream;
 
@@ -126,6 +127,16 @@ public class KeyguardEffectViewLiquid extends FrameLayout implements KeyguardEff
             Log.d("Liquid_KeyguardEffectView", "changeBackground()");
             this.mView.changeBackground(bmp);
         }
+    }
+
+    @Override
+    public void drawPause() {
+        mView.setRenderMode(GLTextureView.RENDERMODE_WHEN_DIRTY);
+    }
+
+    @Override
+    public void drawResume() {
+        mView.setRenderMode(GLTextureView.RENDERMODE_CONTINUOUSLY);
     }
 
     @Override // com.android.keyguard.sec.KeyguardEffectViewBase

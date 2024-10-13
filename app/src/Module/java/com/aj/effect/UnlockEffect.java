@@ -36,6 +36,8 @@ import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+
 import com.android.keyguard.sec.KeyguardEffectViewController;
 
 import java.util.ArrayList;
@@ -60,7 +62,7 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
         KeyguardEffectViewController.setResources(this.getResources());
-        this.mIsTablet = Utils.isTablet();
+        mIsTablet = Utils.isTablet();
         ImageView imageViewforkeyboard;
         super.onCreate(savedInstanceState);
         permissionCheck();
@@ -93,7 +95,13 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
             this.mListView.setOnItemClickListener(this);
             this.mListView.setOverScrollMode(View.OVER_SCROLL_IF_CONTENT_SCROLLS);
             updateImageResource();
-        } else {
+        }
+    }
+
+    @Override
+    protected void onPostCreate(@Nullable Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+        if (mIsTablet) {
             setVisible(false);
             createDialogforTablet();
         }

@@ -127,6 +127,16 @@ public class EffectViewParticle extends FrameLayout implements KeyguardEffectVie
     }
 
     @Override
+    public void drawPause() {
+        onPause();
+    }
+
+    @Override
+    public void drawResume() {
+        onResume();
+    }
+
+    @Override
     public boolean handleTouchEvent(View view, MotionEvent event) {
         if (this.mPaused) {
             return false;

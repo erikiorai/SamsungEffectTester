@@ -120,6 +120,16 @@ public class KeyguardEffectViewMorphing extends FrameLayout implements KeyguardE
     public void setContextualWallpaper(Bitmap bmp) {
 
     }
+// TODO: i dont even know if i should keep this.
+    @Override
+    public void drawPause() {
+
+    }
+
+    @Override
+    public void drawResume() {
+
+    }
 
     public static boolean isBackgroundEffect() {
         return true;

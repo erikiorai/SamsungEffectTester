@@ -230,6 +230,16 @@ public class KeyguardEffectViewBlind extends FrameLayout implements KeyguardEffe
 
     }
 
+    @Override
+    public void drawPause() {
+        blindEffect.drawPause();
+    }
+
+    @Override
+    public void drawResume() {
+        blindEffect.drawResume();
+    }
+
     @Override // com.android.keyguard.sec.effect.KeyguardEffectViewBase
     public void screenTurnedOn() {
         Log.d(TAG, "KeyguardEffectViewBlind : screenTurnedOn");

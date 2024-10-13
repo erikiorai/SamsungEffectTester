@@ -242,6 +242,20 @@ public class KeyguardEffectViewNone extends FrameLayout implements KeyguardEffec
     public void setContextualWallpaper(Bitmap bmp) {
     }
 
+    @Override
+    public void drawPause() {
+        if (circleEffect != null) {
+            circleEffect.drawPause();
+        }
+    }
+
+    @Override
+    public void drawResume() {
+        if (circleEffect != null) {
+            circleEffect.drawResume();
+        }
+    }
+
     public static boolean isBackgroundEffect() {
         return false;
     }

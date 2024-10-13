@@ -1,5 +1,7 @@
 package com.aj.effect;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static de.robv.android.xposed.XposedBridge.hookMethod;
 import static de.robv.android.xposed.XposedBridge.log;
 import static de.robv.android.xposed.XposedHelpers.callMethod;
@@ -13,9 +15,12 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.MotionEvent;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -32,6 +37,7 @@ import de.robv.android.xposed.callbacks.XC_InitPackageResources;
 import de.robv.android.xposed.callbacks.XC_LayoutInflated;
 import de.robv.android.xposed.callbacks.XC_LoadPackage;
 
+/** @noinspection UnreachableCode*/
 public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResources {
 
     String packageName = "com.android.systemui";
@@ -196,6 +202,9 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     super.afterHookedMethod(param);
                     if (wallType[0].contains(KIWname)) {
                         KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+//                        controller.setKeyguardShowing(true);
+                        behind[0].setVisibility(VISIBLE);
+                        front[0].setVisibility(VISIBLE);
                         controller.screenTurnedOn();
                         controller.show();
                         controller.showUnlockAffordance(behind[0]);
@@ -240,7 +249,6 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     }
                 }
             });*/
-            // todo basic functions hook to systemuiwallpaper if not working
 
             log("handleLoadPackage: hooking entry function into PhoneStatusBar");
             findAndHookMethod(packageName + ".statusbar.phone.PhoneStatusBar", loadPackageParam.classLoader, "inflateStatusBarWindow", Context.class, new XC_MethodHook() {
@@ -256,23 +264,46 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
             });
 
             Class<?> hostView = findClass(keyguard + ".KeyguardHostView", loadPackageParam.classLoader);
-
             findAndHookMethod(hostView, "startAppearAnimation", new XC_MethodHook() {
                 @Override
                 protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
                     super.beforeHookedMethod(param);
-                    Thread.dumpStack();
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.drawPause();
+                    }
                 }
             });
 
-            Class<?> bouncer = findClass(packageName + "statusbar.phone.KeyguardBouncer", loadPackageParam.classLoader);
-            findAndHookMethod(bouncer, "notifyKeyguardAuthenticated", boolean.class, new XC_MethodHook() {
+            Class<?> bouncer = findClass(packageName + ".statusbar.phone.KeyguardBouncer", loadPackageParam.classLoader);
+            findAndHookMethod(bouncer, "hide", boolean.class, new XC_MethodHook() {
                 @Override
-                protected void afterHookedMethod(MethodHookParam param) throws Throwable {
-                    super.afterHookedMethod(param);
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
                     if (wallType[0].contains(KIWname)) {
                         KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        controller.drawResume();
+                    }
+                }
+            });
+            findAndHookMethod(hostView, "finish", boolean.class, new XC_MethodHook() {
+                @Override
+                protected void beforeHookedMethod(MethodHookParam param) throws Throwable {
+                    super.beforeHookedMethod(param);
+                    if (wallType[0].contains(KIWname)) {
+                        KeyguardEffectViewController controller = KeyguardEffectViewController.getInstance((Context) getObjectField(param.thisObject, "mContext"));
+                        /*controller.mHandler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                controller.handleUnlock(null, null);
+                            }
+                        }, controller.getUnlockDelay());*/
+                        callMethod(param.thisObject, "reset");
                         controller.handleUnlock(null, null);
+                        Thread.sleep(controller.getUnlockDelay()+150);
+                        //controller.setKeyguardShowing(false);
+                        behind[0].setVisibility(INVISIBLE);
+                        front[0].setVisibility(INVISIBLE);
                     }
                 }
             });
@@ -284,8 +315,6 @@ public class Hook implements IXposedHookLoadPackage, IXposedHookInitPackageResou
                     Thread.dumpStack();
                 }
             });
-
-
 
             /* leave it too
             findAndHookMethod("com.android.systemui.statusbar.NotificationMediaManager",

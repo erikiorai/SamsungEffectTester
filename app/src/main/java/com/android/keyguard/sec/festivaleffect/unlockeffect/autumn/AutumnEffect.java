@@ -158,15 +158,31 @@ public class AutumnEffect extends FestivalEffect {
         }
     }
 
-    @Override
+    /*@Override
     public void drawPause() {
         alpha;
         alphaBack;
         rotation;
+        scaleX;
+        scaleXBack;
+        scaleXBlank;
+        scaleY;
+        scaleYBack;
+        scaleYBlank;
+        touchAlpha;
+        touchAlpha2;
+        touchScaleX;
+        touchScaleX2;
+        touchScaleXMove;
+        touchScaleX2Move;
+        touchScaleY;
+        touchScaleY2;
+        touchScaleYMove;
+        touchScaleY2Move;
     }
 
     @Override
     public void drawResume() {
 
-    }
+    }*/
 }

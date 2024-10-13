@@ -10,6 +10,7 @@ import android.hardware.SensorEvent;
 import android.os.FileObserver;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.os.PowerManager;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -102,7 +103,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
     private KeyguardFestivalEffect mFestivalEffect;
     public static Resources mRes;
     private String mOldPrimaryEffect = null;
-    /* private final Handler mHandler = new Handler() { // from class: com.android.keyguard.sec.KeyguardEffectViewController.1
+    public final Handler mHandler = new Handler(Looper.getMainLooper()) /* { // from class: com.android.keyguard.sec.KeyguardEffectViewController.1
         @Override // android.os.Handler
         public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -123,7 +124,7 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
                     return;
             }
         }
-    }; */
+    }*/;
 
     /* KeyguardUpdateMonitorCallback mInfoCallback = new KeyguardUpdateMonitorCallback() { // from class: com.android.keyguard.sec.KeyguardEffectViewController.2
         @Override // com.android.keyguard.KeyguardUpdateMonitorCallback
@@ -653,6 +654,26 @@ public class KeyguardEffectViewController implements KeyguardEffectViewBase {
         if (this.mBackgroundView != null) {
             this.mBackgroundView.setContextualWallpaper(bmp);
         }
+    }
+
+    @Override
+    public void drawPause() {
+        if (mForegroundView != null)
+            mForegroundView.drawPause();
+        if (mForegroundCircleView != null)
+            mForegroundCircleView.drawPause();
+        if (mBackgroundView != null)
+            mBackgroundView.drawPause();
+    }
+
+    @Override
+    public void drawResume() {
+        if (mForegroundView != null)
+            mForegroundView.drawResume();
+        if (mForegroundCircleView != null)
+            mForegroundCircleView.drawResume();
+        if (mBackgroundView != null)
+            mBackgroundView.drawResume();
     }
 
     @Override // com.android.keyguard.sec.KeyguardEffectViewBase

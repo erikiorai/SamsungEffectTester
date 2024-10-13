@@ -146,6 +146,16 @@ public class KeyguardEffectViewLensFlare extends FrameLayout implements Keyguard
     public void setContextualWallpaper(Bitmap bmp) {
     }
 
+    @Override
+    public void drawPause() {
+        lensFlareEffect.drawPause();
+    }
+
+    @Override
+    public void drawResume() {
+        lensFlareEffect.drawResume();
+    }
+
     public static boolean isBackgroundEffect() {
         return false;
     }

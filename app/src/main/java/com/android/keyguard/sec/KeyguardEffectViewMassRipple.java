@@ -463,6 +463,16 @@ public class KeyguardEffectViewMassRipple extends FrameLayout implements Keyguar
     public void setContextualWallpaper(Bitmap bmp) {
     }
 
+    @Override
+    public void drawPause() {
+        Log.d(TAG, "drawPause: stub!");
+    }
+
+    @Override
+    public void drawResume() {
+        Log.d(TAG, "drawResume: stub!");
+    }
+
     public static boolean isBackgroundEffect() {
         return false;
     }

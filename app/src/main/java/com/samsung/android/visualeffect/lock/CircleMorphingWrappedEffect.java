@@ -358,4 +358,14 @@ public class CircleMorphingWrappedEffect extends CircleMorphingEffect implements
     public boolean handleHoverEvent(MotionEvent event) {
         return false;
     }
+
+    @Override
+    public void drawPause() {
+
+    }
+
+    @Override
+    public void drawResume() {
+
+    }
 }
