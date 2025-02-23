@@ -3,7 +3,6 @@ package com.aj.effect;
 import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
 import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -24,6 +23,7 @@ import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.keyguard.sec.KeyguardEffectViewBase;
 import com.android.keyguard.sec.KeyguardEffectViewBouncingColor;
@@ -32,7 +32,7 @@ import com.android.keyguard.sec.KeyguardEffectViewPoppingColor;
 import com.android.keyguard.sec.KeyguardEffectViewRectangleTraveller;
 import com.android.keyguard.sec.KeyguardUnlockView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends AppCompatActivity {
 
     public static Bitmap bitm;
     public static Canvas canv;

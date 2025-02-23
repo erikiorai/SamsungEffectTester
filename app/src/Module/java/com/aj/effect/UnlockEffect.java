@@ -16,7 +16,7 @@ import static com.aj.effect.EffectEnum.SUMMER;
 import static com.aj.effect.EffectEnum.WATERDROPLET;
 import static com.aj.effect.EffectEnum.WINTER;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -37,6 +37,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.keyguard.sec.KeyguardEffectViewController;
 
@@ -44,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /* loaded from: classes.dex */
-public class UnlockEffect extends Activity implements AdapterView.OnItemClickListener {
+public class UnlockEffect extends AppCompatActivity implements AdapterView.OnItemClickListener {
     // TODO: add mass tension and other effect names!!!!!!!!!!!! s3 firmware
     private static String[] mModeItem;
     private RadioAdapter adapter;

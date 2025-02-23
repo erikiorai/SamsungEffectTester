@@ -50,6 +50,7 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.android.keyguard.sec.KeyguardEffectViewController;
 
@@ -57,7 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /* loaded from: classes.dex */
-public class UnlockEffect extends Activity implements AdapterView.OnItemClickListener {
+public class UnlockEffect extends AppCompatActivity implements AdapterView.OnItemClickListener {
     // TODO: add mass tension and other effect names!!!!!!!!!!!! s3 firmware
     private static String[] mModeItem;
     private RadioAdapter adapter;
@@ -73,12 +74,13 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
             WATERCOLOUR, RIPPLE, INDIGODIFFUSION, BRILLIANTCUT, LIGHTING,
             BLIND, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
+    private int featureId;
 
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         this.mIsTablet = Utils.isTablet();
         ImageView imageViewforkeyboard;
-        super.onCreate(savedInstanceState);
         //permissionCheck();
         if (!this.mIsTablet) {
             setContentView(R.layout.lockscreen_preview);
@@ -123,15 +125,17 @@ public class UnlockEffect extends Activity implements AdapterView.OnItemClickLis
     }
 
     @Override
-    public boolean onMenuItemSelected(int featureId, @NonNull MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.about) {
             Intent intent = new Intent(this, DebugActivity.class);
-            intent.setFlags(FLAG_ACTIVITY_CLEAR_TOP | FLAG_ACTIVITY_SINGLE_TOP);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
+            return true; // Return true to indicate the event was handled
         }
-        return super.onMenuItemSelected(featureId, item);
+        return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
