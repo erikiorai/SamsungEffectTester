@@ -1,7 +1,5 @@
 package com.aj.effect;
 
-import static android.content.Intent.FLAG_ACTIVITY_CLEAR_TOP;
-import static android.content.Intent.FLAG_ACTIVITY_SINGLE_TOP;
 import static com.aj.effect.EffectEnum.ABSTRACTTILES;
 import static com.aj.effect.EffectEnum.AUTUMN;
 import static com.aj.effect.EffectEnum.BLIND;
@@ -28,7 +26,6 @@ import static com.aj.effect.EffectEnum.WATERCOLOUR;
 import static com.aj.effect.EffectEnum.WATERDROPLET;
 import static com.aj.effect.EffectEnum.WINTER;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -74,7 +71,6 @@ public class UnlockEffect extends AppCompatActivity implements AdapterView.OnIte
             WATERCOLOUR, RIPPLE, INDIGODIFFUSION, BRILLIANTCUT, LIGHTING,
             BLIND, POPPINGGOODLOCK, RECTANGLETRAVELLER, BOUNCINGCOLOR
     };
-    private int featureId;
 
     @Override // android.app.Activity
     protected void onCreate(Bundle savedInstanceState) {
